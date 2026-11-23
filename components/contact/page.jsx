@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight, MoveUpRight } from "lucide-react";
+import { ArrowUpRight, MoveUpRight} from "lucide-react";
 
 const initialForm = {
   name: "",
@@ -133,6 +133,7 @@ ${form.message || "—"}`
               </div>
             </div>
           </div>
+         
 
           {/* RIGHT SIDE / FORM */}
           <div className="bg-[#f0ece3] p-6 sm:p-10 lg:p-12">

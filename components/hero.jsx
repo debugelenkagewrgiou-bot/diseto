@@ -41,7 +41,7 @@ export default function Hero() {
 
       <div className="hero-bottom">
         <span>Σχεδιασμός με ταυτότητα</span>
-        <span>SCROLL TO EXPLORE ↓</span>
+        <span>SCROLL TO EXPLORE </span>
       </div>
 
       <style jsx>{`
