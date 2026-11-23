@@ -3,12 +3,12 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const links = [
-  { number: "01", label: "HOME", href: "#home" },
-  { number: "02", label: "PROJECTS", href: "#projects" },
-  { number: "03", label: "CONTACT", href: "#contact" },
+  { label: "HOME", href: "#home" },
+  { label: "PROJECTS", href: "#projects" },
+  { label: "CONTACT", href: "#contact" },
 ];
 
 const ease = [0.22, 1, 0.36, 1];
@@ -29,14 +29,10 @@ export function Navigation() {
       return;
     }
 
-    const target = document.querySelector(href);
-
-    if (target) {
-      target.scrollIntoView({
-        behavior: reduceMotion ? "auto" : "smooth",
-        block: "start",
-      });
-    }
+    document.querySelector(href)?.scrollIntoView({
+      behavior: reduceMotion ? "auto" : "smooth",
+      block: "start",
+    });
   };
 
   return (
@@ -47,13 +43,13 @@ export function Navigation() {
           className="site-logo"
           onClick={(e) => navigateTo(e, "#home")}
         >
-          DiSeto<span>.</span>
+          <img src="/images/logo.jpg" alt="DiSeto" />
         </a>
 
         <nav className="desktop-nav">
           {links.map((link) => (
             <a
-              key={link.number}
+              key={link.label}
               href={link.href}
               onClick={(e) => navigateTo(e, link.href)}
             >
@@ -73,22 +69,22 @@ export function Navigation() {
             {open ? (
               <motion.span
                 key="close"
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 0 }}
+                initial={{ opacity: 0, rotate: -45 }}
+                animate={{ opacity: 1, rotate: 0 }}
+                exit={{ opacity: 0, rotate: 45 }}
                 transition={{ duration: 0.2 }}
               >
-                <X size={25} strokeWidth={1.3} />
+                <X size={23} strokeWidth={1.3} />
               </motion.span>
             ) : (
               <motion.span
                 key="menu"
-                initial={{ rotate: 90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: -90, opacity: 0 }}
+                initial={{ opacity: 0, rotate: 45 }}
+                animate={{ opacity: 1, rotate: 0 }}
+                exit={{ opacity: 0, rotate: -45 }}
                 transition={{ duration: 0.2 }}
               >
-                <Menu size={25} strokeWidth={1.3} />
+                <Menu size={23} strokeWidth={1.3} />
               </motion.span>
             )}
           </AnimatePresence>
@@ -100,70 +96,43 @@ export function Navigation() {
           <motion.div
             id="mobile-navigation"
             className="mobile-menu"
-            initial={{
-              clipPath: "inset(0 0 100% 0)",
-            }}
-            animate={{
-              clipPath: "inset(0 0 0% 0)",
-            }}
-            exit={{
-              clipPath: "inset(0 0 100% 0)",
-            }}
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
             transition={{
-              duration: reduceMotion ? 0 : 0.65,
+              duration: reduceMotion ? 0 : 0.4,
               ease,
             }}
           >
             <div className="mobile-menu-inner">
-              <div className="mobile-menu-top">
-                <span>DISETO — INTERIOR DESIGN</span>
-                <span>MENU / 2026</span>
-              </div>
+              <span className="mobile-menu-label">
+                DISETO — INTERIOR DESIGN
+              </span>
 
               <nav className="mobile-menu-links">
                 {links.map((link, index) => (
                   <motion.a
-                    key={link.number}
+                    key={link.label}
                     href={link.href}
                     className="mobile-menu-link"
                     onClick={(e) => navigateTo(e, link.href)}
-                    initial={{ opacity: 0, y: 35 }}
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{
-                      duration: reduceMotion ? 0 : 0.5,
-                      delay: reduceMotion ? 0 : 0.12 + index * 0.1,
+                      duration: reduceMotion ? 0 : 0.4,
+                      delay: reduceMotion ? 0 : 0.08 * index,
                       ease,
                     }}
                   >
-                    <span className="mobile-link-number">
-                      {link.number}
-                    </span>
-
-                    <span className="mobile-link-title">
-                      {link.label}
-                    </span>
-
-                    <ArrowUpRight
-                      className="mobile-link-arrow"
-                      size={24}
-                      strokeWidth={1}
-                    />
+                    {link.label}
                   </motion.a>
                 ))}
               </nav>
 
-              <motion.div
-                className="mobile-menu-bottom"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{
-                  delay: reduceMotion ? 0 : 0.5,
-                  duration: 0.5,
-                }}
-              >
+              <div className="mobile-menu-bottom">
                 <span>DESIGNED WITH PURPOSE.</span>
                 <span>© DISETO</span>
-              </motion.div>
+              </div>
             </div>
           </motion.div>
         )}
@@ -187,15 +156,18 @@ export function Navigation() {
         }
 
         .site-logo {
-          color: #28231e;
-          font-family: Georgia, serif;
-          font-size: 30px;
-          letter-spacing: -1.5px;
+          display: flex;
+          align-items: center;
           text-decoration: none;
         }
 
-        .site-logo span {
-          color: #a89576;
+        .site-logo img {
+          display: block;
+          width: 105px;
+          height: auto;
+          max-height: 48px;
+          object-fit: contain;
+          object-position: left center;
         }
 
         .desktop-nav {
@@ -220,10 +192,9 @@ export function Navigation() {
           display: none;
           align-items: center;
           justify-content: center;
-          width: 46px;
-          height: 46px;
-          border: 1px solid #ded8cd;
-          border-radius: 50%;
+          width: 42px;
+          height: 42px;
+          border: none;
           background: transparent;
           color: #28231e;
           cursor: pointer;
@@ -243,9 +214,7 @@ export function Navigation() {
           z-index: 100000;
           width: 100%;
           height: 100dvh;
-          min-height: 500px;
-          overflow-y: auto;
-          background: #f0ece3;
+          background: #f7f4ed;
           color: #28231e;
         }
 
@@ -254,82 +223,64 @@ export function Navigation() {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
-          padding: 115px 8% 35px;
+          padding: 125px 8% 35px;
         }
 
-        .mobile-menu-top,
-        .mobile-menu-bottom {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          gap: 15px;
-          color: #8b857b;
+        .mobile-menu-label {
+          color: #777168;
           font-family: Arial, sans-serif;
           font-size: 9px;
-          letter-spacing: 1.8px;
+          font-weight: 500;
+          letter-spacing: 2px;
         }
 
         .mobile-menu-links {
           width: 100%;
           margin: 55px 0;
+          border-top: 1px solid #ded8cd;
         }
 
         .mobile-menu-link {
-          position: relative;
-          display: grid;
-          grid-template-columns: 38px 1fr 28px;
-          align-items: center;
-          gap: 12px;
-          padding: 24px 0;
-          border-bottom: 1px solid #d6cfc2;
+          display: block;
+          padding: 25px 0;
+          border-bottom: 1px solid #ded8cd;
           color: #28231e;
-          text-decoration: none;
-          transition: padding 0.35s ease;
-        }
-
-        .mobile-menu-link:first-child {
-          border-top: 1px solid #d6cfc2;
-        }
-
-        .mobile-menu-link:active {
-          padding-left: 8px;
-        }
-
-        .mobile-link-number {
-          align-self: start;
-          padding-top: 9px;
-          color: #a89576;
-          font-family: Arial, sans-serif;
-          font-size: 10px;
-          letter-spacing: 1px;
-        }
-
-        .mobile-link-title {
           font-family: Georgia, serif;
-          font-size: clamp(43px, 12vw, 66px);
+          font-size: clamp(43px, 12vw, 62px);
           font-weight: 400;
-          letter-spacing: -2.5px;
+          letter-spacing: -2px;
           line-height: 1;
+          text-decoration: none;
+          transition: color 0.3s ease, padding-left 0.3s ease;
         }
 
-        .mobile-link-arrow {
+        .mobile-menu-link:hover,
+        .mobile-menu-link:active {
           color: #a89576;
-          transition: transform 0.3s ease;
-        }
-
-        .mobile-menu-link:active .mobile-link-arrow {
-          transform: translate(4px, -4px);
+          padding-left: 6px;
         }
 
         .mobile-menu-bottom {
+          display: flex;
+          justify-content: space-between;
+          gap: 12px;
           padding-top: 22px;
-          border-top: 1px solid #d6cfc2;
+          border-top: 1px solid #ded8cd;
+          color: #777168;
+          font-family: Arial, sans-serif;
+          font-size: 9px;
+          letter-spacing: 1.5px;
         }
 
         @media (max-width: 768px) {
           .site-header {
             height: 72px;
             padding: 0 6%;
+          }
+
+          .site-logo img {
+            width: 90px;
+            max-height: 42px;
           }
 
           .desktop-nav {
@@ -353,15 +304,8 @@ export function Navigation() {
             padding-right: 6%;
           }
 
-          .mobile-link-title {
+          .mobile-menu-link {
             font-size: 42px;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .mobile-menu-link,
-          .mobile-link-arrow {
-            transition: none;
           }
         }
       `}</style>

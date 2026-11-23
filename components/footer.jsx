@@ -1,29 +1,24 @@
 
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className=" text-[#28231e] border-t border-[#28231e]/10">
-      <div className="max-w-[1400px] mx-auto px-6 md:px-12 py-8">
+    <footer className="border-t border-[#28231e]/10 bg-[#f7f4ed] text-[#28231e]">
+      <div className="mx-auto max-w-[1400px] px-6 py-8 md:px-12">
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-
-          {/* Logo */}
-          <Link
-            href="/"
-            className="text-xl tracking-[0.18em] font-medium"
-          >
-            DiSeto<span className="text-[#a89576]">.</span>
+        {/* Logo */}
+        <div className="flex items-center justify-center md:justify-start">
+          <Link href="/" aria-label="DiSeto homepage">
+            <img
+              src="/images/logo.jpg"
+              alt="DiSeto"
+              className="h-auto w-[90px] max-h-[42px] object-contain"
+            />
           </Link>
-
-          
-
-          
         </div>
 
         {/* Bottom */}
-        <div className="mt-7 pt-5 border-t border-[#28231e]/10 flex flex-col md:flex-row justify-between items-center gap-3 text-[10px] tracking-[0.08em] text-[#28231e]/45">
+        <div className="mt-7 flex flex-col items-center justify-between gap-3 border-t border-[#ded8cd] pt-5 text-center text-[10px] tracking-[0.08em] text-[#777168] md:flex-row md:text-left">
           <p>© 2026 DiSeto. All rights reserved.</p>
           <p>Designed with intention.</p>
         </div>
