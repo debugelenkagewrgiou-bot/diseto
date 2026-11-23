@@ -68,7 +68,6 @@ export default function Lookbook() {
       active === "Όλα τα έργα" || project.type === active
   );
 
-  // SCROLL REVEAL ANIMATION
   useEffect(() => {
     const elements = document.querySelectorAll(".lookbook-reveal");
 
@@ -103,7 +102,6 @@ export default function Lookbook() {
     return () => observer.disconnect();
   }, [active]);
 
-  // LIGHTBOX ΚΑΙ ΠΛΟΗΓΗΣΗ ΜΕ ΠΛΗΚΤΡΟΛΟΓΙΟ
   useEffect(() => {
     if (!selected) return;
 
@@ -663,17 +661,17 @@ export default function Lookbook() {
           white-space: nowrap;
         }
 
-        /* MANIFESTO */
+        /* MANIFESTO - ΣΚΟΥΡΟ ΜΠΟΡΝΤΟ */
 
         .lookbook-manifesto {
-          background: #1c1b19;
-          color: #f3efe8;
-          border-top: 1px solid #39352f;
+          background: #351019;
+          color: #f7f4ed;
+          border-top: 1px solid rgba(255, 255, 255, 0.1);
           padding: 95px 6.5% 110px;
         }
 
         .lookbook-manifesto .lookbook-eyebrow {
-          color: #b9a486;
+          color: #c5a47d;
         }
 
         .lookbook-manifesto-copy {
@@ -681,7 +679,7 @@ export default function Lookbook() {
         }
 
         .lookbook-manifesto-copy p {
-          color: #f3efe8;
+          color: #f7f4ed;
           font: 400 clamp(32px, 5vw, 65px)/1.15 Georgia, serif;
           letter-spacing: -0.045em;
           margin: 0 0 35px;
@@ -690,13 +688,13 @@ export default function Lookbook() {
         .lookbook-manifesto-copy span {
           display: block;
           max-width: 600px;
-          color: #aaa49a;
+          color: #d1c1bd;
           font: 14px/2 Arial, sans-serif;
         }
 
         .lookbook-manifesto .lookbook-text-link {
-          color: #c5ad89;
-          border-bottom: 1px solid #c5ad89;
+          color: #c5a47d;
+          border-bottom: 1px solid #c5a47d;
         }
 
         .lookbook-manifesto .lookbook-text-link:hover {
