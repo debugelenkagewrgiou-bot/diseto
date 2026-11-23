@@ -41,16 +41,23 @@ export default function Hero() {
 
       <div className="hero-bottom">
         <span>Σχεδιασμός με ταυτότητα</span>
-        <span>SCROLL TO EXPLORE </span>
+        <span>SCROLL TO EXPLORE</span>
       </div>
 
       <style jsx>{`
         .hero {
           color: #28231e;
           background: #f7f4ed;
+          min-height: 100vh;
+          overflow: hidden;
+        }
+
+        .hero-content {
+          font-family: Georgia, serif;
         }
 
         .hero-eyebrow {
+          display: block;
           color: #a89576;
           font-family: Arial, Helvetica, sans-serif;
           font-size: 11px;
