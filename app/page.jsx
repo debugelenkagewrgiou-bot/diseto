@@ -7,6 +7,7 @@ import Footer from "@/components/footer";
 import Marquee from "@/components/marquee";
 // import CreativeUniverse from "@/components/creativeuniverse";
 import WhatWeDo from "@/components/whatwedo";
+import OurProcess from "@/components/process";
 
 export default function Home() {
   return (
@@ -15,6 +16,7 @@ export default function Home() {
       <Hero />
       <Marquee/>
       <WhatWeDo/>
+      <OurProcess/>
       {/* <CreativeUniverse/> */}
       <Projects />
       <ContactSection />

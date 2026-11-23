@@ -1,18 +1,10 @@
-
 "use client";
 
 import Link from "next/link";
 import { useEffect } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import { projects } from "@/components/project-data";
+import { ArrowLeft } from "lucide-react";
 
 export function ProjectDetail({ project }) {
-  const currentIndex = projects.findIndex(
-    (item) => item.slug === project.slug
-  );
-
-  const nextProject = projects[(currentIndex + 1) % projects.length];
-
   useEffect(() => {
     const elements = document.querySelectorAll(".project-reveal");
 
@@ -84,6 +76,18 @@ export function ProjectDetail({ project }) {
           background: #a89576;
           color: #fff;
         }
+
+        @media (prefers-reduced-motion: reduce) {
+          .project-reveal {
+            opacity: 1;
+            transform: none;
+            transition: none;
+          }
+
+          .project-image img {
+            transition: none;
+          }
+        }
       `}</style>
 
       {/* HEADER */}
@@ -93,13 +97,13 @@ export function ProjectDetail({ project }) {
           className="flex items-center gap-3 text-[#28231e]"
         >
           <ArrowLeft size={17} strokeWidth={1.4} />
-          <span className="text-[11px] uppercase tracking-[0.18em]">
-            Home
+          <span className="text-[11px] tracking-[0.18em]">
+            ΑΡΧΙΚΗ
           </span>
         </Link>
 
         <Link
-          href="/#projects"
+          href="/"
           className="font-serif text-2xl tracking-[0.12em] text-[#28231e]"
         >
           DiSeto
@@ -107,9 +111,9 @@ export function ProjectDetail({ project }) {
 
         <Link
           href="/#projects"
-          className="project-link text-[11px] uppercase tracking-[0.18em] text-[#777168]"
+          className="project-link text-[11px] tracking-[0.18em] text-[#777168]"
         >
-          All projects
+          ΟΛΑ ΤΑ ΕΡΓΑ
         </Link>
       </header>
 
@@ -119,7 +123,7 @@ export function ProjectDetail({ project }) {
           <div className="project-reveal mb-8 flex items-center gap-3">
             <span className="h-[1px] w-8 bg-[#a89576]" />
 
-            <span className="text-[10px] uppercase tracking-[0.25em] text-[#8b857b]">
+            <span className="text-[10px] tracking-[0.25em] text-[#8b857b]">
               {project.category}
             </span>
           </div>
@@ -155,18 +159,18 @@ export function ProjectDetail({ project }) {
           <div className="mx-auto max-w-[1400px]">
             <div className="project-reveal mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
               <div>
-                <span className="mb-5 block text-[10px] uppercase tracking-[0.25em] text-[#a89576]">
-                  Project details
+                <span className="mb-5 block text-[10px] tracking-[0.25em] text-[#a89576]">
+                  ΛΕΠΤΟΜΕΡΕΙΕΣ ΕΡΓΟΥ
                 </span>
 
                 <h2 className="text-4xl tracking-[-0.03em] md:text-6xl">
-                  Selected images
+                  Επιλεγμένες φωτογραφίες
                 </h2>
               </div>
 
               <p className="max-w-sm text-sm leading-7 text-[#777168]">
-                A closer look at the details, materials and design behind
-                this project.
+                Μια πιο κοντινή ματιά στις λεπτομέρειες, τα υλικά
+                και τον σχεδιασμό αυτού του έργου.
               </p>
             </div>
 
@@ -182,7 +186,7 @@ export function ProjectDetail({ project }) {
                     src={typeof image === "string" ? image : image.src}
                     alt={
                       typeof image === "string"
-                        ? `${project.title} project`
+                        ? `${project.title} - φωτογραφία ${index + 1}`
                         : image.alt || project.title
                     }
                     className="aspect-[1.15] h-full w-full object-cover"
@@ -194,42 +198,42 @@ export function ProjectDetail({ project }) {
         </section>
       )}
 
-      {/* STORY */}
+      {/* STORY - DARK BURGUNDY */}
       {(project.storyEyebrow ||
         project.storyTitle ||
         project.storyDescription ||
         project.story?.length > 0) && (
-        <section className="bg-[#f0ece3] px-6 py-20 md:px-12 md:py-32 lg:px-20">
+        <section className="bg-[#351019] px-6 py-20 text-[#f7f4ed] md:px-12 md:py-32 lg:px-20">
           <div className="mx-auto max-w-[1400px]">
             <div className="project-reveal mb-16 max-w-3xl md:mb-24">
               {project.storyEyebrow && (
-                <span className="mb-6 block text-[10px] uppercase tracking-[0.25em] text-[#a89576]">
+                <span className="mb-6 block text-[10px] tracking-[0.25em] text-[#c5a47d]">
                   {project.storyEyebrow}
                 </span>
               )}
 
               {project.storyTitle && (
-                <h2 className="text-4xl leading-[1.12] tracking-[-0.03em] md:text-6xl">
+                <h2 className="text-4xl leading-[1.12] tracking-[-0.03em] text-[#f7f4ed] md:text-6xl">
                   {project.storyTitle}
                 </h2>
               )}
 
               {project.storyDescription && (
-                <p className="mt-8 max-w-2xl text-sm leading-8 text-[#777168] md:text-base">
+                <p className="mt-8 max-w-2xl text-sm leading-8 text-[#d1c1bd] md:text-base">
                   {project.storyDescription}
                 </p>
               )}
             </div>
 
             {project.story?.length > 0 && (
-              <div className="grid grid-cols-1 gap-12 border-t border-[#ded8cd] pt-12 md:grid-cols-2 md:gap-x-20 md:gap-y-16">
+              <div className="grid grid-cols-1 gap-12 border-t border-white/20 pt-12 md:grid-cols-2 md:gap-x-20 md:gap-y-16">
                 {project.story.map((chapter, index) => (
                   <article key={index} className="project-reveal">
-                    <h3 className="mb-5 text-2xl tracking-[-0.02em] md:text-3xl">
+                    <h3 className="mb-5 text-2xl tracking-[-0.02em] text-[#f7f4ed] md:text-3xl">
                       {chapter.title}
                     </h3>
 
-                    <p className="max-w-xl text-sm leading-8 text-[#777168]">
+                    <p className="max-w-xl text-sm leading-8 text-[#d1c1bd]">
                       {chapter.text}
                     </p>
                   </article>
@@ -239,40 +243,6 @@ export function ProjectDetail({ project }) {
           </div>
         </section>
       )}
-
-      {/* NEXT PROJECT
-      {nextProject && nextProject.slug !== project.slug && (
-        <section className="px-6 py-24 md:px-12 md:py-32 lg:px-20">
-          <div className="project-reveal mx-auto max-w-[1400px]">
-            <span className="mb-8 block text-[10px] uppercase tracking-[0.25em] text-[#a89576]">
-              Continue exploring
-            </span>
-
-            <Link
-              href={`/projects/${nextProject.slug}`}
-              className="group flex flex-col justify-between gap-8 border-b border-[#ded8cd] pb-10 md:flex-row md:items-end"
-            >
-              <div>
-                <span className="mb-4 block text-[10px] uppercase tracking-[0.2em] text-[#8b857b]">
-                  Next project
-                </span>
-
-                <h2 className="text-5xl tracking-[-0.04em] transition-colors duration-300 group-hover:text-[#a89576] md:text-7xl lg:text-8xl">
-                  {nextProject.title}
-                </h2>
-
-                <span className="mt-5 block text-xs uppercase tracking-[0.15em] text-[#8b857b]">
-                  {nextProject.category}
-                </span>
-              </div>
-
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full border border-[#ded8cd] transition-all duration-300 group-hover:border-[#a89576] group-hover:bg-[#a89576] group-hover:text-white">
-                <ArrowRight size={20} strokeWidth={1.3} />
-              </span>
-            </Link>
-          </div>
-        </section> */}
-      
     </main>
   );
 }

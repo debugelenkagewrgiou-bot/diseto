@@ -2,13 +2,20 @@
 "use client";
 
 import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+} from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 const links = [
-  { label: "HOME", href: "#home" },
-  { label: "PROJECTS", href: "#projects" },
-  { label: "CONTACT", href: "#contact" },
+  { label: "ΑΡΧΙΚΗ", href: "/#home" },
+  { label: "PROJECTS", href: "/#projects" },
+  { label: "ΠΟΙΟΙ ΕΙΜΑΣΤΕ", href: "/#what-we-do" },
+  { label: "LOOKBOOK", href: "/lookbook" },
+  { label: "ΕΠΙΚΟΙΝΩΝΙΑ", href: "/#contact" },
 ];
 
 const ease = [0.22, 1, 0.36, 1];
@@ -16,12 +23,30 @@ const ease = [0.22, 1, 0.36, 1];
 export function Navigation() {
   const [open, setOpen] = useState(false);
   const reduceMotion = useReducedMotion();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const navigateTo = (event, href) => {
     event.preventDefault();
     setOpen(false);
 
-    if (href === "#home") {
+    // Ξεχωριστή σελίδα Lookbook
+    if (href === "/lookbook") {
+      if (pathname !== "/lookbook") {
+        router.push("/lookbook");
+      }
+      return;
+    }
+
+    // Μετάβαση σε σελίδα ή section της αρχικής
+    const hash = href.split("#")[1];
+
+    if (pathname !== "/") {
+      router.push(href);
+      return;
+    }
+
+    if (!hash || hash === "home") {
       window.scrollTo({
         top: 0,
         behavior: reduceMotion ? "auto" : "smooth",
@@ -29,19 +54,27 @@ export function Navigation() {
       return;
     }
 
-    document.querySelector(href)?.scrollIntoView({
-      behavior: reduceMotion ? "auto" : "smooth",
-      block: "start",
-    });
+    const target = document.getElementById(hash);
+
+    if (target) {
+      target.scrollIntoView({
+        behavior: reduceMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    }
   };
+
+  const closeMenu = () => setOpen(false);
 
   return (
     <>
       <header className="site-header">
+        {/* LOGO */}
         <a
-          href="#home"
+          href="/#home"
           className="site-logo"
-          onClick={(e) => navigateTo(e, "#home")}
+          onClick={(e) => navigateTo(e, "/#home")}
+          aria-label="DiSeto Home"
         >
           <img
             src="/images/logo.jpg"
@@ -51,28 +84,41 @@ export function Navigation() {
             fetchPriority="high"
             style={{
               display: "block",
-              width: 90,
-              height: 42,
+              width: "90px",
+              height: "42px",
               objectFit: "contain",
               objectPosition: "left center",
             }}
           />
         </a>
 
-        <nav className="desktop-nav">
+        {/* DESKTOP NAVIGATION */}
+        <nav className="desktop-nav" aria-label="Main navigation">
           {links.map((link) => (
             <a
               key={link.label}
               href={link.href}
               onClick={(e) => navigateTo(e, link.href)}
+              className={
+                pathname === "/lookbook" && link.href === "/lookbook"
+                  ? "nav-active"
+                  : ""
+              }
+              aria-current={
+                pathname === "/lookbook" && link.href === "/lookbook"
+                  ? "page"
+                  : undefined
+              }
             >
               {link.label}
             </a>
           ))}
         </nav>
 
+        {/* MOBILE TOGGLE */}
         <button
           className="menu-toggle"
+          type="button"
           onClick={() => setOpen((prev) => !prev)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
@@ -86,6 +132,7 @@ export function Navigation() {
         </button>
       </header>
 
+      {/* MOBILE MENU */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -100,9 +147,10 @@ export function Navigation() {
           >
             <div className="mobile-menu-header">
               <a
-                href="#home"
-                onClick={(e) => navigateTo(e, "#home")}
+                href="/#home"
+                onClick={(e) => navigateTo(e, "/#home")}
                 className="mobile-menu-logo"
+                aria-label="DiSeto Home"
               >
                 <img
                   src="/images/logo.jpg"
@@ -111,8 +159,8 @@ export function Navigation() {
                   height="42"
                   style={{
                     display: "block",
-                    width: 90,
-                    height: 42,
+                    width: "90px",
+                    height: "42px",
                     objectFit: "contain",
                     objectPosition: "left center",
                   }}
@@ -121,7 +169,8 @@ export function Navigation() {
 
               <button
                 className="mobile-close"
-                onClick={() => setOpen(false)}
+                type="button"
+                onClick={closeMenu}
                 aria-label="Close menu"
               >
                 <X size={24} strokeWidth={1.3} />
@@ -133,12 +182,20 @@ export function Navigation() {
                 DISETO — INTERIOR DESIGN
               </span>
 
-              <nav className="mobile-menu-links">
+              <nav
+                className="mobile-menu-links"
+                aria-label="Mobile navigation"
+              >
                 {links.map((link, index) => (
                   <motion.a
                     key={link.label}
                     href={link.href}
-                    className="mobile-menu-link"
+                    className={`mobile-menu-link ${
+                      pathname === "/lookbook" &&
+                      link.href === "/lookbook"
+                        ? "nav-active"
+                        : ""
+                    }`}
                     onClick={(e) => navigateTo(e, link.href)}
                     initial={{ opacity: 0, x: -15 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -209,15 +266,35 @@ export function Navigation() {
         }
 
         .desktop-nav a {
+          position: relative;
           color: #28231e;
+          font-family: Arial, sans-serif;
           font-size: 10px;
+          font-weight: 500;
           letter-spacing: 2px;
           text-decoration: none;
           transition: color 0.3s ease;
         }
 
-        .desktop-nav a:hover {
+        .desktop-nav a::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          bottom: -7px;
+          width: 0;
+          height: 1px;
+          background: #a89576;
+          transition: width 0.3s ease;
+        }
+
+        .desktop-nav a:hover,
+        .desktop-nav a.nav-active {
           color: #a89576;
+        }
+
+        .desktop-nav a:hover::after,
+        .desktop-nav a.nav-active::after {
+          width: 100%;
         }
 
         .menu-toggle {
@@ -323,11 +400,14 @@ export function Navigation() {
           line-height: 1.1;
           text-decoration: none;
           opacity: 1;
-          transition: color 0.25s ease, padding-left 0.25s ease;
+          transition:
+            color 0.25s ease,
+            padding-left 0.25s ease;
         }
 
         .mobile-menu-link:hover,
-        .mobile-menu-link:active {
+        .mobile-menu-link:active,
+        .mobile-menu-link.nav-active {
           color: #a89576 !important;
           padding-left: 7px;
         }
@@ -377,6 +457,14 @@ export function Navigation() {
 
           .mobile-menu-bottom {
             padding-top: 12px;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .desktop-nav a,
+          .desktop-nav a::after,
+          .mobile-menu-link {
+            transition: none;
           }
         }
       `}</style>

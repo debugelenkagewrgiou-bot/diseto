@@ -2,11 +2,12 @@
 "use client";
 
 const items = [
-  "STRATEGY",
-  "BRANDING",
-  "DIGITAL DESIGN",
-  "CREATIVE DIRECTION",
-  "VISUAL EXPERIENCES",
+  "ΣΧΕΔΙΑΣΜΟΣ",
+  "ΞΥΛΙΝΕΣ ΚΑΤΑΣΚΕΥΕΣ",
+  "ΕΙΔΙΚΕΣ ΔΗΜΙΟΥΡΓΙΕΣ",
+  "ΕΠΙΠΛΑ ΚΑΤΑ ΠΑΡΑΓΓΕΛΙΑ",
+  "ΕΣΩΤΕΡΙΚΟΙ ΧΩΡΟΙ",
+  "ΠΟΙΟΤΗΤΑ",
 ];
 
 export default function Marquee() {
@@ -14,29 +15,10 @@ export default function Marquee() {
 
   return (
     <section
-      aria-label="DiSeto services"
+      aria-label="Οι υπηρεσίες της DiSeto"
       className="relative w-full overflow-hidden bg-[#f7f4ed] px-6 pb-12 pt-24 text-[#28231e] sm:px-10 sm:pb-16 sm:pt-32 lg:pt-40"
     >
-      {/* Intro above marquee */}
-      <div className="mx-auto mb-10 flex max-w-[1500px] items-end justify-between gap-6 sm:mb-14">
-        <div>
-          <span className="mb-4 block font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-[#a89576]">
-          
-          </span>
-
-          <h2 className="font-serif text-3xl font-normal leading-tight tracking-[-0.045em] sm:text-5xl lg:text-6xl">
-            
-            <br />
-            <span className="text-[#a89576]"></span>
-          </h2>
-        </div>
-
-        <span className="hidden pb-2 font-sans text-[9px] tracking-[0.16em] text-[#777168] sm:block">
-        
-        </span>
-      </div>
-
-      {/* Marquee strip */}
+      {/* MARQUEE */}
       <div className="border-y border-[#28231e]/15 py-7 sm:py-9 lg:py-11">
         <div className="marquee-track flex w-max items-center">
           {repeatedItems.map((item, index) => (
@@ -60,10 +42,9 @@ export default function Marquee() {
         </div>
       </div>
 
-      {/* Bottom caption */}
+      {/* BOTTOM CAPTION */}
       <div className="mx-auto mt-5 flex max-w-[1500px] justify-between font-sans text-[9px] tracking-[0.15em] text-[#777168]">
-        <span></span>
-        <span></span>
+        
       </div>
 
       <style jsx>{`

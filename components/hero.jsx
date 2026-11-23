@@ -20,13 +20,13 @@ export default function Hero() {
 
       <div className="hero-content">
         <span className="hero-eyebrow">
-          Design που δίνει χαρακτήρα στον χώρο.
+          Σχεδιασμός που δίνει χαρακτήρα στον χώρο.
         </span>
 
         <h1>
-          DESIGN THAT DEFINES
+          ΣΧΕΔΙΑΣΜΟΣ ΠΟΥ
           <br />
-          <span>YOUR SPACE.</span>
+          <span>ΞΕΧΩΡΙΖΕΙ.</span>
         </h1>
       </div>
 
@@ -40,8 +40,8 @@ export default function Hero() {
       </div>
 
       <div className="hero-bottom">
-        <span>Σχεδιασμός με ταυτότητα</span>
-        <span>SCROLL TO EXPLORE</span>
+        <span>Αισθητική με ταυτότητα</span>
+        <span>ΚΑΝΤΕ ΚΥΛΙΣΗ ΓΙΑ ΝΑ ΑΝΑΚΑΛΥΨΕΤΕ</span>
       </div>
 
       <style jsx>{`

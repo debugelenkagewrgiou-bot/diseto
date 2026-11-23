@@ -88,7 +88,6 @@ function VideoCard({ project, isHovered, onHoverChange, onClick }) {
 
     if (isHovered && project.video) {
       video.currentTime = 0;
-
       const playPromise = video.play();
       if (playPromise) playPromise.catch(() => {});
     } else {
@@ -216,6 +215,28 @@ export default function Projects() {
         <div className="mt-8 flex w-full flex-col items-center justify-between gap-3 text-center font-sans text-[9px] font-medium tracking-[0.16em] text-[#999184] sm:flex-row">
           <span>HOVER TO EXPLORE</span>
           <span>CLICK TO DISCOVER</span>
+        </div>
+
+        {/* PORTFOLIO BUTTON */}
+        <div className="mt-16 flex flex-col items-center sm:mt-20">
+          <span className="mb-5 text-[9px] font-medium tracking-[0.25em] text-[#999184]">
+            DISCOVER MORE OF DISETO
+          </span>
+
+          <button
+            onClick={() => router.push("/lookbook")}
+            className="group relative inline-flex items-center gap-8 overflow-hidden border border-[#a89576] px-8 py-5 text-[10px] font-medium tracking-[0.2em] text-[#28231e] transition-all duration-500 hover:border-[#a89576] hover:text-[#f7f4ed] sm:px-12"
+          >
+            <span className="absolute inset-0 origin-left scale-x-0 bg-[#a89576] transition-transform duration-500 ease-out group-hover:scale-x-100" />
+
+            <span className="relative z-10">
+              ΑΝΑΚΑΛΥΨΤΕ ΟΛΟ ΤΟ PORTFOLIO
+            </span>
+
+            <span className="relative z-10 text-lg transition-transform duration-500 group-hover:translate-x-2 group-hover:-translate-y-1">
+              ↗
+            </span>
+          </button>
         </div>
       </div>
     </section>
