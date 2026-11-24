@@ -3,6 +3,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/components/languagecontext";
 
 const projects = [
   {
@@ -79,7 +80,13 @@ function CustomCursor({ isActive }) {
   );
 }
 
-function VideoCard({ project, isHovered, onHoverChange, onClick }) {
+function VideoCard({
+  project,
+  isHovered,
+  onHoverChange,
+  onClick,
+  exploreText,
+}) {
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -107,7 +114,7 @@ function VideoCard({ project, isHovered, onHoverChange, onClick }) {
       }}
       role="link"
       tabIndex={0}
-      aria-label={`View ${project.title} projects`}
+      aria-label={`${exploreText} ${project.title}`}
       className={`group relative h-[420px] min-w-[78vw] flex-1 cursor-none overflow-hidden rounded-[2rem] transition-[flex,opacity,box-shadow] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] sm:h-[500px] sm:min-w-[320px] lg:h-[600px] ${
         isHovered
           ? "lg:flex-[2] lg:shadow-2xl lg:shadow-black/10"
@@ -165,7 +172,7 @@ function VideoCard({ project, isHovered, onHoverChange, onClick }) {
 
           <div className="mt-3 flex items-center justify-between border-t border-[#f7f4ed]/40 pt-3">
             <span className="font-sans text-[10px] font-medium tracking-[0.15em] text-[#f7f4ed]/90">
-              EXPLORE PROJECTS
+              {exploreText}
             </span>
             <span className="text-xl text-[#a89576]">↗</span>
           </div>
@@ -178,6 +185,30 @@ function VideoCard({ project, isHovered, onHoverChange, onClick }) {
 export default function Projects() {
   const [hoveredId, setHoveredId] = useState(null);
   const router = useRouter();
+  const { language } = useLanguage();
+
+  const content = {
+    el: {
+      description:
+        "Ανακαλύψτε έργα που συνδυάζουν σύγχρονο σχεδιασμό, ποιότητα και διαχρονική αισθητική.",
+      explore: "ΕΞΕΡΕΥΝΗΣΤΕ ΤΑ ΕΡΓΑ",
+      hover: "ΠΕΡΑΣΤΕ ΤΟΝ ΔΕΙΚΤΗ ΓΙΑ ΠΡΟΒΟΛΗ",
+      click: "ΚΑΝΤΕ ΚΛΙΚ ΓΙΑ ΝΑ ΑΝΑΚΑΛΥΨΕΤΕ",
+      discover: "ΑΝΑΚΑΛΥΨΤΕ ΠΕΡΙΣΣΟΤΕΡΑ ΑΠΟ ΤΗ DISETO",
+      portfolio: "ΑΝΑΚΑΛΥΨΤΕ ΟΛΟ ΤΟ PORTFOLIO",
+    },
+    en: {
+      description:
+        "Discover projects that combine contemporary design, quality and timeless aesthetics.",
+      explore: "EXPLORE PROJECTS",
+      hover: "HOVER TO EXPLORE",
+      click: "CLICK TO DISCOVER",
+      discover: "DISCOVER MORE OF DISETO",
+      portfolio: "DISCOVER THE FULL PORTFOLIO",
+    },
+  };
+
+  const t = content[language] || content.el;
 
   return (
     <section
@@ -193,8 +224,7 @@ export default function Projects() {
           </h2>
 
           <span className="mt-5 max-w-xl font-sans text-sm font-normal leading-7 text-[#777168]">
-            Ανακαλύψτε έργα που συνδυάζουν σύγχρονο σχεδιασμό,
-            ποιότητα και διαχρονική αισθητική.
+            {t.description}
           </span>
         </div>
 
@@ -208,19 +238,19 @@ export default function Projects() {
                 setHoveredId(hovered ? project.id : null)
               }
               onClick={() => router.push(`/projects/${project.slug}`)}
+              exploreText={t.explore}
             />
           ))}
         </div>
 
         <div className="mt-8 flex w-full flex-col items-center justify-between gap-3 text-center font-sans text-[9px] font-medium tracking-[0.16em] text-[#999184] sm:flex-row">
-          <span>HOVER TO EXPLORE</span>
-          <span>CLICK TO DISCOVER</span>
+          <span>{t.hover}</span>
+          <span>{t.click}</span>
         </div>
 
-        {/* PORTFOLIO BUTTON */}
         <div className="mt-16 flex flex-col items-center sm:mt-20">
           <span className="mb-5 text-[9px] font-medium tracking-[0.25em] text-[#999184]">
-            DISCOVER MORE OF DISETO
+            {t.discover}
           </span>
 
           <button
@@ -230,11 +260,11 @@ export default function Projects() {
             <span className="absolute inset-0 origin-left scale-x-0 bg-[#a89576] transition-transform duration-500 ease-out group-hover:scale-x-100" />
 
             <span className="relative z-10">
-              ΑΝΑΚΑΛΥΨΤΕ ΟΛΟ ΤΟ PORTFOLIO
+              {t.portfolio}
             </span>
 
             <span className="relative z-10 text-lg transition-transform duration-500 group-hover:translate-x-2 group-hover:-translate-y-1">
-              
+              ↗
             </span>
           </button>
         </div>

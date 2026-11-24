@@ -1,3 +1,4 @@
+
 export const projects = [
   {
     slug: "doors",
@@ -37,6 +38,38 @@ export const projects = [
         text: "Δημιουργούμε πόρτες με ανθεκτικότητα και διαχρονική αξία, συνδυάζοντας την εμπειρία μας με σύγχρονες μεθόδους παραγωγής.",
       },
     ],
+
+    translations: {
+      en: {
+        title: "DOORS",
+        category: "CUSTOM-MADE DOORS",
+        location: "BESPOKE DESIGN",
+
+        summary:
+          "Every door is a distinctive architectural element. We design solutions that combine aesthetics, functionality and outstanding craftsmanship.",
+
+        storyEyebrow: "THE ART OF DETAIL",
+        storyTitle: "More than just a door.",
+
+        storyDescription:
+          "At DiSeto, we see every door as an integral part of a space's architecture. Through carefully selected materials, modern production techniques and attention to detail, we create pieces that combine aesthetics with lasting durability.",
+
+        story: [
+          {
+            title: "DESIGN WITH IDENTITY",
+            text: "Clean lines, balanced proportions and contemporary aesthetics. Every door is designed to complement the character and personality of its space.",
+          },
+          {
+            title: "QUALITY IN EVERY DETAIL",
+            text: "Quality begins with the selection of materials and is completed through precision craftsmanship. We pay attention to every detail.",
+          },
+          {
+            title: "BUILT TO LAST",
+            text: "We create doors with durability and timeless value, combining our experience with modern production methods.",
+          },
+        ],
+      },
+    },
   },
 
   {
@@ -77,6 +110,38 @@ export const projects = [
         text: "Επιλέγουμε υλικά, αποχρώσεις και σχεδιαστικές γραμμές που διατηρούν την αισθητική τους στον χρόνο, χωρίς συμβιβασμούς στην ποιότητα.",
       },
     ],
+
+    translations: {
+      en: {
+        title: "WARDROBES",
+        category: "BESPOKE STORAGE SOLUTIONS",
+        location: "BESPOKE DESIGN",
+
+        summary:
+          "Wardrobes designed with attention to detail, ergonomics and the best use of space. Every piece is tailored to the needs and aesthetics of your home.",
+
+        storyEyebrow: "DESIGNED AROUND YOU",
+        storyTitle: "Where space meets functionality.",
+
+        storyDescription:
+          "At DiSeto, a well-designed storage space should offer more than practicality. We create bespoke solutions that make the most of every centimetre, organise everyday life and enhance the aesthetics of your surroundings.",
+
+        story: [
+          {
+            title: "DESIGNED FOR YOUR SPACE",
+            text: "Every space has its own needs. We create bespoke solutions tailored to your dimensions, requirements and personal style.",
+          },
+          {
+            title: "SMART FUNCTIONALITY",
+            text: "Ergonomics are at the heart of our design. Smart storage solutions and thoughtful organisation make everyday life simpler.",
+          },
+          {
+            title: "TIMELESS AESTHETICS",
+            text: "We select materials, colours and design lines that stand the test of time, without compromising on quality.",
+          },
+        ],
+      },
+    },
   },
 
   {
@@ -117,5 +182,37 @@ export const projects = [
         text: "Επενδύουμε στη διαχρονικότητα. Δημιουργούμε χώρους που ακολουθούν τις ανάγκες της ζωής και διατηρούν την αξία τους μέσα από τον χρόνο.",
       },
     ],
+
+    translations: {
+      en: {
+        title: "KITCHENS",
+        category: "BESPOKE KITCHENS",
+        location: "BESPOKE DESIGN",
+
+        summary:
+          "Kitchens that combine contemporary design, ergonomics and timeless aesthetics, creating spaces that are both beautiful and practical for everyday living.",
+
+        storyEyebrow: "THE HEART OF EVERY HOME",
+        storyTitle: "Designed to be lived in.",
+
+        storyDescription:
+          "The kitchen is a space for creativity, connection and everyday life. At DiSeto, we design kitchens that balance aesthetics and functionality, with a focus on material quality, ergonomics and timeless design identity.",
+
+        story: [
+          {
+            title: "FORM AND FUNCTION",
+            text: "We combine clean design lines with smart ergonomic solutions, creating kitchens that make everyday activities easier.",
+          },
+          {
+            title: "MATERIAL SELECTION",
+            text: "Material selection is central to our philosophy. We seek high-specification solutions, focusing on quality, durability and respect for the environment.",
+          },
+          {
+            title: "DESIGNED TO LAST",
+            text: "We believe in timeless design. We create spaces that adapt to the needs of everyday life and retain their value over time.",
+          },
+        ],
+      },
+    },
   },
 ];

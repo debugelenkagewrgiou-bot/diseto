@@ -9,14 +9,7 @@ import {
   useReducedMotion,
 } from "framer-motion";
 import { Menu, X } from "lucide-react";
-
-const links = [
-  { label: "ΑΡΧΙΚΗ", href: "/#home" },
-  { label: "PROJECTS", href: "/#projects" },
-  { label: "ΠΟΙΟΙ ΕΙΜΑΣΤΕ", href: "/#what-we-do" },
-  { label: "LOOKBOOK", href: "/lookbook" },
-  { label: "ΕΠΙΚΟΙΝΩΝΙΑ", href: "/#contact" },
-];
+import { useLanguage } from "@/components/languagecontext";
 
 const ease = [0.22, 1, 0.36, 1];
 
@@ -26,11 +19,35 @@ export function Navigation() {
   const router = useRouter();
   const pathname = usePathname();
 
+  const { language, setLanguage } = useLanguage();
+
+  const links = [
+    {
+      label: language === "el" ? "ΑΡΧΙΚΗ" : "HOME",
+      href: "/#home",
+    },
+    {
+      label: "PROJECTS",
+      href: "/#projects",
+    },
+    {
+      label: language === "el" ? "ΠΟΙΟΙ ΕΙΜΑΣΤΕ" : "ABOUT US",
+      href: "/#what-we-do",
+    },
+    {
+      label: "LOOKBOOK",
+      href: "/lookbook",
+    },
+    {
+      label: language === "el" ? "ΕΠΙΚΟΙΝΩΝΙΑ" : "CONTACT",
+      href: "/#contact",
+    },
+  ];
+
   const navigateTo = (event, href) => {
     event.preventDefault();
     setOpen(false);
 
-    // Ξεχωριστή σελίδα Lookbook
     if (href === "/lookbook") {
       if (pathname !== "/lookbook") {
         router.push("/lookbook");
@@ -38,7 +55,6 @@ export function Navigation() {
       return;
     }
 
-    // Μετάβαση σε σελίδα ή section της αρχικής
     const hash = href.split("#")[1];
 
     if (pathname !== "/") {
@@ -65,6 +81,30 @@ export function Navigation() {
   };
 
   const closeMenu = () => setOpen(false);
+
+  const LanguageSwitcher = () => (
+    <div className="language-switcher" aria-label="Select language">
+      <button
+        type="button"
+        onClick={() => setLanguage("el")}
+        className={language === "el" ? "language-active" : ""}
+        aria-pressed={language === "el"}
+      >
+        EL
+      </button>
+
+      <span>|</span>
+
+      <button
+        type="button"
+        onClick={() => setLanguage("en")}
+        className={language === "en" ? "language-active" : ""}
+        aria-pressed={language === "en"}
+      >
+        EN
+      </button>
+    </div>
+  );
 
   return (
     <>
@@ -93,27 +133,31 @@ export function Navigation() {
         </a>
 
         {/* DESKTOP NAVIGATION */}
-        <nav className="desktop-nav" aria-label="Main navigation">
-          {links.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              onClick={(e) => navigateTo(e, link.href)}
-              className={
-                pathname === "/lookbook" && link.href === "/lookbook"
-                  ? "nav-active"
-                  : ""
-              }
-              aria-current={
-                pathname === "/lookbook" && link.href === "/lookbook"
-                  ? "page"
-                  : undefined
-              }
-            >
-              {link.label}
-            </a>
-          ))}
-        </nav>
+        <div className="desktop-nav-wrap">
+          <nav className="desktop-nav" aria-label="Main navigation">
+            {links.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={(e) => navigateTo(e, link.href)}
+                className={
+                  pathname === "/lookbook" && link.href === "/lookbook"
+                    ? "nav-active"
+                    : ""
+                }
+                aria-current={
+                  pathname === "/lookbook" && link.href === "/lookbook"
+                    ? "page"
+                    : undefined
+                }
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          <LanguageSwitcher />
+        </div>
 
         {/* MOBILE TOGGLE */}
         <button
@@ -213,6 +257,7 @@ export function Navigation() {
 
             <div className="mobile-menu-bottom">
               <span>DESIGNED WITH PURPOSE.</span>
+              <LanguageSwitcher />
               <span>© DISETO</span>
             </div>
           </motion.div>
@@ -259,6 +304,12 @@ export function Navigation() {
           object-position: left center;
         }
 
+        .desktop-nav-wrap {
+          display: flex;
+          align-items: center;
+          gap: 30px;
+        }
+
         .desktop-nav {
           display: flex;
           align-items: center;
@@ -295,6 +346,33 @@ export function Navigation() {
         .desktop-nav a:hover::after,
         .desktop-nav a.nav-active::after {
           width: 100%;
+        }
+
+        .language-switcher {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #a49b8e;
+          font-family: Arial, sans-serif;
+          font-size: 10px;
+          letter-spacing: 1px;
+          white-space: nowrap;
+        }
+
+        .language-switcher button {
+          padding: 5px 0;
+          border: none;
+          background: transparent;
+          color: #777168;
+          font: inherit;
+          letter-spacing: inherit;
+          cursor: pointer;
+          transition: color 0.25s ease;
+        }
+
+        .language-switcher button:hover,
+        .language-switcher button.language-active {
+          color: #a89576;
         }
 
         .menu-toggle {
@@ -414,6 +492,7 @@ export function Navigation() {
 
         .mobile-menu-bottom {
           display: flex;
+          align-items: center;
           justify-content: space-between;
           gap: 10px;
           padding-top: 20px;
@@ -430,7 +509,7 @@ export function Navigation() {
             padding: 0 6%;
           }
 
-          .desktop-nav {
+          .desktop-nav-wrap {
             display: none;
           }
 

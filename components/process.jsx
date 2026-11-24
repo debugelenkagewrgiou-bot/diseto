@@ -1,59 +1,109 @@
+
 "use client";
 
-const steps = [
-  {
-    number: "01",
-    title: "Αρχική συνάντηση",
-    description:
-      "Συζητάμε τις ανάγκες σας, το προσωπικό σας στυλ, το διαθέσιμο budget και το χρονοδιάγραμμα. Καταγράφουμε τις απαιτήσεις του έργου και, εφόσον υπάρχει αρχιτέκτονας ή διακοσμητής, συνεργαζόμαστε μαζί του από την πρώτη στιγμή.",
+import { useLanguage } from "@/components/languagecontext";
+
+const content = {
+  el: {
+    topline: "DISETO — Η ΔΙΑΔΙΚΑΣΙΑ ΜΑΣ",
+    headingStart: "Από το",
+    headingHighlight: "σχέδιο",
+    headingEnd: "στην παράδοση.",
+    intro:
+      "Κάθε έργο ξεκινά με μια ιδέα. Με σωστή μελέτη, προσεγμένη κατασκευή και προσωπική φροντίδα, τη μετατρέπουμε σε έναν χώρο φτιαγμένο για εσάς.",
+    steps: [
+      {
+        number: "01",
+        title: "Αρχική συνάντηση",
+        description:
+          "Συζητάμε τις ανάγκες σας, το προσωπικό σας στυλ, το διαθέσιμο budget και το χρονοδιάγραμμα. Καταγράφουμε τις απαιτήσεις του έργου και, εφόσον υπάρχει αρχιτέκτονας ή διακοσμητής, συνεργαζόμαστε μαζί του από την πρώτη στιγμή.",
+      },
+      {
+        number: "02",
+        title: "Σχεδιασμός & προσφορά",
+        description:
+          "Μελετάμε τον χώρο και προχωράμε στον σχεδιασμό της κατασκευής. Ετοιμάζουμε τεχνικά σχέδια, προτείνουμε υλικά και φινιρίσματα και σας παρουσιάζουμε αναλυτική προσφορά, ώστε να γνωρίζετε κάθε λεπτομέρεια πριν ξεκινήσει η υλοποίηση.",
+      },
+      {
+        number: "03",
+        title: "Κατασκευή στο εργαστήριό μας",
+        description:
+          "Κάθε δημιουργία κατασκευάζεται στο εργαστήριό μας με σύγχρονα μηχανήματα ακριβείας και την εμπειρία των τεχνιτών μας. Η τεχνολογία εξασφαλίζει ακρίβεια στις διαστάσεις, ενώ το ανθρώπινο χέρι φροντίζει το φινίρισμα, τις λεπτομέρειες και το ταίριασμα στα νερά του ξύλου. Αν το επιθυμείτε, μπορείτε να επισκεφθείτε το εργαστήριό μας και να παρακολουθήσετε την εξέλιξη του έργου σας.",
+      },
+      {
+        number: "04",
+        title: "Τοποθέτηση & παράδοση",
+        description:
+          "Ολοκληρώνουμε το έργο με εξειδικευμένα συνεργεία τοποθέτησης, προσοχή σε κάθε λεπτομέρεια και συνέπεια στο συμφωνημένο χρονοδιάγραμμα. Παραδίδουμε τον χώρο σας έτοιμο, με την εγγύηση και την υποστήριξη της DiSeto.",
+      },
+    ],
+    bottomStart: "ΑΠΟ ΤΗΝ ΠΡΩΤΗ ΙΔΕΑ",
+    bottomEnd: "ΜΕΧΡΙ ΤΗΝ ΤΕΛΕΥΤΑΙΑ ΛΕΠΤΟΜΕΡΕΙΑ",
   },
-  {
-    number: "02",
-    title: "Σχεδιασμός & προσφορά",
-    description:
-      "Μελετάμε τον χώρο και προχωράμε στον σχεδιασμό της κατασκευής. Ετοιμάζουμε τεχνικά σχέδια, προτείνουμε υλικά και φινιρίσματα και σας παρουσιάζουμε αναλυτική προσφορά, ώστε να γνωρίζετε κάθε λεπτομέρεια πριν ξεκινήσει η υλοποίηση.",
+
+  en: {
+    topline: "DISETO — OUR PROCESS",
+    headingStart: "From",
+    headingHighlight: "concept",
+    headingEnd: "to completion.",
+    intro:
+      "Every project begins with an idea. Through thoughtful planning, meticulous craftsmanship and personal attention, we transform it into a space made for you.",
+    steps: [
+      {
+        number: "01",
+        title: "Initial consultation",
+        description:
+          "We discuss your needs, personal style, available budget and timeline. We define the project requirements and, if you are working with an architect or interior designer, we collaborate with them from the very beginning.",
+      },
+      {
+        number: "02",
+        title: "Design & proposal",
+        description:
+          "We study your space and develop the design of your project. We prepare technical drawings, recommend materials and finishes, and present a detailed proposal so you know every aspect before production begins.",
+      },
+      {
+        number: "03",
+        title: "Crafted in our workshop",
+        description:
+          "Every creation is made in our workshop using modern precision machinery and the expertise of our craftsmen. Technology ensures dimensional accuracy, while the human touch takes care of the finishing, details and natural wood grain matching. You are also welcome to visit our workshop and follow the progress of your project.",
+      },
+      {
+        number: "04",
+        title: "Installation & delivery",
+        description:
+          "We complete your project with specialized installation teams, attention to every detail and commitment to the agreed timeline. We deliver your space ready to enjoy, backed by DiSeto's warranty and ongoing support.",
+      },
+    ],
+    bottomStart: "FROM THE FIRST IDEA",
+    bottomEnd: "TO THE VERY LAST DETAIL",
   },
-  {
-    number: "03",
-    title: "Κατασκευή στο εργαστήριό μας",
-    description:
-      "Κάθε δημιουργία κατασκευάζεται στο εργαστήριό μας με σύγχρονα μηχανήματα ακριβείας και την εμπειρία των τεχνιτών μας. Η τεχνολογία εξασφαλίζει ακρίβεια στις διαστάσεις, ενώ το ανθρώπινο χέρι φροντίζει το φινίρισμα, τις λεπτομέρειες και το ταίριασμα στα νερά του ξύλου. Αν το επιθυμείτε, μπορείτε να επισκεφθείτε το εργαστήριό μας και να παρακολουθήσετε την εξέλιξη του έργου σας.",
-  },
-  {
-    number: "04",
-    title: "Τοποθέτηση & παράδοση",
-    description:
-      "Ολοκληρώνουμε το έργο με εξειδικευμένα συνεργεία τοποθέτησης, προσοχή σε κάθε λεπτομέρεια και συνέπεια στο συμφωνημένο χρονοδιάγραμμα. Παραδίδουμε τον χώρο σας έτοιμο, με την εγγύηση και την υποστήριξη της DiSeto.",
-  },
-];
+};
 
 export default function OurProcess() {
+  const { language } = useLanguage();
+  const t = content[language] || content.el;
+
   return (
     <section className="our-process">
       <div className="process-container">
 
         <div className="process-topline">
-          <span>DISETO — Η ΔΙΑΔΙΚΑΣΙΑ ΜΑΣ</span>
-          <span>ΑΠΟ ΤΟ 1982</span>
+          <span>{t.topline}</span>
+          <span>{language === "el" ? "ΑΠΟ ΤΟ 1982" : "SINCE 1982"}</span>
         </div>
 
         <div className="process-heading">
           <h2>
-            Από το <em>σχέδιο</em>
+            {t.headingStart} <em>{t.headingHighlight}</em>
             <br />
-            στην παράδοση.
+            {t.headingEnd}
           </h2>
 
-          <p>
-            Κάθε έργο ξεκινά με μια ιδέα.
-            Με σωστή μελέτη, προσεγμένη κατασκευή
-            και προσωπική φροντίδα, τη μετατρέπουμε
-            σε έναν χώρο φτιαγμένο για εσάς.
-          </p>
+          <p>{t.intro}</p>
         </div>
 
         <div className="process-list">
-          {steps.map((step) => (
+          {t.steps.map((step) => (
             <article className="process-step" key={step.number}>
               <span className="process-number">
                 {step.number}
@@ -65,15 +115,15 @@ export default function OurProcess() {
               </div>
 
               <span className="process-symbol" aria-hidden="true">
-                
+                ↗
               </span>
             </article>
           ))}
         </div>
 
         <div className="process-bottom">
-          <span>ΑΠΟ ΤΗΝ ΠΡΩΤΗ ΙΔΕΑ</span>
-          <span>ΜΕΧΡΙ ΤΗΝ ΤΕΛΕΥΤΑΙΑ ΛΕΠΤΟΜΕΡΕΙΑ</span>
+          <span>{t.bottomStart}</span>
+          <span>{t.bottomEnd}</span>
         </div>
 
       </div>

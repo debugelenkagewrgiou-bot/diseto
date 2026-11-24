@@ -2,47 +2,126 @@
 "use client";
 
 import { useEffect } from "react";
+import { useLanguage } from "@/components/languagecontext";
 
-const services = [
-  {
-    number: "01",
-    title: "Κουζίνες κατά παραγγελία",
-    description:
-      "Σχεδιάζουμε και κατασκευάζουμε κουζίνες στα μέτρα σας, συνδυάζοντας αισθητική, εργονομία και λειτουργικότητα. Κάθε δημιουργία προσαρμόζεται στον χώρο και στις καθημερινές σας ανάγκες.",
+const content = {
+  el: {
+    eyebrow: "DISETO — ΟΙ ΥΠΗΡΕΣΙΕΣ ΜΑΣ",
+    since: "ΑΠΟ ΤΟ 1982",
+    title: "ΔΗΜΙΟΥΡΓΟΥΜΕ",
+    titleHighlight: "ΤΟΝ ΧΩΡΟ ΣΑΣ.",
+    intro:
+      "Από την ιδέα μέχρι την τελική κατασκευή. Δημιουργούμε ξύλινες κατασκευές, έπιπλα και ολοκληρωμένους χώρους με διαχρονική αισθητική και έμφαση στη λεπτομέρεια.",
+    servicesHeading: "ΤΙ ΜΠΟΡΟΥΜΕ ΝΑ ΔΗΜΙΟΥΡΓΗΣΟΥΜΕ",
+    services: [
+      {
+        number: "01",
+        title: "Κουζίνες κατά παραγγελία",
+        description:
+          "Σχεδιάζουμε και κατασκευάζουμε κουζίνες στα μέτρα σας, συνδυάζοντας αισθητική, εργονομία και λειτουργικότητα. Κάθε δημιουργία προσαρμόζεται στον χώρο και στις καθημερινές σας ανάγκες.",
+      },
+      {
+        number: "02",
+        title: "Έπιπλα & ειδικές κατασκευές",
+        description:
+          "Κατασκευάζουμε έπιπλα και ξύλινες δημιουργίες κατά παραγγελία. Από μια ξεχωριστή σύνθεση μέχρι μια εξειδικευμένη κατασκευή, δίνουμε μορφή στις ιδέες σας.",
+      },
+      {
+        number: "03",
+        title: "Ντουλάπες & αποθηκευτικοί χώροι",
+        description:
+          "Δημιουργούμε εξατομικευμένες λύσεις αποθήκευσης με προσεγμένα υλικά, καθαρές γραμμές και έξυπνη αξιοποίηση κάθε διαθέσιμου χώρου.",
+      },
+      {
+        number: "04",
+        title: "Σχεδιασμός εσωτερικών χώρων",
+        description:
+          "Μελετάμε και διαμορφώνουμε κατοικίες, ξενοδοχεία και επαγγελματικούς χώρους. Συνδυάζουμε υλικά, φωτισμό και έπιπλα για ένα ολοκληρωμένο αποτέλεσμα.",
+      },
+      {
+        number: "05",
+        title: "Ανακαινίσεις & επαγγελματικοί χώροι",
+        description:
+          "Αναλαμβάνουμε ανακαινίσεις και εξοπλισμό επαγγελματικών χώρων και ξενοδοχειακών μονάδων, προσφέροντας ολοκληρωμένες λύσεις σχεδιασμού και κατασκευής.",
+      },
+      {
+        number: "06",
+        title: "Σχεδιασμός & παραγωγή",
+        description:
+          "Από την πρώτη ιδέα και τη μελέτη μέχρι την τελική κατασκευή, αξιοποιούμε την εμπειρία και την τεχνογνωσία μας, με έμφαση στην ποιότητα και σε κάθε λεπτομέρεια.",
+      },
+    ],
+    philosophy: "Η ΦΙΛΟΣΟΦΙΑ ΜΑΣ",
+    philosophyTitle: ["ΟΜΟΡΦΙΑ", "ΣΕ ΚΑΘΕ", "ΛΕΠΤΟΜΕΡΕΙΑ."],
+    philosophyParagraphs: [
+      "Πιστεύουμε πως κάθε χώρος έχει τη δική του ταυτότητα. Η ποιότητα των υλικών, η προσεγμένη κατασκευή και η ισορροπία στον σχεδιασμό κάνουν τη διαφορά.",
+      "Δημιουργούμε με γνώση, φροντίδα και σεβασμό στις δικές σας ανάγκες, δίνοντας αξία σε κάθε λεπτομέρεια.",
+    ],
+    contactLink: "ΑΣ ΣΧΕΔΙΑΣΟΥΜΕ ΤΟ ΕΠΟΜΕΝΟ ΕΡΓΟ ΣΑΣ",
+    bottom: "ΣΧΕΔΙΑΣΜΟΣ · ΠΟΙΟΤΗΤΑ · ΔΙΑΧΡΟΝΙΚΟΤΗΤΑ",
   },
-  {
-    number: "02",
-    title: "Έπιπλα & ειδικές κατασκευές",
-    description:
-      "Κατασκευάζουμε έπιπλα και ξύλινες δημιουργίες κατά παραγγελία. Από μια ξεχωριστή σύνθεση μέχρι μια εξειδικευμένη κατασκευή, δίνουμε μορφή στις ιδέες σας.",
+
+  en: {
+    eyebrow: "DISETO — OUR SERVICES",
+    since: "EST. 1982",
+    title: "WE CREATE",
+    titleHighlight: "YOUR SPACE.",
+    intro:
+      "From the initial idea to the final realization. We create bespoke wooden constructions, furniture and complete interiors with timeless aesthetics and attention to detail.",
+    servicesHeading: "WHAT WE CAN CREATE",
+    services: [
+      {
+        number: "01",
+        title: "Bespoke Kitchens",
+        description:
+          "We design and craft made-to-measure kitchens, combining aesthetics, ergonomics and functionality. Every creation is tailored to your space and everyday needs.",
+      },
+      {
+        number: "02",
+        title: "Furniture & Custom Creations",
+        description:
+          "We create bespoke furniture and wooden constructions. From distinctive furniture compositions to specialized installations, we bring your ideas to life.",
+      },
+      {
+        number: "03",
+        title: "Wardrobes & Storage Solutions",
+        description:
+          "We create personalized storage solutions using carefully selected materials, clean lines and intelligent use of every available space.",
+      },
+      {
+        number: "04",
+        title: "Interior Design",
+        description:
+          "We design and shape residential, hospitality and commercial spaces. We combine materials, lighting and furniture to create cohesive interiors.",
+      },
+      {
+        number: "05",
+        title: "Renovations & Commercial Spaces",
+        description:
+          "We undertake renovations and fit-outs for commercial spaces and hotels, delivering comprehensive design and construction solutions.",
+      },
+      {
+        number: "06",
+        title: "Design & Production",
+        description:
+          "From the initial concept and planning to the final construction, we draw on our experience and expertise, with a focus on quality and every detail.",
+      },
+    ],
+    philosophy: "OUR PHILOSOPHY",
+    philosophyTitle: ["BEAUTY", "IN EVERY", "DETAIL."],
+    philosophyParagraphs: [
+      "We believe every space has its own identity. The quality of materials, thoughtful craftsmanship and balance in design make all the difference.",
+      "We create with knowledge, care and respect for your needs, giving value to every detail.",
+    ],
+    contactLink: "LET'S DESIGN YOUR NEXT PROJECT",
+    bottom: "DESIGN · QUALITY · TIMELESSNESS",
   },
-  {
-    number: "03",
-    title: "Ντουλάπες & αποθηκευτικοί χώροι",
-    description:
-      "Δημιουργούμε εξατομικευμένες λύσεις αποθήκευσης με προσεγμένα υλικά, καθαρές γραμμές και έξυπνη αξιοποίηση κάθε διαθέσιμου χώρου.",
-  },
-  {
-    number: "04",
-    title: "Σχεδιασμός εσωτερικών χώρων",
-    description:
-      "Μελετάμε και διαμορφώνουμε κατοικίες, ξενοδοχεία και επαγγελματικούς χώρους. Συνδυάζουμε υλικά, φωτισμό και έπιπλα για ένα ολοκληρωμένο αποτέλεσμα.",
-  },
-  {
-    number: "05",
-    title: "Ανακαινίσεις & επαγγελματικοί χώροι",
-    description:
-      "Αναλαμβάνουμε ανακαινίσεις και εξοπλισμό επαγγελματικών χώρων και ξενοδοχειακών μονάδων, προσφέροντας ολοκληρωμένες λύσεις σχεδιασμού και κατασκευής.",
-  },
-  {
-    number: "06",
-    title: "Σχεδιασμός & παραγωγή",
-    description:
-      "Από την πρώτη ιδέα και τη μελέτη μέχρι την τελική κατασκευή, αξιοποιούμε την εμπειρία και την τεχνογνωσία μας, με έμφαση στην ποιότητα και σε κάθε λεπτομέρεια.",
-  },
-];
+};
 
 export default function WhatWeDo() {
+  const { language } = useLanguage();
+  const t = content[language] || content.el;
+
   useEffect(() => {
     const elements = document.querySelectorAll(".what-reveal");
 
@@ -72,52 +151,45 @@ export default function WhatWeDo() {
       }
     );
 
-    elements.forEach((element) => observer.observe(element));
+    elements.forEach((element) => {
+      element.classList.remove("is-visible");
+      observer.observe(element);
+    });
 
     return () => observer.disconnect();
-  }, []);
+  }, [language]);
 
   return (
     <section className="what-we-do" id="what-we-do">
       <div className="what-container">
-
         {/* HEADING */}
-
         <div className="what-heading what-reveal">
           <div className="what-topline">
-            <span className="what-eyebrow">
-              DISETO — ΟΙ ΥΠΗΡΕΣΙΕΣ ΜΑΣ
-            </span>
-            <span className="what-since">ΑΠΟ ΤΟ 1982</span>
+            <span className="what-eyebrow">{t.eyebrow}</span>
+            <span className="what-since">{t.since}</span>
           </div>
 
           <div className="what-heading-grid">
             <h2 className="what-main-title">
-              ΔΗΜΙΟΥΡΓΟΥΜΕ
+              {t.title}
               <br />
-              <span>ΤΟΝ ΧΩΡΟ ΣΑΣ.</span>
+              <span>{t.titleHighlight}</span>
             </h2>
 
             <div className="what-intro-wrap">
-              <p className="what-intro">
-                Από την ιδέα μέχρι την τελική κατασκευή.
-                Δημιουργούμε ξύλινες κατασκευές, έπιπλα
-                και ολοκληρωμένους χώρους με διαχρονική
-                αισθητική και έμφαση στη λεπτομέρεια.
-              </p>
+              <p className="what-intro">{t.intro}</p>
             </div>
           </div>
         </div>
 
         {/* SERVICES */}
-
         <div className="services-heading what-reveal">
-          <span>ΤΙ ΜΠΟΡΟΥΜΕ ΝΑ ΔΗΜΙΟΥΡΓΗΣΟΥΜΕ</span>
+          <span>{t.servicesHeading}</span>
           <span>01 — 06</span>
         </div>
 
         <div className="services-list">
-          {services.map((service, index) => (
+          {t.services.map((service, index) => (
             <article
               className="service-item what-reveal"
               key={service.number}
@@ -125,9 +197,7 @@ export default function WhatWeDo() {
                 "--service-delay": `${(index % 2) * 150}ms`,
               }}
             >
-              <div className="service-number">
-                {service.number}
-              </div>
+              <div className="service-number">{service.number}</div>
 
               <div className="service-content">
                 <h3>{service.title}</h3>
@@ -138,54 +208,35 @@ export default function WhatWeDo() {
         </div>
 
         {/* PHILOSOPHY */}
-
         <div className="what-footer">
-
           <div className="philosophy-title what-reveal">
-            <span className="what-eyebrow">
-              Η ΦΙΛΟΣΟΦΙΑ ΜΑΣ
-            </span>
+            <span className="what-eyebrow">{t.philosophy}</span>
 
             <h2>
-              ΟΜΟΡΦΙΑ
+              {t.philosophyTitle[0]}
               <br />
-              <span>ΣΕ ΚΑΘΕ</span>
+              <span>{t.philosophyTitle[1]}</span>
               <br />
-              ΛΕΠΤΟΜΕΡΕΙΑ.
+              {t.philosophyTitle[2]}
             </h2>
           </div>
 
           <div className="philosophy-content what-reveal">
-            <p>
-              Πιστεύουμε πως κάθε χώρος έχει τη δική του
-              ταυτότητα. Η ποιότητα των υλικών, η προσεγμένη
-              κατασκευή και η ισορροπία στον σχεδιασμό κάνουν
-              τη διαφορά.
-            </p>
-
-            <p>
-              Δημιουργούμε με γνώση, φροντίδα και σεβασμό
-              στις δικές σας ανάγκες, δίνοντας αξία σε κάθε
-              λεπτομέρεια.
-            </p>
+            {t.philosophyParagraphs.map((paragraph, index) => (
+              <p key={index}>{paragraph}</p>
+            ))}
 
             <a href="#contact" className="philosophy-link">
-              ΑΣ ΣΧΕΔΙΑΣΟΥΜΕ ΤΟ ΕΠΟΜΕΝΟ ΕΡΓΟ ΣΑΣ
+              {t.contactLink}
               <span className="philosophy-arrow"></span>
             </a>
           </div>
-
         </div>
 
         {/* BOTTOM LINE */}
-
         <div className="what-bottom-line what-reveal">
-          <span>DISETO — ΑΠΟ ΤΟ 1982</span>
-          <span>
-            ΣΧΕΔΙΑΣΜΟΣ · ΠΟΙΟΤΗΤΑ · ΔΙΑΧΡΟΝΙΚΟΤΗΤΑ
-          </span>
+          <span>{t.bottom}</span>
         </div>
-
       </div>
 
       <style jsx>{`
@@ -200,8 +251,6 @@ export default function WhatWeDo() {
           max-width: 1500px;
           margin: 0 auto;
         }
-
-        /* HEADING */
 
         .what-topline {
           display: flex;
@@ -260,8 +309,6 @@ export default function WhatWeDo() {
           font-size: 14px;
           line-height: 2;
         }
-
-        /* SERVICES */
 
         .services-heading {
           display: flex;
@@ -327,8 +374,6 @@ export default function WhatWeDo() {
           line-height: 1.9;
         }
 
-        /* PHILOSOPHY */
-
         .what-footer {
           display: grid;
           grid-template-columns: 1fr 0.7fr;
@@ -387,8 +432,6 @@ export default function WhatWeDo() {
           font-size: 15px;
         }
 
-        /* BOTTOM LINE */
-
         .what-bottom-line {
           display: flex;
           justify-content: space-between;
@@ -399,8 +442,6 @@ export default function WhatWeDo() {
           font-size: 9px;
           letter-spacing: 0.15em;
         }
-
-        /* SCROLL REVEAL */
 
         .what-reveal {
           opacity: 0;
@@ -444,8 +485,6 @@ export default function WhatWeDo() {
         .what-bottom-line.what-reveal {
           transition-delay: 150ms;
         }
-
-        /* RESPONSIVE */
 
         @media (max-width: 900px) {
           .what-heading-grid {
@@ -541,8 +580,6 @@ export default function WhatWeDo() {
             font-size: 8px;
           }
         }
-
-        /* REDUCED MOTION */
 
         @media (prefers-reduced-motion: reduce) {
           .what-reveal {

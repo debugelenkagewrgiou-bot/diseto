@@ -2,31 +2,81 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/components/languagecontext";
 
 const projects = [
-  { id: "01", type: "Κουζίνες", name: "Σύγχρονη κουζίνα", image: "kitchen-01.jpg", layout: "wide" },
-  { id: "02", type: "Κουζίνες", name: "Η αρμονία των υλικών", image: "kitchen-02.jpg", layout: "tall" },
-  { id: "03", type: "Κουζίνες", name: "Λεπτομέρεια και λειτουργικότητα", image: "kitchen-03.jpg", layout: "tall" },
-  { id: "04", type: "Κουζίνες", name: "Διαχρονικός σχεδιασμός", image: "kitchen-04.jpg", layout: "wide" },
-  { id: "05", type: "Κουζίνες", name: "Ζεστή minimal αισθητική", image: "kitchen-05.jpg", layout: "tall" },
-  { id: "06", type: "Ντουλάπες", name: "Έξυπνη αποθήκευση", image: "wardrobe-01.jpg", layout: "tall" },
-  { id: "07", type: "Κουζίνες", name: "Σχεδιασμός με χαρακτήρα", image: "kitchen-06.jpg", layout: "wide" },
-  { id: "08", type: "Κουζίνες", name: "Η λεπτομέρεια κάνει τη διαφορά", image: "kitchen-07.jpg", layout: "tall" },
-  { id: "09", type: "Εσωτερικοί χώροι", name: "Χώροι με ταυτότητα", image: "commercial-01.jpg", layout: "tall" },
-  { id: "10", type: "Κουζίνες", name: "Σύγχρονη αισθητική", image: "kitchen-08.jpg", layout: "wide" },
-  { id: "11", type: "Κουζίνες", name: "Ισορροπία και απλότητα", image: "kitchen-09.jpg", layout: "tall" },
-  { id: "12", type: "Ντουλάπες", name: "Σχεδιασμός στα μέτρα σας", image: "wardrobe-02.jpg", layout: "tall" },
-  { id: "13", type: "Κουζίνες", name: "Δημιουργίες DiSeto", image: "kitchen-10.jpg", layout: "wide" },
+  { id: "01", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Σύγχρονη κουζίνα", en: "Contemporary Kitchen" }, image: "kitchen-01.jpg", layout: "wide" },
+  { id: "02", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Η αρμονία των υλικών", en: "Harmony of Materials" }, image: "kitchen-02.jpg", layout: "tall" },
+  { id: "03", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Λεπτομέρεια και λειτουργικότητα", en: "Detail and Functionality" }, image: "kitchen-03.jpg", layout: "tall" },
+  { id: "04", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Διαχρονικός σχεδιασμός", en: "Timeless Design" }, image: "kitchen-04.jpg", layout: "wide" },
+  { id: "05", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Ζεστή minimal αισθητική", en: "Warm Minimal Aesthetic" }, image: "kitchen-05.jpg", layout: "tall" },
+  { id: "06", category: "wardrobes", type: { el: "Ντουλάπες", en: "Wardrobes" }, name: { el: "Έξυπνη αποθήκευση", en: "Smart Storage" }, image: "wardrobe-01.jpg", layout: "tall" },
+  { id: "07", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Σχεδιασμός με χαρακτήρα", en: "Design with Character" }, image: "kitchen-06.jpg", layout: "wide" },
+  { id: "08", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Η λεπτομέρεια κάνει τη διαφορά", en: "Details Make the Difference" }, image: "kitchen-07.jpg", layout: "tall" },
+  { id: "09", category: "interiors", type: { el: "Εσωτερικοί χώροι", en: "Interior Spaces" }, name: { el: "Χώροι με ταυτότητα", en: "Spaces with Identity" }, image: "commercial-01.jpg", layout: "tall" },
+  { id: "10", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Σύγχρονη αισθητική", en: "Contemporary Aesthetic" }, image: "kitchen-08.jpg", layout: "wide" },
+  { id: "11", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Ισορροπία και απλότητα", en: "Balance and Simplicity" }, image: "kitchen-09.jpg", layout: "tall" },
+  { id: "12", category: "wardrobes", type: { el: "Ντουλάπες", en: "Wardrobes" }, name: { el: "Σχεδιασμός στα μέτρα σας", en: "Made to Measure Design" }, image: "wardrobe-02.jpg", layout: "tall" },
+  { id: "13", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Δημιουργίες DiSeto", en: "DiSeto Creations" }, image: "kitchen-10.jpg", layout: "wide" },
 ];
 
 const categories = [
-  "Όλα τα έργα",
-  "Κουζίνες",
-  "Ντουλάπες",
-  "Εσωτερικοί χώροι",
+  { id: "all", el: "Όλα τα έργα", en: "All Projects" },
+  { id: "kitchens", el: "Κουζίνες", en: "Kitchens" },
+  { id: "wardrobes", el: "Ντουλάπες", en: "Wardrobes" },
+  { id: "interiors", el: "Εσωτερικοί χώροι", en: "Interior Spaces" },
 ];
 
-function ProjectCard({ project, index, onOpen }) {
+const content = {
+  el: {
+    heroTop: "Χώροι σχεδιασμένοι για να αντέχουν στον χρόνο",
+    heroTopRight: "Σχεδιασμός · Ποιότητα · Λεπτομέρεια",
+    title1: "Σχεδιασμένα",
+    title2: "για τη ζωή.",
+    intro: "Ανακαλύψτε τις δημιουργίες μας σε κουζίνες, ντουλάπες και εσωτερικούς χώρους, σχεδιασμένες γύρω από τις δικές σας ανάγκες.",
+    discover: "Ανακαλύψτε τα έργα μας",
+    heroImageAlt: "Σχεδιασμός κουζίνας DiSeto",
+    heroImageCaption: "01 — Σχεδιασμένα γύρω από εσάς",
+    heroIndex: "DISETO · ΣΧΕΔΙΑΣΜΟΣ · ΠΟΙΟΤΗΤΑ · ΛΕΠΤΟΜΕΡΕΙΑ",
+    workEyebrow: "Μια επιλογή από τα έργα μας",
+    workTitle: "Χώροι που σας",
+    workTitleAccent: "εκφράζουν.",
+    filterLabel: "Φιλτράρισμα έργων",
+    viewProject: "ΠΡΟΒΟΛΗ ΕΡΓΟΥ",
+    manifestoEyebrow: "Η φιλοσοφία της DiSeto",
+    manifestoTitle: "Ο καλός σχεδιασμός δεν ζητά την προσοχή.\nΚερδίζει τη θέση του στην καθημερινότητά σας.",
+    manifestoText: "Από την πρώτη ιδέα μέχρι την τελευταία λεπτομέρεια, συνδυάζουμε τον σχεδιασμό, τα υλικά και την τεχνογνωσία για να δημιουργούμε χώρους που ανταποκρίνονται πραγματικά σε εσάς.",
+    contact: "ΞΕΚΙΝΗΣΤΕ ΤΟ ΕΡΓΟ ΣΑΣ",
+    close: "Κλείσιμο",
+    previous: "Προηγούμενη φωτογραφία",
+    next: "Επόμενη φωτογραφία",
+  },
+  en: {
+    heroTop: "Spaces designed to stand the test of time",
+    heroTopRight: "Design · Quality · Detail",
+    title1: "Designed",
+    title2: "for life.",
+    intro: "Discover our kitchens, wardrobes and interior spaces, thoughtfully designed around your individual needs.",
+    discover: "Discover our projects",
+    heroImageAlt: "DiSeto kitchen design",
+    heroImageCaption: "01 — Designed around you",
+    heroIndex: "DISETO · DESIGN · QUALITY · DETAIL",
+    workEyebrow: "A selection of our projects",
+    workTitle: "Spaces that",
+    workTitleAccent: "reflect you.",
+    filterLabel: "Filter projects",
+    viewProject: "VIEW PROJECT",
+    manifestoEyebrow: "The DiSeto Philosophy",
+    manifestoTitle: "Good design does not demand attention.\nIt earns its place in your everyday life.",
+    manifestoText: "From the first idea to the final detail, we combine design, materials and expertise to create spaces that truly respond to your needs.",
+    contact: "START YOUR PROJECT",
+    close: "Close",
+    previous: "Previous image",
+    next: "Next image",
+  },
+};
+
+function ProjectCard({ project, index, onOpen, language, t }) {
   return (
     <article
       className={`lookbook-card lookbook-reveal ${project.layout}`}
@@ -34,12 +84,12 @@ function ProjectCard({ project, index, onOpen }) {
     >
       <button
         className="lookbook-image"
-        onClick={() => onOpen(project)}
-        aria-label={`Προβολή: ${project.name}`}
+        onClick={() => onOpen(project.id)}
+        aria-label={`${t.viewProject}: ${project.name[language]}`}
       >
         <img
           src={`/images/lookbook/${project.image}`}
-          alt={project.name}
+          alt={project.name[language]}
           loading="lazy"
         />
         <span className="lookbook-image-arrow">↗</span>
@@ -48,24 +98,28 @@ function ProjectCard({ project, index, onOpen }) {
       <div className="lookbook-caption">
         <div>
           <span className="lookbook-type">
-            {project.type} · {project.id}
+            {project.type[language]} · {project.id}
           </span>
-          <h3>{project.name}</h3>
+          <h3>{project.name[language]}</h3>
         </div>
 
-        <span className="lookbook-view">ΠΡΟΒΟΛΗ ΕΡΓΟΥ</span>
+        <span className="lookbook-view">{t.viewProject}</span>
       </div>
     </article>
   );
 }
 
 export default function Lookbook() {
-  const [active, setActive] = useState("Όλα τα έργα");
-  const [selected, setSelected] = useState(null);
+  const { language } = useLanguage();
+  const t = content[language] || content.el;
+
+  const [active, setActive] = useState("all");
+  const [selectedId, setSelectedId] = useState(null);
+
+  const selected = projects.find((project) => project.id === selectedId);
 
   const visibleProjects = projects.filter(
-    (project) =>
-      active === "Όλα τα έργα" || project.type === active
+    (project) => active === "all" || project.category === active
   );
 
   useEffect(() => {
@@ -100,36 +154,27 @@ export default function Lookbook() {
     elements.forEach((element) => observer.observe(element));
 
     return () => observer.disconnect();
-  }, [active]);
+  }, [active, language]);
 
   useEffect(() => {
-    if (!selected) return;
+    if (!selectedId) return;
 
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
-        setSelected(null);
+        setSelectedId(null);
       }
 
-      if (event.key === "ArrowRight") {
+      if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
         const currentIndex = projects.findIndex(
-          (project) => project.id === selected.id
+          (project) => project.id === selectedId
         );
 
-        setSelected(
-          projects[(currentIndex + 1) % projects.length]
-        );
-      }
+        const direction = event.key === "ArrowRight" ? 1 : -1;
 
-      if (event.key === "ArrowLeft") {
-        const currentIndex = projects.findIndex(
-          (project) => project.id === selected.id
-        );
+        const nextIndex =
+          (currentIndex + direction + projects.length) % projects.length;
 
-        setSelected(
-          projects[
-            (currentIndex - 1 + projects.length) % projects.length
-          ]
-        );
+        setSelectedId(projects[nextIndex].id);
       }
     };
 
@@ -142,7 +187,7 @@ export default function Lookbook() {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [selected]);
+  }, [selectedId]);
 
   return (
     <main className="lookbook-page">
@@ -152,28 +197,24 @@ export default function Lookbook() {
       <section className="lookbook-hero">
 
         <div className="lookbook-hero-top lookbook-reveal">
-          <span>Χώροι σχεδιασμένοι για να αντέχουν στον χρόνο</span>
-          <span>Σχεδιασμός · Ποιότητα · Λεπτομέρεια</span>
+          <span>{t.heroTop}</span>
+          <span>{t.heroTopRight}</span>
         </div>
 
         <h1 className="lookbook-title lookbook-reveal">
-          <span>Σχεδιασμένα</span>
+          <span>{t.title1}</span>
           <span className="lookbook-title-indent">
-            <em>για τη ζωή.</em>
+            <em>{t.title2}</em>
           </span>
         </h1>
 
         <div className="lookbook-hero-bottom lookbook-reveal">
-          <p>
-            Ανακαλύψτε τις δημιουργίες μας σε κουζίνες,
-            ντουλάπες και εσωτερικούς χώρους,
-            σχεδιασμένες γύρω από τις δικές σας ανάγκες.
-          </p>
+          <p>{t.intro}</p>
 
           <a
             href="#lookbook-work"
             className="lookbook-round-link"
-            aria-label="Ανακαλύψτε τα έργα μας"
+            aria-label={t.discover}
           >
             ↓
           </a>
@@ -182,15 +223,15 @@ export default function Lookbook() {
         <div className="lookbook-hero-image lookbook-reveal">
           <img
             src="/images/lookbook/kitchen-01.jpg"
-            alt="Σχεδιασμός κουζίνας DiSeto"
+            alt={t.heroImageAlt}
             fetchPriority="high"
           />
 
-          <span>01 — Σχεδιασμένα γύρω από εσάς</span>
+          <span>{t.heroImageCaption}</span>
         </div>
 
         <span className="lookbook-hero-index">
-          DISETO · ΣΧΕΔΙΑΣΜΟΣ · ΠΟΙΟΤΗΤΑ · ΛΕΠΤΟΜΕΡΕΙΑ
+          {t.heroIndex}
         </span>
 
       </section>
@@ -202,11 +243,11 @@ export default function Lookbook() {
         <div className="lookbook-heading lookbook-reveal">
           <div>
             <span className="lookbook-eyebrow">
-              Μια επιλογή από τα έργα μας
+              {t.workEyebrow}
             </span>
 
             <h2>
-              Χώροι που σας <em>εκφράζουν.</em>
+              {t.workTitle} <em>{t.workTitleAccent}</em>
             </h2>
           </div>
 
@@ -220,20 +261,20 @@ export default function Lookbook() {
         <div
           className="lookbook-filters lookbook-reveal"
           role="group"
-          aria-label="Φιλτράρισμα έργων"
+          aria-label={t.filterLabel}
         >
           {categories.map((category) => (
             <button
-              key={category}
+              key={category.id}
               className={
-                active === category
+                active === category.id
                   ? "lookbook-filter active"
                   : "lookbook-filter"
               }
-              onClick={() => setActive(category)}
-              aria-pressed={active === category}
+              onClick={() => setActive(category.id)}
+              aria-pressed={active === category.id}
             >
-              {category}
+              {category[language]}
             </button>
           ))}
         </div>
@@ -246,7 +287,9 @@ export default function Lookbook() {
               key={project.id}
               project={project}
               index={index}
-              onOpen={setSelected}
+              onOpen={setSelectedId}
+              language={language}
+              t={t}
             />
           ))}
         </div>
@@ -258,28 +301,24 @@ export default function Lookbook() {
       <section className="lookbook-manifesto lookbook-reveal">
 
         <span className="lookbook-eyebrow">
-          Η φιλοσοφία της DiSeto
+          {t.manifestoEyebrow}
         </span>
 
         <div className="lookbook-manifesto-copy">
-
           <p>
-            Ο καλός σχεδιασμός δεν ζητά την προσοχή.
-            <br />
-            Κερδίζει τη θέση του στην καθημερινότητά σας.
+            {t.manifestoTitle.split("\n").map((line, index) => (
+              <span key={index}>
+                {line}
+                {index === 0 && <br />}
+              </span>
+            ))}
           </p>
 
-          <span>
-            Από την πρώτη ιδέα μέχρι την τελευταία λεπτομέρεια,
-            συνδυάζουμε τον σχεδιασμό, τα υλικά και την
-            τεχνογνωσία για να δημιουργούμε χώρους
-            που ανταποκρίνονται πραγματικά σε εσάς.
-          </span>
-
+          <span>{t.manifestoText}</span>
         </div>
 
         <a className="lookbook-text-link" href="/#contact">
-          ΞΕΚΙΝΗΣΤΕ ΤΟ ΕΡΓΟ ΣΑΣ
+          {t.contact}
         </a>
 
       </section>
@@ -289,23 +328,23 @@ export default function Lookbook() {
       {selected && (
         <div
           className="lookbook-lightbox"
-          onClick={() => setSelected(null)}
+          onClick={() => setSelectedId(null)}
           role="dialog"
           aria-modal="true"
-          aria-label={selected.name}
+          aria-label={selected.name[language]}
         >
 
           <button
             className="lightbox-close"
-            onClick={() => setSelected(null)}
-            aria-label="Κλείσιμο"
+            onClick={() => setSelectedId(null)}
+            aria-label={t.close}
           >
             ×
           </button>
 
           <button
             className="lightbox-prev"
-            aria-label="Προηγούμενη φωτογραφία"
+            aria-label={t.previous}
             onClick={(event) => {
               event.stopPropagation();
 
@@ -313,10 +352,10 @@ export default function Lookbook() {
                 (project) => project.id === selected.id
               );
 
-              setSelected(
+              setSelectedId(
                 projects[
                   (index - 1 + projects.length) % projects.length
-                ]
+                ].id
               );
             }}
           >
@@ -325,13 +364,13 @@ export default function Lookbook() {
 
           <img
             src={`/images/lookbook/${selected.image}`}
-            alt={selected.name}
+            alt={selected.name[language]}
             onClick={(event) => event.stopPropagation()}
           />
 
           <button
             className="lightbox-next"
-            aria-label="Επόμενη φωτογραφία"
+            aria-label={t.next}
             onClick={(event) => {
               event.stopPropagation();
 
@@ -339,8 +378,8 @@ export default function Lookbook() {
                 (project) => project.id === selected.id
               );
 
-              setSelected(
-                projects[(index + 1) % projects.length]
+              setSelectedId(
+                projects[(index + 1) % projects.length].id
               );
             }}
           >
@@ -348,7 +387,7 @@ export default function Lookbook() {
           </button>
 
           <span className="lightbox-caption">
-            {selected.type} · {selected.id}
+            {selected.type[language]} · {selected.id}
           </span>
 
         </div>

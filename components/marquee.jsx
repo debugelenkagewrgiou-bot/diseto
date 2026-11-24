@@ -1,24 +1,42 @@
 
 "use client";
 
-const items = [
-  "ΣΧΕΔΙΑΣΜΟΣ",
-  "ΞΥΛΙΝΕΣ ΚΑΤΑΣΚΕΥΕΣ",
-  "ΕΙΔΙΚΕΣ ΔΗΜΙΟΥΡΓΙΕΣ",
-  "ΕΠΙΠΛΑ ΚΑΤΑ ΠΑΡΑΓΓΕΛΙΑ",
-  "ΕΣΩΤΕΡΙΚΟΙ ΧΩΡΟΙ",
-  "ΠΟΙΟΤΗΤΑ",
-];
+import { useLanguage } from "@/components/languagecontext";
+
+const itemsByLanguage = {
+  el: [
+    "ΣΧΕΔΙΑΣΜΟΣ",
+    "ΞΥΛΙΝΕΣ ΚΑΤΑΣΚΕΥΕΣ",
+    "ΕΙΔΙΚΕΣ ΔΗΜΙΟΥΡΓΙΕΣ",
+    "ΕΠΙΠΛΑ ΚΑΤΑ ΠΑΡΑΓΓΕΛΙΑ",
+    "ΕΣΩΤΕΡΙΚΟΙ ΧΩΡΟΙ",
+    "ΠΟΙΟΤΗΤΑ",
+  ],
+  en: [
+    "DESIGN",
+    "WOODEN CONSTRUCTIONS",
+    "BESPOKE CREATIONS",
+    "CUSTOM-MADE FURNITURE",
+    "INTERIOR SPACES",
+    "QUALITY",
+  ],
+};
 
 export default function Marquee() {
+  const { language } = useLanguage();
+
+  const items = itemsByLanguage[language] || itemsByLanguage.el;
   const repeatedItems = [...items, ...items];
 
   return (
     <section
-      aria-label="Οι υπηρεσίες της DiSeto"
+      aria-label={
+        language === "el"
+          ? "Οι υπηρεσίες της DiSeto"
+          : "DiSeto services"
+      }
       className="relative w-full overflow-hidden bg-[#f7f4ed] px-6 pb-12 pt-24 text-[#28231e] sm:px-10 sm:pb-16 sm:pt-32 lg:pt-40"
     >
-      {/* MARQUEE */}
       <div className="border-y border-[#28231e]/15 py-7 sm:py-9 lg:py-11">
         <div className="marquee-track flex w-max items-center">
           {repeatedItems.map((item, index) => (
@@ -42,9 +60,7 @@ export default function Marquee() {
         </div>
       </div>
 
-      {/* BOTTOM CAPTION */}
       <div className="mx-auto mt-5 flex max-w-[1500px] justify-between font-sans text-[9px] tracking-[0.15em] text-[#777168]">
-        
       </div>
 
       <style jsx>{`

@@ -1,10 +1,40 @@
+
 "use client";
 
 import Link from "next/link";
 import { useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
+import { useLanguage } from "@/components/languagecontext";
 
 export function ProjectDetail({ project }) {
+  const { language } = useLanguage();
+
+  const translations = {
+    el: {
+      home: "ΑΡΧΙΚΗ",
+      allProjects: "ΟΛΑ ΤΑ ΕΡΓΑ",
+      details: "ΛΕΠΤΟΜΕΡΕΙΕΣ ΕΡΓΟΥ",
+      selectedPhotos: "Επιλεγμένες φωτογραφίες",
+      galleryDescription:
+        "Μια πιο κοντινή ματιά στις λεπτομέρειες, τα υλικά και τον σχεδιασμό αυτού του έργου.",
+      photo: "φωτογραφία",
+    },
+    en: {
+      home: "HOME",
+      allProjects: "ALL PROJECTS",
+      details: "PROJECT DETAILS",
+      selectedPhotos: "Selected photographs",
+      galleryDescription:
+        "A closer look at the details, materials and design of this project.",
+      photo: "photo",
+    },
+  };
+
+  const t = translations[language] || translations.el;
+  const localized = project.translations?.[language] || {};
+
+  const getText = (field) => localized[field] ?? project[field];
+
   useEffect(() => {
     const elements = document.querySelectorAll(".project-reveal");
 
@@ -92,13 +122,10 @@ export function ProjectDetail({ project }) {
 
       {/* HEADER */}
       <header className="relative z-10 flex items-center justify-between border-b border-[#ded8cd] px-6 py-6 md:px-12 lg:px-20">
-        <Link
-          href="/"
-          className="flex items-center gap-3 text-[#28231e]"
-        >
+        <Link href="/" className="flex items-center gap-3 text-[#28231e]">
           <ArrowLeft size={17} strokeWidth={1.4} />
           <span className="text-[11px] tracking-[0.18em]">
-            ΑΡΧΙΚΗ
+            {t.home}
           </span>
         </Link>
 
@@ -113,7 +140,7 @@ export function ProjectDetail({ project }) {
           href="/#projects"
           className="project-link text-[11px] tracking-[0.18em] text-[#777168]"
         >
-          ΟΛΑ ΤΑ ΕΡΓΑ
+          {t.allProjects}
         </Link>
       </header>
 
@@ -122,21 +149,20 @@ export function ProjectDetail({ project }) {
         <div className="mx-auto max-w-[1400px]">
           <div className="project-reveal mb-8 flex items-center gap-3">
             <span className="h-[1px] w-8 bg-[#a89576]" />
-
             <span className="text-[10px] tracking-[0.25em] text-[#8b857b]">
-              {project.category}
+              {getText("category")}
             </span>
           </div>
 
           <div className="project-reveal mb-12 max-w-5xl">
             <h1 className="text-5xl leading-[1.05] tracking-[-0.04em] md:text-7xl lg:text-[100px]">
-              {project.title}
+              {getText("title")}
               <span className="text-[#a89576]">.</span>
             </h1>
 
-            {project.summary && (
+            {getText("summary") && (
               <p className="mt-8 max-w-2xl text-sm leading-8 text-[#777168] md:text-base">
-                {project.summary}
+                {getText("summary")}
               </p>
             )}
           </div>
@@ -145,7 +171,7 @@ export function ProjectDetail({ project }) {
             <div className="project-reveal project-image aspect-[16/9] w-full bg-[#e9e4da]">
               <img
                 src={project.hero}
-                alt={project.title}
+                alt={getText("title")}
                 className="h-full w-full object-cover"
               />
             </div>
@@ -160,17 +186,16 @@ export function ProjectDetail({ project }) {
             <div className="project-reveal mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
               <div>
                 <span className="mb-5 block text-[10px] tracking-[0.25em] text-[#a89576]">
-                  ΛΕΠΤΟΜΕΡΕΙΕΣ ΕΡΓΟΥ
+                  {t.details}
                 </span>
 
                 <h2 className="text-4xl tracking-[-0.03em] md:text-6xl">
-                  Επιλεγμένες φωτογραφίες
+                  {t.selectedPhotos}
                 </h2>
               </div>
 
               <p className="max-w-sm text-sm leading-7 text-[#777168]">
-                Μια πιο κοντινή ματιά στις λεπτομέρειες, τα υλικά
-                και τον σχεδιασμό αυτού του έργου.
+                {t.galleryDescription}
               </p>
             </div>
 
@@ -186,8 +211,8 @@ export function ProjectDetail({ project }) {
                     src={typeof image === "string" ? image : image.src}
                     alt={
                       typeof image === "string"
-                        ? `${project.title} - φωτογραφία ${index + 1}`
-                        : image.alt || project.title
+                        ? `${getText("title")} - ${t.photo} ${index + 1}`
+                        : image.alt || getText("title")
                     }
                     className="aspect-[1.15] h-full w-full object-cover"
                   />
@@ -198,36 +223,36 @@ export function ProjectDetail({ project }) {
         </section>
       )}
 
-      {/* STORY - DARK BURGUNDY */}
-      {(project.storyEyebrow ||
-        project.storyTitle ||
-        project.storyDescription ||
-        project.story?.length > 0) && (
+      {/* STORY */}
+      {(getText("storyEyebrow") ||
+        getText("storyTitle") ||
+        getText("storyDescription") ||
+        getText("story")?.length > 0) && (
         <section className="bg-[#351019] px-6 py-20 text-[#f7f4ed] md:px-12 md:py-32 lg:px-20">
           <div className="mx-auto max-w-[1400px]">
             <div className="project-reveal mb-16 max-w-3xl md:mb-24">
-              {project.storyEyebrow && (
+              {getText("storyEyebrow") && (
                 <span className="mb-6 block text-[10px] tracking-[0.25em] text-[#c5a47d]">
-                  {project.storyEyebrow}
+                  {getText("storyEyebrow")}
                 </span>
               )}
 
-              {project.storyTitle && (
+              {getText("storyTitle") && (
                 <h2 className="text-4xl leading-[1.12] tracking-[-0.03em] text-[#f7f4ed] md:text-6xl">
-                  {project.storyTitle}
+                  {getText("storyTitle")}
                 </h2>
               )}
 
-              {project.storyDescription && (
+              {getText("storyDescription") && (
                 <p className="mt-8 max-w-2xl text-sm leading-8 text-[#d1c1bd] md:text-base">
-                  {project.storyDescription}
+                  {getText("storyDescription")}
                 </p>
               )}
             </div>
 
-            {project.story?.length > 0 && (
+            {getText("story")?.length > 0 && (
               <div className="grid grid-cols-1 gap-12 border-t border-white/20 pt-12 md:grid-cols-2 md:gap-x-20 md:gap-y-16">
-                {project.story.map((chapter, index) => (
+                {getText("story").map((chapter, index) => (
                   <article key={index} className="project-reveal">
                     <h3 className="mb-5 text-2xl tracking-[-0.02em] text-[#f7f4ed] md:text-3xl">
                       {chapter.title}
