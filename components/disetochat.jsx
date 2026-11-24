@@ -10,18 +10,9 @@ const initialMessage = {
 };
 
 const quickQuestions = [
-  {
-    el: "Ανακαίνιση κατοικίας",
-    en: "Home renovation",
-  },
-  {
-    el: "Interior design",
-    en: "Interior design",
-  },
-  {
-    el: "Νέο project",
-    en: "New project",
-  },
+  { el: "Ανακαίνιση κατοικίας", en: "Home renovation" },
+  { el: "Interior design", en: "Interior design" },
+  { el: "Νέο project", en: "New project" },
 ];
 
 export default function DISETOChatbot() {
@@ -401,7 +392,15 @@ export default function DISETOChatbot() {
           onClick={() => setIsOpen(true)}
           aria-label="Open DISETO AI chat"
         >
-          <span style={{ fontSize: 23, fontWeight: 300 }}>✳</span>
+          <span
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              letterSpacing: "0.16em",
+            }}
+          >
+            CHAT
+          </span>
         </button>
       )}
 
@@ -461,7 +460,7 @@ export default function DISETOChatbot() {
                     textTransform: "uppercase",
                   }}
                 >
-                  {isGreek ? "Explore" : "Explore"}
+                  Explore
                 </div>
 
                 <div className="diseto-suggestions">

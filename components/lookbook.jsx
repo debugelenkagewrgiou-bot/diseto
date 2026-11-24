@@ -92,7 +92,10 @@ function ProjectCard({ project, index, onOpen, language, t }) {
           alt={project.name[language]}
           loading="lazy"
         />
-        <span className="lookbook-image-arrow">↗</span>
+        <span className="lookbook-image-arrow">
+          <span>VIEW</span>
+          <span className="lookbook-image-arrow-icon">＋</span>
+        </span>
       </button>
 
       <div className="lookbook-caption">
@@ -191,11 +194,8 @@ export default function Lookbook() {
 
   return (
     <main className="lookbook-page">
-
       {/* HERO */}
-
       <section className="lookbook-hero">
-
         <div className="lookbook-hero-top lookbook-reveal">
           <span>{t.heroTop}</span>
           <span>{t.heroTopRight}</span>
@@ -233,13 +233,10 @@ export default function Lookbook() {
         <span className="lookbook-hero-index">
           {t.heroIndex}
         </span>
-
       </section>
 
       {/* GALLERY ΕΡΓΩΝ */}
-
       <section className="lookbook-work" id="lookbook-work">
-
         <div className="lookbook-heading lookbook-reveal">
           <div>
             <span className="lookbook-eyebrow">
@@ -257,7 +254,6 @@ export default function Lookbook() {
         </div>
 
         {/* ΦΙΛΤΡΑ */}
-
         <div
           className="lookbook-filters lookbook-reveal"
           role="group"
@@ -280,7 +276,6 @@ export default function Lookbook() {
         </div>
 
         {/* ΦΩΤΟΓΡΑΦΙΕΣ */}
-
         <div className="lookbook-grid">
           {visibleProjects.map((project, index) => (
             <ProjectCard
@@ -293,13 +288,10 @@ export default function Lookbook() {
             />
           ))}
         </div>
-
       </section>
 
       {/* ΦΙΛΟΣΟΦΙΑ DISETO */}
-
       <section className="lookbook-manifesto lookbook-reveal">
-
         <span className="lookbook-eyebrow">
           {t.manifestoEyebrow}
         </span>
@@ -320,11 +312,9 @@ export default function Lookbook() {
         <a className="lookbook-text-link" href="/#contact">
           {t.contact}
         </a>
-
       </section>
 
       {/* LIGHTBOX */}
-
       {selected && (
         <div
           className="lookbook-lightbox"
@@ -333,7 +323,6 @@ export default function Lookbook() {
           aria-modal="true"
           aria-label={selected.name[language]}
         >
-
           <button
             className="lightbox-close"
             onClick={() => setSelectedId(null)}
@@ -359,7 +348,7 @@ export default function Lookbook() {
               );
             }}
           >
-            ←
+            ‹
           </button>
 
           <img
@@ -383,18 +372,16 @@ export default function Lookbook() {
               );
             }}
           >
-            →
+            ›
           </button>
 
           <span className="lightbox-caption">
             {selected.type[language]} · {selected.id}
           </span>
-
         </div>
       )}
 
       {/* STYLES */}
-
       <style jsx global>{`
         .lookbook-page {
           --lb-bg: #f7f4ed;
@@ -412,7 +399,6 @@ export default function Lookbook() {
         }
 
         /* HERO */
-
         .lookbook-hero {
           padding: 75px 6.5% 65px;
         }
@@ -540,7 +526,6 @@ export default function Lookbook() {
         }
 
         /* GALLERY */
-
         .lookbook-work {
           padding: 110px 6.5% 130px;
         }
@@ -566,7 +551,6 @@ export default function Lookbook() {
         }
 
         /* FILTERS */
-
         .lookbook-filters {
           display: flex;
           flex-wrap: wrap;
@@ -601,7 +585,6 @@ export default function Lookbook() {
         }
 
         /* GRID */
-
         .lookbook-grid {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -657,26 +640,46 @@ export default function Lookbook() {
           filter: brightness(0.94);
         }
 
+        /* ΝΕΟ ΚΟΥΜΠΙ ΦΩΤΟΓΡΑΦΙΑΣ */
         .lookbook-image-arrow {
           position: absolute;
           right: 18px;
           bottom: 18px;
-          display: grid;
-          place-items: center;
-          width: 42px;
-          height: 42px;
-          border-radius: 50%;
-          background: var(--lb-bg);
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          padding: 8px 9px 8px 15px;
+          border: 1px solid rgba(255, 255, 255, 0.65);
+          border-radius: 40px;
+          background: rgba(247, 244, 237, 0.94);
           color: var(--lb-dark);
-          font-size: 20px;
+          font: 600 9px Arial, sans-serif;
+          letter-spacing: 0.16em;
           opacity: 0;
           transform: translateY(8px);
-          transition: all 0.3s;
+          transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .lookbook-image-arrow-icon {
+          display: grid;
+          place-items: center;
+          width: 25px;
+          height: 25px;
+          border-radius: 50%;
+          background: var(--lb-dark);
+          color: white;
+          font-size: 17px;
+          letter-spacing: 0;
+          transition: transform 0.3s ease;
         }
 
         .lookbook-image:hover .lookbook-image-arrow {
           opacity: 1;
           transform: translateY(0);
+        }
+
+        .lookbook-image:hover .lookbook-image-arrow-icon {
+          transform: rotate(45deg);
         }
 
         .lookbook-caption {
@@ -702,8 +705,7 @@ export default function Lookbook() {
           white-space: nowrap;
         }
 
-        /* MANIFESTO - ΣΚΟΥΡΟ ΜΠΟΡΝΤΟ */
-
+        /* MANIFESTO */
         .lookbook-manifesto {
           background: #351019;
           color: #f7f4ed;
@@ -757,7 +759,6 @@ export default function Lookbook() {
         }
 
         /* LIGHTBOX */
-
         .lookbook-lightbox {
           position: fixed;
           inset: 0;
@@ -794,12 +795,35 @@ export default function Lookbook() {
           font-size: 42px;
         }
 
+        /* ΝΕΑ ΚΥΚΛΙΚΑ ΚΟΥΜΠΙΑ LIGHTBOX */
+        .lightbox-prev,
+        .lightbox-next {
+          display: grid;
+          place-items: center;
+          width: 52px;
+          height: 52px;
+          border: 1px solid rgba(255, 255, 255, 0.35);
+          border-radius: 50%;
+          background: rgba(247, 244, 237, 0.08);
+          color: white;
+          font-family: Georgia, serif;
+          font-size: 38px;
+          line-height: 1;
+          transition: background 0.3s ease, color 0.3s ease;
+        }
+
         .lightbox-prev {
           left: 25px;
         }
 
         .lightbox-next {
           right: 25px;
+        }
+
+        .lightbox-prev:hover,
+        .lightbox-next:hover {
+          background: #f7f4ed;
+          color: #28231e;
         }
 
         .lightbox-caption {
@@ -815,7 +839,6 @@ export default function Lookbook() {
         }
 
         /* SCROLL REVEAL */
-
         .lookbook-reveal {
           opacity: 0;
           transform: translate3d(0, 55px, 0);
@@ -843,8 +866,7 @@ export default function Lookbook() {
           transition-delay: var(--delay, 0ms);
         }
 
-        /* ANIMATION KEYFRAMES */
-
+        /* ANIMATIONS */
         @keyframes lightboxFade {
           from {
             opacity: 0;
@@ -868,7 +890,6 @@ export default function Lookbook() {
         }
 
         /* MOBILE */
-
         @media (max-width: 700px) {
           .lookbook-hero {
             padding: 45px 5% 45px;
@@ -981,7 +1002,6 @@ export default function Lookbook() {
         }
 
         /* REDUCED MOTION */
-
         @media (prefers-reduced-motion: reduce) {
           .lookbook-page *,
           .lookbook-page *::before,
@@ -1002,7 +1022,6 @@ export default function Lookbook() {
           }
         }
       `}</style>
-
     </main>
   );
 }

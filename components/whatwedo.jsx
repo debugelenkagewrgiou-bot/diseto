@@ -162,7 +162,6 @@ export default function WhatWeDo() {
   return (
     <section className="what-we-do" id="what-we-do">
       <div className="what-container">
-
         {/* HEADING */}
         <div className="what-heading what-reveal">
           <div className="what-topline">
@@ -186,7 +185,6 @@ export default function WhatWeDo() {
         {/* SERVICES */}
         <div className="services-heading what-reveal">
           <span>{t.servicesHeading}</span>
-          <span>01 — 06</span>
         </div>
 
         <div className="services-list">
@@ -234,7 +232,6 @@ export default function WhatWeDo() {
       </div>
 
       <div className="what-container">
-
         {/* PHILOSOPHY */}
         <div className="what-footer">
           <div className="philosophy-title what-reveal">
@@ -256,7 +253,9 @@ export default function WhatWeDo() {
 
             <a href="#contact" className="philosophy-link">
               {t.contactLink}
-              <span className="philosophy-arrow">↗</span>
+              <span className="philosophy-arrow" aria-hidden="true">
+                <span>＋</span>
+              </span>
             </a>
           </div>
         </div>
@@ -435,7 +434,6 @@ export default function WhatWeDo() {
         }
 
         /* PHILOSOPHY */
-
         .what-footer {
           position: relative;
           display: grid;
@@ -496,6 +494,7 @@ export default function WhatWeDo() {
           font-size: 12px;
           line-height: 1.6;
           letter-spacing: 0.12em;
+          text-decoration: none;
           transition:
             color 0.3s ease,
             gap 0.3s ease,
@@ -508,12 +507,40 @@ export default function WhatWeDo() {
           border-color: #28231e;
         }
 
+        /* ΝΕΟ ΚΥΚΛΙΚΟ ΚΟΥΜΠΙ */
         .philosophy-arrow {
-          font-size: 15px;
+          display: grid;
+          place-items: center;
+          width: 27px;
+          height: 27px;
+          flex-shrink: 0;
+          border: 1px solid #a98c61;
+          border-radius: 50%;
+          background: #28231e;
+          color: #f4efe6;
+          transition:
+            transform 0.3s ease,
+            background 0.3s ease,
+            color 0.3s ease;
+        }
+
+        .philosophy-arrow span {
+          display: block;
+          font-size: 17px;
+          line-height: 1;
+          transition: transform 0.3s ease;
+        }
+
+        .philosophy-link:hover .philosophy-arrow {
+          background: #9c8058;
+          color: #ffffff;
+        }
+
+        .philosophy-link:hover .philosophy-arrow span {
+          transform: rotate(45deg);
         }
 
         /* BOTTOM LINE */
-
         .what-bottom-line {
           display: flex;
           justify-content: space-between;
@@ -528,7 +555,6 @@ export default function WhatWeDo() {
         }
 
         /* REVEAL ANIMATIONS */
-
         .what-reveal {
           opacity: 0;
           transform: translate3d(0, 45px, 0);
@@ -574,7 +600,6 @@ export default function WhatWeDo() {
         }
 
         /* FULL-WIDTH ARCHITECTURAL IMAGE */
-
         .what-wide-band {
           position: relative;
           width: 100vw;
@@ -629,7 +654,6 @@ export default function WhatWeDo() {
         }
 
         /* TABLET */
-
         @media (max-width: 900px) {
           .what-heading-grid {
             grid-template-columns: 1fr;
@@ -659,7 +683,6 @@ export default function WhatWeDo() {
         }
 
         /* MOBILE */
-
         @media (max-width: 600px) {
           .what-we-do {
             padding: 76px 5% 48px;
@@ -782,7 +805,9 @@ export default function WhatWeDo() {
 
           .service-item,
           .service-content h3,
-          .philosophy-link {
+          .philosophy-link,
+          .philosophy-arrow,
+          .philosophy-arrow span {
             transition: none;
           }
 

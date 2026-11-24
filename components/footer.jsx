@@ -187,9 +187,9 @@ export default function Footer() {
                   className="group inline-flex items-center border-b border-[#c5a47d] pb-2 text-xs font-semibold tracking-[0.15em] text-[#f7f4ed] transition-colors duration-300 hover:text-[#c5a47d]"
                 >
                   {t.requestQuote}
-                  <span className="ml-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
-                    ↗
-                  </span>
+                  <span className="ml-3 inline-grid h-5 w-5 place-items-center rounded-full border border-current text-[13px] leading-none transition-transform duration-300 group-hover:rotate-45">
+  +
+</span>
                 </Link>
               </li>
             </ul>
