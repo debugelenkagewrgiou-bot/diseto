@@ -83,11 +83,11 @@ export default function Footer() {
               />
             </Link>
 
-            <p className="mt-5 max-w-[240px] text-sm leading-7 text-[#d1c1bd]">
+            <p className="mt-5 max-w-[240px] text-base font-medium leading-7 text-[#d1c1bd]">
               {t.description}
             </p>
 
-            <p className="mt-5 text-[10px] tracking-[0.16em] text-[#c5a47d]">
+            <p className="mt-5 text-xs font-semibold tracking-[0.16em] text-[#c5a47d]">
               {t.since}
             </p>
 
@@ -113,11 +113,11 @@ export default function Footer() {
 
           {/* NAVIGATION */}
           <div>
-            <h3 className="mb-6 text-[10px] tracking-[0.18em] text-[#c5a47d]">
+            <h3 className="mb-6 text-xs font-semibold tracking-[0.18em] text-[#c5a47d]">
               {t.navigation}
             </h3>
 
-            <ul className="space-y-4 text-sm text-[#d1c1bd]">
+            <ul className="space-y-4 text-base font-medium text-[#d1c1bd]">
               <li><Link href="/" className="transition-colors duration-300 hover:text-white">{t.home}</Link></li>
               <li><Link href="/#projects" className="transition-colors duration-300 hover:text-white">{t.projects}</Link></li>
               <li><Link href="/lookbook" className="transition-colors duration-300 hover:text-white">{t.lookbook}</Link></li>
@@ -128,31 +128,31 @@ export default function Footer() {
 
           {/* LOCATIONS */}
           <div>
-            <h3 className="mb-6 text-[10px] tracking-[0.18em] text-[#c5a47d]">
+            <h3 className="mb-6 text-xs font-semibold tracking-[0.18em] text-[#c5a47d]">
               {t.locations}
             </h3>
 
-            <div className="space-y-7 text-sm">
+            <div className="space-y-7 text-base">
               <div>
-                <p className="mb-2 text-[#f7f4ed]">{t.factory}</p>
-                <p className="leading-6 text-[#d1c1bd]">{t.corinth}</p>
-                <p className="mt-1 text-xs leading-6 text-[#b9a5a5]">
+                <p className="mb-2 font-semibold text-[#f7f4ed]">{t.factory}</p>
+                <p className="font-medium leading-6 text-[#d1c1bd]">{t.corinth}</p>
+                <p className="mt-1 text-sm leading-6 text-[#b9a5a5]">
                   {t.factoryDescription}
                 </p>
               </div>
 
               <div>
-                <p className="mb-2 text-[#f7f4ed]">{t.showroom}</p>
-                <p className="leading-6 text-[#d1c1bd]">{t.athens}</p>
-                <p className="mt-1 text-xs leading-6 text-[#b9a5a5]">
+                <p className="mb-2 font-semibold text-[#f7f4ed]">{t.showroom}</p>
+                <p className="font-medium leading-6 text-[#d1c1bd]">{t.athens}</p>
+                <p className="mt-1 text-sm leading-6 text-[#b9a5a5]">
                   {t.showroomDescription}
                 </p>
               </div>
 
               <div className="border-t border-white/10 pt-5">
-                <p className="mb-2 text-[#f7f4ed]">{t.openingHours}</p>
-                <p className="text-sm leading-7 text-[#d1c1bd]">
-                  <span className="text-[#c5a47d]">{t.open}</span>
+                <p className="mb-2 font-semibold text-[#f7f4ed]">{t.openingHours}</p>
+                <p className="text-base font-medium leading-7 text-[#d1c1bd]">
+                  <span className="font-semibold text-[#c5a47d]">{t.open}</span>
                   <br />
                   {t.weekdays}
                   <br />
@@ -164,11 +164,11 @@ export default function Footer() {
 
           {/* CONTACT */}
           <div>
-            <h3 className="mb-6 text-[10px] tracking-[0.18em] text-[#c5a47d]">
+            <h3 className="mb-6 text-xs font-semibold tracking-[0.18em] text-[#c5a47d]">
               {t.communication}
             </h3>
 
-            <ul className="space-y-4 text-sm text-[#d1c1bd]">
+            <ul className="space-y-4 text-base font-medium text-[#d1c1bd]">
               <li>
                 <a href="tel:+306987452135" className="transition-colors duration-300 hover:text-white">
                   698 745 2135
@@ -184,7 +184,7 @@ export default function Footer() {
               <li className="pt-3">
                 <Link
                   href="/#contact"
-                  className="group inline-flex items-center border-b border-[#c5a47d] pb-2 text-[10px] tracking-[0.15em] text-[#f7f4ed] transition-colors duration-300 hover:text-[#c5a47d]"
+                  className="group inline-flex items-center border-b border-[#c5a47d] pb-2 text-xs font-semibold tracking-[0.15em] text-[#f7f4ed] transition-colors duration-300 hover:text-[#c5a47d]"
                 >
                   {t.requestQuote}
                   <span className="ml-3 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
@@ -197,10 +197,10 @@ export default function Footer() {
         </div>
 
         {/* BOTTOM */}
-        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-7 text-center text-[10px] tracking-[0.08em] text-[#b9a5a5] md:flex-row md:text-left">
+        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-7 text-center text-xs font-medium tracking-[0.08em] text-[#b9a5a5] md:flex-row md:text-left">
           <p>{t.copyright}</p>
 
-          <p className="text-[#c5a47d]">
+          <p className="font-semibold text-[#c5a47d]">
             {t.slogan}
           </p>
         </div>

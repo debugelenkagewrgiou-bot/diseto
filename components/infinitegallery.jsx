@@ -1,7 +1,14 @@
 
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
@@ -21,6 +28,7 @@ const DEFAULT_BLUR_SETTINGS = {
   maxBlur: 8,
 };
 
+// Optimized shader material
 function createClothMaterial() {
   return new THREE.ShaderMaterial({
     transparent: true,
@@ -34,14 +42,17 @@ function createClothMaterial() {
       time: { value: 0 },
       isHovered: { value: 0 },
     },
+
     vertexShader: `
       uniform float scrollForce;
       uniform float time;
       uniform float isHovered;
+
       varying vec2 vUv;
 
       void main() {
         vUv = uv;
+
         vec3 pos = position;
 
         float curveIntensity = scrollForce * 0.3;
@@ -50,7 +61,9 @@ function createClothMaterial() {
 
         float ripple1 = sin(pos.x * 2.0 + scrollForce * 3.0) * 0.02;
         float ripple2 = sin(pos.y * 2.5 + scrollForce * 2.0) * 0.015;
-        float clothEffect = (ripple1 + ripple2) * abs(curveIntensity) * 2.0;
+
+        float clothEffect =
+          (ripple1 + ripple2) * abs(curveIntensity) * 2.0;
 
         float flagWave = 0.0;
 
@@ -69,9 +82,11 @@ function createClothMaterial() {
 
         pos.z -= curve + clothEffect + flagWave;
 
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+        gl_Position =
+          projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
       }
     `,
+
     fragmentShader: `
       uniform sampler2D map;
       uniform vec2 resolution;
@@ -84,15 +99,21 @@ function createClothMaterial() {
       void main() {
         vec4 color = texture2D(map, vUv);
 
-        if (blurAmount > 0.0) {
-          vec2 texelSize = 1.0 / max(resolution, vec2(1.0));
+        // Optimized 3x3 blur instead of 5x5
+        if (blurAmount > 0.01) {
+          vec2 texelSize =
+            1.0 / max(resolution, vec2(1.0));
+
           vec4 blurred = vec4(0.0);
           float total = 0.0;
 
-          for (float x = -2.0; x <= 2.0; x += 1.0) {
-            for (float y = -2.0; y <= 2.0; y += 1.0) {
-              vec2 offset = vec2(x, y) * texelSize * blurAmount;
-              float weight = 1.0 / (1.0 + length(vec2(x, y)));
+          for (float x = -1.0; x <= 1.0; x += 1.0) {
+            for (float y = -1.0; y <= 1.0; y += 1.0) {
+              vec2 offset =
+                vec2(x, y) * texelSize * blurAmount;
+
+              float weight =
+                1.0 / (1.0 + length(vec2(x, y)));
 
               blurred += texture2D(map, vUv + offset) * weight;
               total += weight;
@@ -103,6 +124,7 @@ function createClothMaterial() {
         }
 
         float curveHighlight = abs(scrollForce) * 0.005;
+
         color.rgb += vec3(curveHighlight);
 
         gl_FragColor = vec4(color.rgb, color.a * opacity);
@@ -115,27 +137,31 @@ function getImageSize(texture) {
   const image = texture?.image;
 
   return {
-    width: image?.naturalWidth || image?.videoWidth || image?.width || 1,
-    height: image?.naturalHeight || image?.videoHeight || image?.height || 1,
+    width:
+      image?.naturalWidth ||
+      image?.videoWidth ||
+      image?.width ||
+      1,
+
+    height:
+      image?.naturalHeight ||
+      image?.videoHeight ||
+      image?.height ||
+      1,
   };
 }
 
 function ImagePlane({ plane, textures, material }) {
   const meshRef = useRef(null);
-  const hoveredRef = useRef(false);
   const currentTextureRef = useRef(null);
 
   const handlePointerEnter = useCallback(() => {
-    hoveredRef.current = true;
-
     if (material?.uniforms?.isHovered) {
       material.uniforms.isHovered.value = 1;
     }
   }, [material]);
 
   const handlePointerLeave = useCallback(() => {
-    hoveredRef.current = false;
-
     if (material?.uniforms?.isHovered) {
       material.uniforms.isHovered.value = 0;
     }
@@ -152,7 +178,6 @@ function ImagePlane({ plane, textures, material }) {
       currentTextureRef.current = texture;
 
       material.uniforms.map.value = texture;
-      texture.colorSpace = THREE.SRGBColorSpace;
 
       const { width, height } = getImageSize(texture);
 
@@ -181,7 +206,7 @@ function ImagePlane({ plane, textures, material }) {
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
     >
-      <planeGeometry args={[1, 1, 32, 32]} />
+      <planeGeometry args={[1, 1, 16, 16]} />
     </mesh>
   );
 }
@@ -192,7 +217,10 @@ function getOpacity(position, fadeSettings) {
   if (position < fadeIn.start) return 0;
 
   if (position <= fadeIn.end) {
-    const range = Math.max(fadeIn.end - fadeIn.start, 0.0001);
+    const range = Math.max(
+      fadeIn.end - fadeIn.start,
+      0.0001
+    );
 
     return THREE.MathUtils.clamp(
       (position - fadeIn.start) / range,
@@ -204,7 +232,10 @@ function getOpacity(position, fadeSettings) {
   if (position < fadeOut.start) return 1;
 
   if (position <= fadeOut.end) {
-    const range = Math.max(fadeOut.end - fadeOut.start, 0.0001);
+    const range = Math.max(
+      fadeOut.end - fadeOut.start,
+      0.0001
+    );
 
     return 1 - THREE.MathUtils.clamp(
       (position - fadeOut.start) / range,
@@ -222,19 +253,35 @@ function getBlur(position, blurSettings) {
   if (position < blurIn.start) return maxBlur;
 
   if (position <= blurIn.end) {
-    const range = Math.max(blurIn.end - blurIn.start, 0.0001);
-    const progress = (position - blurIn.start) / range;
+    const range = Math.max(
+      blurIn.end - blurIn.start,
+      0.0001
+    );
 
-    return maxBlur * (1 - THREE.MathUtils.clamp(progress, 0, 1));
+    const progress =
+      (position - blurIn.start) / range;
+
+    return maxBlur * (
+      1 - THREE.MathUtils.clamp(progress, 0, 1)
+    );
   }
 
   if (position < blurOut.start) return 0;
 
   if (position <= blurOut.end) {
-    const range = Math.max(blurOut.end - blurOut.start, 0.0001);
-    const progress = (position - blurOut.start) / range;
+    const range = Math.max(
+      blurOut.end - blurOut.start,
+      0.0001
+    );
 
-    return maxBlur * THREE.MathUtils.clamp(progress, 0, 1);
+    const progress =
+      (position - blurOut.start) / range;
+
+    return maxBlur * THREE.MathUtils.clamp(
+      progress,
+      0,
+      1
+    );
   }
 
   return maxBlur;
@@ -257,7 +304,9 @@ function GalleryScene({
     () =>
       images
         .map((img) =>
-          typeof img === "string" ? { src: img, alt: "" } : img
+          typeof img === "string"
+            ? { src: img, alt: "" }
+            : img
         )
         .filter((img) => img?.src),
     [images]
@@ -291,7 +340,9 @@ function GalleryScene({
     () =>
       Array.from({ length: visibleCount }, (_, i) => {
         const horizontalAngle = (i * 2.618) % (Math.PI * 2);
-        const verticalAngle = (i * 1.618 + Math.PI / 3) % (Math.PI * 2);
+
+        const verticalAngle =
+          (i * 1.618 + Math.PI / 3) % (Math.PI * 2);
 
         const horizontalRadius = (i % 3) * 1.2;
         const verticalRadius = ((i + 1) % 4) * 0.8;
@@ -300,13 +351,12 @@ function GalleryScene({
           x:
             (Math.sin(horizontalAngle) *
               horizontalRadius *
-              MAX_HORIZONTAL_OFFSET) /
-            3,
+              MAX_HORIZONTAL_OFFSET) / 3,
+
           y:
             (Math.cos(verticalAngle) *
               verticalRadius *
-              MAX_VERTICAL_OFFSET) /
-            4,
+              MAX_VERTICAL_OFFSET) / 4,
         };
       }),
     [visibleCount]
@@ -318,17 +368,27 @@ function GalleryScene({
     () =>
       Array.from({ length: visibleCount }, (_, i) => ({
         index: i,
-        z: (DEFAULT_DEPTH_RANGE / Math.max(visibleCount, 1)) * i,
-        imageIndex: totalImages ? i % totalImages : 0,
+
+        z:
+          (DEFAULT_DEPTH_RANGE /
+            Math.max(visibleCount, 1)) * i,
+
+        imageIndex: totalImages
+          ? i % totalImages
+          : 0,
+
         x: spatialPositions[i]?.x ?? 0,
         y: spatialPositions[i]?.y ?? 0,
       })),
     [visibleCount, totalImages, spatialPositions]
   );
 
+  // Dispose materials when the gallery is removed
   useEffect(() => {
     return () => {
-      materials.forEach((material) => material.dispose());
+      materials.forEach((material) => {
+        material.dispose();
+      });
     };
   }, [materials]);
 
@@ -336,7 +396,8 @@ function GalleryScene({
     (event) => {
       event.preventDefault();
 
-      velocityRef.current += event.deltaY * 0.01 * speed;
+      velocityRef.current +=
+        event.deltaY * 0.01 * speed;
 
       autoPlayRef.current = false;
       lastInteractionRef.current = Date.now();
@@ -346,7 +407,10 @@ function GalleryScene({
 
   const handleKeyDown = useCallback(
     (event) => {
-      if (event.key === "ArrowUp" || event.key === "ArrowLeft") {
+      if (
+        event.key === "ArrowUp" ||
+        event.key === "ArrowLeft"
+      ) {
         velocityRef.current -= 2 * speed;
       } else if (
         event.key === "ArrowDown" ||
@@ -381,15 +445,18 @@ function GalleryScene({
   useFrame((state, delta) => {
     if (!totalImages) return;
 
+    // Prevent large jumps after a dropped frame
+    const safeDelta = Math.min(delta, 0.05);
+
     if (Date.now() - lastInteractionRef.current > 3000) {
       autoPlayRef.current = true;
     }
 
     if (autoPlayRef.current) {
-      velocityRef.current += 0.3 * delta;
+      velocityRef.current += 0.3 * safeDelta;
     }
 
-    const damping = Math.pow(0.95, delta * 60);
+    const damping = Math.pow(0.95, safeDelta * 60);
 
     velocityRef.current *= damping;
 
@@ -401,55 +468,68 @@ function GalleryScene({
       material.uniforms.scrollForce.value = velocity;
     });
 
-    const imageAdvance = visibleCount % totalImages || totalImages;
+    // Advance one image per complete cycle
+    const imageAdvance = 1;
 
     planesData.forEach((plane, i) => {
-      let nextZ = plane.z + velocity * delta * 10;
+      let nextZ =
+        plane.z + velocity * safeDelta * 10;
 
       let wrapsForward = 0;
       let wrapsBackward = 0;
 
       if (nextZ >= DEFAULT_DEPTH_RANGE) {
-        wrapsForward = Math.floor(nextZ / DEFAULT_DEPTH_RANGE);
-        nextZ -= DEFAULT_DEPTH_RANGE * wrapsForward;
+        wrapsForward = Math.floor(
+          nextZ / DEFAULT_DEPTH_RANGE
+        );
+
+        nextZ -=
+          DEFAULT_DEPTH_RANGE * wrapsForward;
       } else if (nextZ < 0) {
-        wrapsBackward = Math.ceil(-nextZ / DEFAULT_DEPTH_RANGE);
-        nextZ += DEFAULT_DEPTH_RANGE * wrapsBackward;
+        wrapsBackward = Math.ceil(
+          -nextZ / DEFAULT_DEPTH_RANGE
+        );
+
+        nextZ +=
+          DEFAULT_DEPTH_RANGE * wrapsBackward;
       }
 
       if (wrapsForward > 0) {
         plane.imageIndex =
-          (plane.imageIndex + wrapsForward * imageAdvance) %
+          (plane.imageIndex +
+            wrapsForward * imageAdvance) %
           totalImages;
       }
 
       if (wrapsBackward > 0) {
-        const step = plane.imageIndex - wrapsBackward * imageAdvance;
+        const step =
+          plane.imageIndex -
+          wrapsBackward * imageAdvance;
 
         plane.imageIndex =
-          ((step % totalImages) + totalImages) % totalImages;
+          ((step % totalImages) + totalImages) %
+          totalImages;
       }
 
       plane.z =
-        ((nextZ % DEFAULT_DEPTH_RANGE) + DEFAULT_DEPTH_RANGE) %
+        ((nextZ % DEFAULT_DEPTH_RANGE) +
+          DEFAULT_DEPTH_RANGE) %
         DEFAULT_DEPTH_RANGE;
 
       plane.x = spatialPositions[i]?.x ?? 0;
       plane.y = spatialPositions[i]?.y ?? 0;
 
-      const normalizedPosition = plane.z / DEFAULT_DEPTH_RANGE;
+      const normalizedPosition =
+        plane.z / DEFAULT_DEPTH_RANGE;
+
       const material = materials[i];
 
       if (material) {
-        material.uniforms.opacity.value = getOpacity(
-          normalizedPosition,
-          fadeSettings
-        );
+        material.uniforms.opacity.value =
+          getOpacity(normalizedPosition, fadeSettings);
 
-        material.uniforms.blurAmount.value = getBlur(
-          normalizedPosition,
-          blurSettings
-        );
+        material.uniforms.blurAmount.value =
+          getBlur(normalizedPosition, blurSettings);
       }
     });
   });
@@ -473,7 +553,9 @@ function GalleryScene({
 function FallbackGallery({ images }) {
   const normalizedImages = images
     .map((img) =>
-      typeof img === "string" ? { src: img, alt: "" } : img
+      typeof img === "string"
+        ? { src: img, alt: "" }
+        : img
     )
     .filter((img) => img?.src);
 
@@ -491,6 +573,7 @@ function FallbackGallery({ images }) {
             alt={image.alt || ""}
             className="h-32 w-full rounded object-cover"
             loading="lazy"
+            decoding="async"
           />
         ))}
       </div>
@@ -555,6 +638,7 @@ export default function InfiniteGallery({
     return <div className={className} style={style} />;
   }
 
+ 
   return (
     <div className={className} style={style}>
       <Canvas
@@ -565,19 +649,21 @@ export default function InfiniteGallery({
           far: 100,
         }}
         gl={{
-          antialias: true,
+          antialias: false,
           alpha: true,
+          powerPreference: "high-performance",
         }}
-        dpr={[1, 1.75]}
+        dpr={[1, 1.25]}
       >
         <GalleryScene
           images={validImages}
           speed={speed}
-          visibleCount={Math.max(1, visibleCount)}
+          visibleCount={visibleCount}
           fadeSettings={fadeSettings}
           blurSettings={blurSettings}
         />
       </Canvas>
     </div>
   );
+
 }

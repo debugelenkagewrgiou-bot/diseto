@@ -434,7 +434,8 @@ export default function Lookbook() {
         .lookbook-hero-image > span,
         .lookbook-count {
           font-family: Arial, sans-serif;
-          font-size: 10px;
+          font-size: 12px;
+          font-weight: 600;
           letter-spacing: 0.13em;
           text-transform: uppercase;
         }
@@ -450,7 +451,7 @@ export default function Lookbook() {
           font-size: clamp(65px, 12.5vw, 175px);
           line-height: 0.88;
           letter-spacing: -0.075em;
-          font-weight: 400;
+          font-weight: 500;
           margin: 0;
         }
 
@@ -477,7 +478,7 @@ export default function Lookbook() {
         .lookbook-hero-bottom p {
           max-width: 390px;
           color: var(--lb-muted);
-          font: 14px/1.8 Arial, sans-serif;
+          font: 500 16px/1.8 Arial, sans-serif;
         }
 
         .lookbook-round-link {
@@ -554,7 +555,7 @@ export default function Lookbook() {
         }
 
         .lookbook-heading h2 {
-          font: 400 clamp(38px, 5.5vw, 72px)/1.1 Georgia, serif;
+          font: 500 clamp(38px, 5.5vw, 72px)/1.1 Georgia, serif;
           letter-spacing: -0.055em;
           margin: 18px 0 0;
         }
@@ -579,7 +580,7 @@ export default function Lookbook() {
           border-radius: 30px;
           padding: 11px 18px;
           color: var(--lb-muted);
-          font: 11px Arial, sans-serif;
+          font: 500 13px Arial, sans-serif;
           cursor: pointer;
           transition:
             color 0.35s ease,
@@ -686,17 +687,18 @@ export default function Lookbook() {
 
         .lookbook-type {
           color: var(--lb-muted);
-          font-size: 9px;
+          font-size: 11px;
         }
 
         .lookbook-caption h3 {
-          font: 400 22px Georgia, serif;
+          font: 500 25px Georgia, serif;
           margin: 8px 0 0;
         }
 
         .lookbook-view {
           color: var(--lb-muted);
-          font-size: 8px;
+          font-size: 10px;
+          font-weight: 600;
           white-space: nowrap;
         }
 
@@ -719,7 +721,7 @@ export default function Lookbook() {
 
         .lookbook-manifesto-copy p {
           color: #f7f4ed;
-          font: 400 clamp(32px, 5vw, 65px)/1.15 Georgia, serif;
+          font: 500 clamp(32px, 5vw, 65px)/1.15 Georgia, serif;
           letter-spacing: -0.045em;
           margin: 0 0 35px;
         }
@@ -728,7 +730,7 @@ export default function Lookbook() {
           display: block;
           max-width: 600px;
           color: #d1c1bd;
-          font: 14px/2 Arial, sans-serif;
+          font: 400 16px/2 Arial, sans-serif;
         }
 
         .lookbook-manifesto .lookbook-text-link {
@@ -748,7 +750,7 @@ export default function Lookbook() {
           padding-bottom: 9px;
           border-bottom: 1px solid var(--lb-dark);
           color: var(--lb-dark);
-          font: 10px Arial, sans-serif;
+          font: 600 12px Arial, sans-serif;
           letter-spacing: 0.12em;
           text-decoration: none;
           transition: color 0.3s, border-color 0.3s;
@@ -806,7 +808,7 @@ export default function Lookbook() {
           left: 50%;
           transform: translateX(-50%);
           color: white;
-          font: 10px Arial, sans-serif;
+          font: 500 12px Arial, sans-serif;
           letter-spacing: 0.15em;
           text-transform: uppercase;
           white-space: nowrap;
@@ -874,7 +876,7 @@ export default function Lookbook() {
 
           .lookbook-hero-top {
             padding-bottom: 55px;
-            font-size: 8px;
+            font-size: 10px;
           }
 
           .lookbook-title {
@@ -891,7 +893,7 @@ export default function Lookbook() {
 
           .lookbook-hero-bottom p {
             max-width: 270px;
-            font-size: 12px;
+            font-size: 14px;
           }
 
           .lookbook-round-link {
@@ -913,7 +915,7 @@ export default function Lookbook() {
           }
 
           .lookbook-count {
-            font-size: 8px;
+            font-size: 10px;
           }
 
           .lookbook-filters {
@@ -923,7 +925,7 @@ export default function Lookbook() {
 
           .lookbook-filter {
             padding: 9px 13px;
-            font-size: 10px;
+            font-size: 12px;
           }
 
           .lookbook-grid {
@@ -941,11 +943,11 @@ export default function Lookbook() {
           }
 
           .lookbook-caption h3 {
-            font-size: 19px;
+            font-size: 21px;
           }
 
           .lookbook-view {
-            font-size: 7px;
+            font-size: 9px;
           }
 
           .lookbook-manifesto {
@@ -958,10 +960,11 @@ export default function Lookbook() {
 
           .lookbook-manifesto-copy p {
             font-size: 35px;
+            font-weight: 500;
           }
 
           .lookbook-manifesto-copy span {
-            font-size: 12px;
+            font-size: 14px;
           }
 
           .lookbook-lightbox {

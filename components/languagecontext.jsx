@@ -3,8 +3,10 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -31,15 +33,22 @@ export function LanguageProvider({ children }) {
     document.documentElement.lang = language;
   }, [language, ready]);
 
-  function changeLanguage(nextLanguage) {
+  const changeLanguage = useCallback((nextLanguage) => {
     if (nextLanguage !== "el" && nextLanguage !== "en") return;
+
     setLanguage(nextLanguage);
-  }
+  }, []);
+
+  const contextValue = useMemo(
+    () => ({
+      language,
+      setLanguage: changeLanguage,
+    }),
+    [language, changeLanguage]
+  );
 
   return (
-    <LanguageContext.Provider
-      value={{ language, setLanguage: changeLanguage }}
-    >
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );

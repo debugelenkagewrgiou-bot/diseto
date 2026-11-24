@@ -162,6 +162,7 @@ export default function WhatWeDo() {
   return (
     <section className="what-we-do" id="what-we-do">
       <div className="what-container">
+
         {/* HEADING */}
         <div className="what-heading what-reveal">
           <div className="what-topline">
@@ -206,6 +207,33 @@ export default function WhatWeDo() {
             </article>
           ))}
         </div>
+      </div>
+
+      {/* FULL-WIDTH ARCHITECTURAL IMAGE STRIP */}
+      <div
+        className="what-wide-band"
+        role="img"
+        aria-label={
+          language === "en"
+            ? "Architectural interior and bespoke craftsmanship"
+            : "Αρχιτεκτονικός χώρος και προσεγμένη κατασκευή"
+        }
+      >
+        <div className="what-wide-band-inner">
+          <span>
+            {language === "en"
+              ? "DESIGNED WITH PURPOSE"
+              : "ΣΧΕΔΙΑΣΜΕΝΟ ΜΕ ΣΚΟΠΟ"}
+          </span>
+          <p>
+            {language === "en"
+              ? "CRAFTED TO LAST."
+              : "ΚΑΤΑΣΚΕΥΑΣΜΕΝΟ ΓΙΑ ΝΑ ΑΝΤΕΧΕΙ."}
+          </p>
+        </div>
+      </div>
+
+      <div className="what-container">
 
         {/* PHILOSOPHY */}
         <div className="what-footer">
@@ -228,7 +256,7 @@ export default function WhatWeDo() {
 
             <a href="#contact" className="philosophy-link">
               {t.contactLink}
-              <span className="philosophy-arrow"></span>
+              <span className="philosophy-arrow">↗</span>
             </a>
           </div>
         </div>
@@ -241,14 +269,31 @@ export default function WhatWeDo() {
 
       <style jsx>{`
         .what-we-do {
-          background: #f7f4ed;
-          color: #28231e;
-          padding: 145px 7% 90px;
+          position: relative;
+          isolation: isolate;
+          background: #351019;
+          color: #f4efe6;
+          padding: clamp(82px, 9vw, 138px) 7% 76px;
           overflow: hidden;
         }
 
+        .what-we-do::before {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          inset: 0 0 auto;
+          height: 1px;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            #c5a47d,
+            transparent
+          );
+          opacity: 0.9;
+        }
+
         .what-container {
-          max-width: 1500px;
+          max-width: 1440px;
           margin: 0 auto;
         }
 
@@ -256,105 +301,120 @@ export default function WhatWeDo() {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding-bottom: 22px;
+          border-bottom: 1px solid rgba(226, 211, 187, 0.2);
+          padding-bottom: 25px;
         }
 
         .what-eyebrow,
         .what-since {
-          color: #a89576;
+          color: #c5a47d;
           font-family: Arial, Helvetica, sans-serif;
-          font-size: 10px;
+          font-size: 12px;
           font-weight: 500;
-          letter-spacing: 0.19em;
+          letter-spacing: 0.18em;
         }
 
         .what-since {
-          color: #938a7d;
+          color: #d0bdb5;
         }
 
         .what-heading-grid {
           display: grid;
-          grid-template-columns: 1.25fr 0.75fr;
-          gap: 8%;
+          grid-template-columns: 1.15fr 0.85fr;
+          gap: 7%;
           align-items: end;
-          padding: 85px 0 120px;
+          padding: clamp(68px, 8vw, 112px) 0
+            clamp(82px, 9vw, 130px);
         }
 
         .what-heading h2,
         .what-footer h2 {
           margin: 0;
-          color: #28231e;
+          color: #f4efe6;
           font-family: Georgia, serif;
-          font-size: clamp(58px, 7.4vw, 112px);
+          font-size: clamp(64px, 8vw, 124px);
           font-weight: 400;
-          line-height: 0.91;
-          letter-spacing: -0.065em;
+          line-height: 0.88;
+          letter-spacing: -0.075em;
         }
 
         .what-heading h2 span,
         .what-footer h2 span {
-          color: #a89576;
+          color: #c5a47d;
           font-style: italic;
         }
 
         .what-intro-wrap {
-          max-width: 420px;
-          margin: 0 0 10px auto;
+          max-width: 470px;
+          padding: 24px 0 8px 28px;
+          margin: 0 0 0 auto;
+          border-left: 1px solid #c5a47d;
         }
 
         .what-intro {
           margin: 0;
-          color: #777168;
+          color: #e0d2ca;
           font-family: Arial, Helvetica, sans-serif;
-          font-size: 14px;
-          line-height: 2;
+          font-size: clamp(17px, 1.25vw, 19px);
+          line-height: 1.9;
         }
 
         .services-heading {
           display: flex;
           justify-content: space-between;
-          padding: 18px 0;
-          color: #a89576;
+          padding: 21px 2px;
+          color: #c5a47d;
+          border-top: 1px solid rgba(226, 211, 187, 0.22);
+          border-bottom: 1px solid rgba(226, 211, 187, 0.22);
           font-family: Arial, Helvetica, sans-serif;
-          font-size: 9px;
-          letter-spacing: 0.17em;
+          font-size: 12px;
+          letter-spacing: 0.18em;
         }
 
         .services-list {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
-          column-gap: 65px;
-          row-gap: 0;
+          gap: 16px;
+          padding-top: 24px;
         }
 
         .service-item {
+          position: relative;
           display: grid;
-          grid-template-columns: 38px 1fr;
+          grid-template-columns: 42px 1fr;
           gap: 20px;
           align-items: start;
-          min-height: 190px;
-          padding: 38px 10px;
-          transition: background 0.35s ease;
+          min-height: 230px;
+          padding: 34px 32px 32px;
+          background: #421c25;
+          border: 1px solid rgba(226, 211, 187, 0.15);
+          border-radius: 3px;
+          transition:
+            border-color 0.35s ease,
+            background 0.35s ease,
+            transform 0.35s ease;
         }
 
         .service-item:hover {
-          background: #f0ece3;
+          background: #4b222c;
+          border-color: rgba(197, 164, 125, 0.65);
+          transform: translateY(-4px);
         }
 
         .service-number {
-          padding-top: 7px;
-          color: #a89576;
+          padding-top: 5px;
+          color: #c5a47d;
           font-family: Arial, Helvetica, sans-serif;
-          font-size: 10px;
+          font-size: 13px;
           letter-spacing: 0.12em;
         }
 
         .service-content h3 {
-          max-width: 400px;
+          max-width: 440px;
           margin: 0 0 18px;
-          color: #28231e;
+          color: #f4efe6;
           font-family: Georgia, serif;
-          font-size: clamp(22px, 2.2vw, 31px);
+          font-size: clamp(25px, 2.2vw, 33px);
           font-weight: 400;
           line-height: 1.15;
           letter-spacing: -0.04em;
@@ -362,30 +422,48 @@ export default function WhatWeDo() {
         }
 
         .service-item:hover .service-content h3 {
-          color: #a89576;
+          color: #d9bd96;
         }
 
         .service-content p {
-          max-width: 430px;
+          max-width: 480px;
           margin: 0;
-          color: #777168;
+          color: #ddcfca;
           font-family: Arial, Helvetica, sans-serif;
-          font-size: 12px;
-          line-height: 1.9;
+          font-size: clamp(16px, 1.05vw, 17px);
+          line-height: 1.85;
         }
 
+        /* PHILOSOPHY */
+
         .what-footer {
+          position: relative;
           display: grid;
-          grid-template-columns: 1fr 0.7fr;
-          gap: 12%;
+          grid-template-columns: 1fr 0.75fr;
+          gap: 10%;
           align-items: end;
-          margin-top: 160px;
-          padding-bottom: 120px;
+          margin-top: clamp(100px, 13vw, 180px);
+          padding: clamp(48px, 6vw, 82px) clamp(28px, 5vw, 72px);
+          background: #eae3d7;
+          color: #28231e;
+          border-radius: 3px;
+        }
+
+        .what-footer h2 {
+          color: #28231e;
+          font-size: clamp(55px, 6.3vw, 92px);
+        }
+
+        .what-footer h2 span {
+          color: #9c8058;
+        }
+
+        .what-footer .what-eyebrow {
+          color: #9c8058;
         }
 
         .philosophy-title h2 {
           margin-top: 28px;
-          font-size: clamp(54px, 6vw, 86px);
         }
 
         .philosophy-title h2 span {
@@ -393,16 +471,17 @@ export default function WhatWeDo() {
         }
 
         .philosophy-content {
-          max-width: 430px;
+          max-width: 480px;
+          align-self: center;
           margin-left: auto;
         }
 
         .philosophy-content p {
           margin: 15px 0;
-          color: #777168;
+          color: #625b51;
           font-family: Arial, Helvetica, sans-serif;
-          font-size: 13px;
-          line-height: 2;
+          font-size: clamp(16px, 1.08vw, 18px);
+          line-height: 1.9;
         }
 
         .philosophy-link {
@@ -411,11 +490,12 @@ export default function WhatWeDo() {
           gap: 12px;
           margin-top: 25px;
           padding-bottom: 10px;
-          border-bottom: 1px solid #a89576;
+          border-bottom: 1px solid #a98c61;
           color: #28231e;
           font-family: Arial, Helvetica, sans-serif;
-          font-size: 9px;
-          letter-spacing: 0.14em;
+          font-size: 12px;
+          line-height: 1.6;
+          letter-spacing: 0.12em;
           transition:
             color 0.3s ease,
             gap 0.3s ease,
@@ -423,7 +503,7 @@ export default function WhatWeDo() {
         }
 
         .philosophy-link:hover {
-          color: #a89576;
+          color: #9c8058;
           gap: 19px;
           border-color: #28231e;
         }
@@ -432,16 +512,22 @@ export default function WhatWeDo() {
           font-size: 15px;
         }
 
+        /* BOTTOM LINE */
+
         .what-bottom-line {
           display: flex;
           justify-content: space-between;
           gap: 20px;
-          padding-top: 22px;
-          color: #a89576;
+          margin-top: 34px;
+          padding-top: 24px;
+          border-top: 1px solid rgba(226, 211, 187, 0.22);
+          color: #c5a47d;
           font-family: Arial, Helvetica, sans-serif;
-          font-size: 9px;
-          letter-spacing: 0.15em;
+          font-size: 11px;
+          letter-spacing: 0.18em;
         }
+
+        /* REVEAL ANIMATIONS */
 
         .what-reveal {
           opacity: 0;
@@ -461,7 +547,8 @@ export default function WhatWeDo() {
           transition:
             opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
             transform 1s cubic-bezier(0.2, 0.7, 0.2, 1),
-            background 0.35s ease;
+            background 0.35s ease,
+            border-color 0.35s ease;
           transition-delay: var(--service-delay, 0ms);
         }
 
@@ -486,10 +573,67 @@ export default function WhatWeDo() {
           transition-delay: 150ms;
         }
 
+        /* FULL-WIDTH ARCHITECTURAL IMAGE */
+
+        .what-wide-band {
+          position: relative;
+          width: 100vw;
+          height: clamp(250px, 34vw, 440px);
+          margin: 76px 0 68px calc(50% - 50vw);
+          display: flex;
+          align-items: flex-end;
+          overflow: hidden;
+          isolation: isolate;
+          background-image:
+            linear-gradient(
+              90deg,
+              rgba(35, 8, 16, 0.76),
+              rgba(35, 8, 16, 0.12)
+            ),
+            url("/images/background.jpg");
+          background-size: cover;
+          background-position: center 55%;
+        }
+
+        .what-wide-band::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          border-top: 1px solid rgba(197, 164, 125, 0.5);
+          border-bottom: 1px solid rgba(197, 164, 125, 0.5);
+        }
+
+        .what-wide-band-inner {
+          width: min(1440px, 86%);
+          margin: 0 auto;
+          padding: 0 0 clamp(30px, 5vw, 62px);
+          color: #f4efe6;
+        }
+
+        .what-wide-band-inner span {
+          display: block;
+          margin-bottom: 12px;
+          color: #d1b88f;
+          font-size: 11px;
+          letter-spacing: 0.2em;
+        }
+
+        .what-wide-band-inner p {
+          max-width: 800px;
+          margin: 0;
+          font-size: clamp(28px, 5.4vw, 72px);
+          font-weight: 500;
+          line-height: 0.98;
+          letter-spacing: -0.055em;
+        }
+
+        /* TABLET */
+
         @media (max-width: 900px) {
           .what-heading-grid {
             grid-template-columns: 1fr;
-            gap: 45px;
+            gap: 38px;
           }
 
           .what-intro-wrap {
@@ -497,87 +641,135 @@ export default function WhatWeDo() {
           }
 
           .what-footer {
-            gap: 7%;
-          }
-
-          .services-list {
-            column-gap: 25px;
-          }
-
-          .service-item {
-            padding: 30px 10px;
-            grid-template-columns: 28px 1fr;
-            gap: 13px;
-          }
-        }
-
-        @media (max-width: 600px) {
-          .what-we-do {
-            padding: 95px 6% 65px;
-          }
-
-          .what-topline {
-            gap: 15px;
-          }
-
-          .what-eyebrow,
-          .what-since {
-            font-size: 8px;
-          }
-
-          .what-heading-grid {
-            padding: 65px 0 75px;
-            gap: 35px;
-          }
-
-          .what-heading h2 {
-            font-size: clamp(45px, 11vw, 68px);
-          }
-
-          .what-intro {
-            font-size: 13px;
-            line-height: 1.9;
-          }
-
-          .services-list {
             grid-template-columns: 1fr;
-          }
-
-          .service-item {
-            min-height: auto;
-            padding: 28px 10px;
-            grid-template-columns: 28px 1fr;
-            gap: 12px;
-          }
-
-          .service-content h3 {
-            margin-bottom: 12px;
-            font-size: 24px;
-          }
-
-          .service-content p {
-            font-size: 12px;
-          }
-
-          .what-footer {
-            grid-template-columns: 1fr;
-            gap: 35px;
-            margin-top: 100px;
-            padding-bottom: 75px;
-          }
-
-          .philosophy-title h2 {
-            font-size: clamp(45px, 10vw, 65px);
+            gap: 28px;
           }
 
           .philosophy-content {
             margin: 0;
           }
 
+          .service-item {
+            padding: 32px 24px;
+          }
+
+          .service-content p {
+            font-size: 15px;
+          }
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+          .what-we-do {
+            padding: 76px 5% 48px;
+          }
+
+          .what-topline {
+            align-items: flex-start;
+            gap: 15px;
+          }
+
+          .what-eyebrow,
+          .what-since {
+            font-size: 9px;
+            line-height: 1.6;
+          }
+
+          .what-heading-grid {
+            grid-template-columns: 1fr;
+            padding: 58px 0 72px;
+          }
+
+          .what-heading h2 {
+            font-size: clamp(49px, 12vw, 70px);
+          }
+
+          .what-intro-wrap {
+            padding: 18px 0 4px 18px;
+          }
+
+          .what-intro {
+            font-size: 16px;
+            line-height: 1.85;
+          }
+
+          .services-heading {
+            font-size: 10px;
+            letter-spacing: 0.12em;
+          }
+
+          .services-list {
+            grid-template-columns: 1fr;
+            gap: 12px;
+            padding-top: 16px;
+          }
+
+          .service-item {
+            min-height: auto;
+            padding: 25px 20px;
+            grid-template-columns: 30px 1fr;
+            gap: 12px;
+          }
+
+          .service-number {
+            font-size: 11px;
+          }
+
+          .service-content h3 {
+            font-size: 25px;
+            margin-bottom: 12px;
+          }
+
+          .service-content p {
+            font-size: 15px;
+            line-height: 1.85;
+          }
+
+          .what-wide-band {
+            height: 250px;
+            margin: 48px 0 48px calc(50% - 50vw);
+            background-position: center;
+          }
+
+          .what-wide-band-inner {
+            width: 88%;
+            padding-bottom: 28px;
+          }
+
+          .what-wide-band-inner span {
+            font-size: 9px;
+          }
+
+          .what-wide-band-inner p {
+            font-size: 34px;
+          }
+
+          .what-footer {
+            grid-template-columns: 1fr;
+            margin-top: 82px;
+            padding: 38px 24px 42px;
+            gap: 25px;
+          }
+
+          .philosophy-title h2 {
+            font-size: clamp(44px, 10.5vw, 64px);
+          }
+
+          .philosophy-content p {
+            font-size: 16px;
+          }
+
+          .philosophy-link {
+            font-size: 10px;
+            line-height: 1.7;
+          }
+
           .what-bottom-line {
             flex-direction: column;
             gap: 12px;
-            font-size: 8px;
+            font-size: 9px;
+            line-height: 1.8;
           }
         }
 
@@ -592,6 +784,10 @@ export default function WhatWeDo() {
           .service-content h3,
           .philosophy-link {
             transition: none;
+          }
+
+          .service-item:hover {
+            transform: none;
           }
         }
       `}</style>

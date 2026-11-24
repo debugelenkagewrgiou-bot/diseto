@@ -66,7 +66,7 @@ export function ProjectDetail({ project }) {
         .project-page h2,
         .project-page h3 {
           font-family: Georgia, "Times New Roman", serif;
-          font-weight: 400;
+          font-weight: 500;
         }
 
         .project-reveal {
@@ -124,21 +124,21 @@ export function ProjectDetail({ project }) {
       <header className="relative z-10 flex items-center justify-between border-b border-[#ded8cd] px-6 py-6 md:px-12 lg:px-20">
         <Link href="/" className="flex items-center gap-3 text-[#28231e]">
           <ArrowLeft size={17} strokeWidth={1.4} />
-          <span className="text-[11px] tracking-[0.18em]">
+          <span className="text-xs font-semibold tracking-[0.18em]">
             {t.home}
           </span>
         </Link>
 
         <Link
           href="/"
-          className="font-serif text-2xl tracking-[0.12em] text-[#28231e]"
+          className="font-serif text-2xl font-medium tracking-[0.12em] text-[#28231e]"
         >
           DiSeto
         </Link>
 
         <Link
           href="/#projects"
-          className="project-link text-[11px] tracking-[0.18em] text-[#777168]"
+          className="project-link text-xs font-semibold tracking-[0.18em] text-[#777168]"
         >
           {t.allProjects}
         </Link>
@@ -149,19 +149,19 @@ export function ProjectDetail({ project }) {
         <div className="mx-auto max-w-[1400px]">
           <div className="project-reveal mb-8 flex items-center gap-3">
             <span className="h-[1px] w-8 bg-[#a89576]" />
-            <span className="text-[10px] tracking-[0.25em] text-[#8b857b]">
+            <span className="text-xs font-semibold tracking-[0.25em] text-[#8b857b]">
               {getText("category")}
             </span>
           </div>
 
           <div className="project-reveal mb-12 max-w-5xl">
-            <h1 className="text-5xl leading-[1.05] tracking-[-0.04em] md:text-7xl lg:text-[100px]">
+            <h1 className="text-5xl font-medium leading-[1.05] tracking-[-0.04em] md:text-7xl lg:text-[100px]">
               {getText("title")}
               <span className="text-[#a89576]">.</span>
             </h1>
 
             {getText("summary") && (
-              <p className="mt-8 max-w-2xl text-sm leading-8 text-[#777168] md:text-base">
+              <p className="mt-8 max-w-2xl text-base font-medium leading-8 text-[#777168] md:text-lg">
                 {getText("summary")}
               </p>
             )}
@@ -185,16 +185,16 @@ export function ProjectDetail({ project }) {
           <div className="mx-auto max-w-[1400px]">
             <div className="project-reveal mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
               <div>
-                <span className="mb-5 block text-[10px] tracking-[0.25em] text-[#a89576]">
+                <span className="mb-5 block text-xs font-semibold tracking-[0.25em] text-[#a89576]">
                   {t.details}
                 </span>
 
-                <h2 className="text-4xl tracking-[-0.03em] md:text-6xl">
+                <h2 className="text-4xl font-medium tracking-[-0.03em] md:text-6xl">
                   {t.selectedPhotos}
                 </h2>
               </div>
 
-              <p className="max-w-sm text-sm leading-7 text-[#777168]">
+              <p className="max-w-sm text-base font-medium leading-7 text-[#777168]">
                 {t.galleryDescription}
               </p>
             </div>
@@ -232,19 +232,19 @@ export function ProjectDetail({ project }) {
           <div className="mx-auto max-w-[1400px]">
             <div className="project-reveal mb-16 max-w-3xl md:mb-24">
               {getText("storyEyebrow") && (
-                <span className="mb-6 block text-[10px] tracking-[0.25em] text-[#c5a47d]">
+                <span className="mb-6 block text-xs font-semibold tracking-[0.25em] text-[#c5a47d]">
                   {getText("storyEyebrow")}
                 </span>
               )}
 
               {getText("storyTitle") && (
-                <h2 className="text-4xl leading-[1.12] tracking-[-0.03em] text-[#f7f4ed] md:text-6xl">
+                <h2 className="text-4xl font-medium leading-[1.12] tracking-[-0.03em] text-[#f7f4ed] md:text-6xl">
                   {getText("storyTitle")}
                 </h2>
               )}
 
               {getText("storyDescription") && (
-                <p className="mt-8 max-w-2xl text-sm leading-8 text-[#d1c1bd] md:text-base">
+                <p className="mt-8 max-w-2xl text-base font-medium leading-8 text-[#d1c1bd] md:text-lg">
                   {getText("storyDescription")}
                 </p>
               )}
@@ -254,11 +254,11 @@ export function ProjectDetail({ project }) {
               <div className="grid grid-cols-1 gap-12 border-t border-white/20 pt-12 md:grid-cols-2 md:gap-x-20 md:gap-y-16">
                 {getText("story").map((chapter, index) => (
                   <article key={index} className="project-reveal">
-                    <h3 className="mb-5 text-2xl tracking-[-0.02em] text-[#f7f4ed] md:text-3xl">
+                    <h3 className="mb-5 text-2xl font-medium tracking-[-0.02em] text-[#f7f4ed] md:text-3xl">
                       {chapter.title}
                     </h3>
 
-                    <p className="max-w-xl text-sm leading-8 text-[#d1c1bd]">
+                    <p className="max-w-xl text-base font-medium leading-8 text-[#d1c1bd]">
                       {chapter.text}
                     </p>
                   </article>

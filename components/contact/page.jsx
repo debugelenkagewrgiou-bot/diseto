@@ -328,10 +328,10 @@ export default function ContactSection() {
   }
 
   const labelClass =
-    "mb-3 block text-[9px] font-medium tracking-[0.2em] text-[#938a7d]";
+    "mb-3 block text-[11px] font-semibold tracking-[0.2em] text-[#938a7d]";
 
   const inputClass =
-    "w-full min-w-0 border-b border-[#ded8cd] bg-transparent py-3.5 text-[13px] text-[#28231e] outline-none transition-colors placeholder:text-[#aaa398] focus:border-[#a89576]";
+    "w-full min-w-0 border-b border-[#ded8cd] bg-transparent py-3.5 text-[15px] font-medium text-[#28231e] outline-none transition-colors placeholder:text-[#aaa398] focus:border-[#a89576]";
 
   return (
     <section
@@ -341,11 +341,11 @@ export default function ContactSection() {
       <div className="mx-auto max-w-[1300px]">
 
         <div className="contact-reveal mb-16 flex flex-col gap-3 border-b border-[#ded8cd] pb-5 sm:mb-24 sm:flex-row sm:items-center sm:justify-between">
-          <span className="text-[9px] tracking-[0.22em] text-[#a89576]">
+          <span className="text-[11px] font-semibold tracking-[0.22em] text-[#a89576]">
             {t.introLabel}
           </span>
 
-          <span className="text-[9px] tracking-[0.16em] text-[#938a7d]">
+          <span className="text-[11px] font-semibold tracking-[0.16em] text-[#938a7d]">
             {t.introTagline}
           </span>
         </div>
@@ -355,7 +355,7 @@ export default function ContactSection() {
           <div className="flex flex-col justify-between">
 
             <div className="contact-reveal">
-              <h2 className="contact-main-title max-w-[650px] font-serif text-[clamp(3.5rem,8vw,7rem)] leading-[0.9] tracking-[-0.075em]">
+              <h2 className="contact-main-title max-w-[650px] font-serif text-[clamp(3.5rem,8vw,7rem)] font-medium leading-[0.9] tracking-[-0.075em]">
                 {t.titleFirst}
                 <br />
                 {t.titleSecond}
@@ -365,7 +365,7 @@ export default function ContactSection() {
                 </span>
               </h2>
 
-              <p className="mt-10 max-w-[390px] text-[13px] leading-8 text-[#777168]">
+              <p className="mt-10 max-w-[390px] text-[15px] font-medium leading-8 text-[#777168]">
                 {t.description}
               </p>
             </div>
@@ -380,7 +380,7 @@ export default function ContactSection() {
 
                 <a
                   href="mailto:diseto@diseto.gr"
-                  className="group inline-flex items-center gap-2 text-[13px] transition-colors hover:text-[#a89576]"
+                  className="group inline-flex items-center gap-2 text-[15px] font-medium transition-colors hover:text-[#a89576]"
                 >
                   diseto@diseto.gr
 
@@ -399,7 +399,7 @@ export default function ContactSection() {
 
                 <a
                   href="tel:+302741038181"
-                  className="group inline-flex items-center gap-2 text-[13px] transition-colors hover:text-[#a89576]"
+                  className="group inline-flex items-center gap-2 text-[15px] font-medium transition-colors hover:text-[#a89576]"
                 >
                   27410.38181
 
@@ -421,16 +421,16 @@ export default function ContactSection() {
 
             <div className="mb-12 flex items-start justify-between gap-4">
               <div>
-                <h3 className="font-serif text-3xl tracking-[-0.04em] sm:text-4xl">
+                <h3 className="font-serif text-3xl font-medium tracking-[-0.04em] sm:text-4xl">
                   {t.formTitle}
                 </h3>
 
-                <p className="mt-3 text-[12px] leading-6 text-[#777168]">
+                <p className="mt-3 text-[14px] font-medium leading-6 text-[#777168]">
                   {t.formDescription}
                 </p>
               </div>
 
-              <span className="hidden text-[11px] tracking-widest text-[#a89576] sm:block">
+              <span className="hidden text-[12px] font-semibold tracking-widest text-[#a89576] sm:block">
                 DISETO.
               </span>
             </div>
@@ -623,19 +623,19 @@ export default function ContactSection() {
                   multiple
                   accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
                   onChange={handleFiles}
-                  className="block w-full text-[11px] text-[#777168] file:mr-4 file:border file:border-[#d9d1c5] file:bg-transparent file:px-4 file:py-3 file:text-[10px] file:tracking-wider file:text-[#28231e] hover:file:border-[#a89576]"
+                  className="block w-full text-[13px] text-[#777168] file:mr-4 file:border file:border-[#d9d1c5] file:bg-transparent file:px-4 file:py-3 file:text-[12px] file:font-semibold file:tracking-wider file:text-[#28231e] hover:file:border-[#a89576]"
                 />
 
                 {files.length > 0 && (
                   <div className="mt-3 space-y-2">
-                    <p className="text-[11px] text-[#777168]">
+                    <p className="text-[13px] font-medium text-[#777168]">
                       {t.fileCount(files.length)}
                     </p>
 
                     {files.map((file, index) => (
                       <div
                         key={`${file.name}-${index}`}
-                        className="flex items-center justify-between gap-3 text-[10px] text-[#938a7d]"
+                        className="flex items-center justify-between gap-3 text-[12px] text-[#938a7d]"
                       >
                         <span className="min-w-0 truncate">
                           {file.name}
@@ -649,7 +649,7 @@ export default function ContactSection() {
                   </div>
                 )}
 
-                <p className="mt-2 text-[10px] leading-5 text-[#938a7d]">
+                <p className="mt-2 text-[12px] font-medium leading-5 text-[#938a7d]">
                   {t.fileInfo}
                 </p>
               </div>
@@ -657,7 +657,7 @@ export default function ContactSection() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="contact-submit group flex w-full items-center justify-between bg-[#28231e] px-6 py-5 text-[10px] tracking-[0.17em] text-[#f7f4ed] transition-colors duration-300 hover:bg-[#a89576] disabled:cursor-not-allowed disabled:opacity-60"
+                className="contact-submit group flex w-full items-center justify-between bg-[#28231e] px-6 py-5 text-[12px] font-semibold tracking-[0.17em] text-[#f7f4ed] transition-colors duration-300 hover:bg-[#a89576] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <span>
                   {submitting ? t.sending : t.submit}
@@ -674,9 +674,9 @@ export default function ContactSection() {
                 <div
                   role="status"
                   aria-live="polite"
-                  className="border-l-2 border-[#a89576] pl-4 text-[11px] leading-7 text-[#8b7655]"
+                  className="border-l-2 border-[#a89576] pl-4 text-[13px] font-medium leading-7 text-[#8b7655]"
                 >
-                  <strong className="block font-medium">
+                  <strong className="block font-semibold">
                     {t.successTitle}
                   </strong>
 
@@ -690,7 +690,7 @@ export default function ContactSection() {
                 <div
                   role="alert"
                   aria-live="assertive"
-                  className="border-l-2 border-red-700 pl-4 text-[11px] leading-6 text-red-700"
+                  className="border-l-2 border-red-700 pl-4 text-[13px] font-medium leading-6 text-red-700"
                 >
                   {submitError}
                 </div>
@@ -701,11 +701,11 @@ export default function ContactSection() {
         </div>
 
         <div className="contact-reveal mt-20 flex flex-col gap-3 border-t border-[#ded8cd] pt-5 sm:flex-row sm:items-center sm:justify-between">
-          <span className="text-[9px] tracking-[0.16em] text-[#a89576]">
+          <span className="text-[11px] font-semibold tracking-[0.16em] text-[#a89576]">
             {t.footerLabel}
           </span>
 
-          <span className="text-[9px] tracking-[0.16em] text-[#938a7d]">
+          <span className="text-[11px] font-semibold tracking-[0.16em] text-[#938a7d]">
             {t.footerTagline}
           </span>
         </div>
