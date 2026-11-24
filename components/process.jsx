@@ -65,7 +65,7 @@ export default function OurProcess() {
               </div>
 
               <span className="process-symbol" aria-hidden="true">
-                ↗
+                
               </span>
             </article>
           ))}

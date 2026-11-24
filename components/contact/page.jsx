@@ -43,10 +43,24 @@ const budgets = [
   "Δεν γνωρίζω ακόμη",
 ];
 
+const MAX_FILES = 5;
+const MAX_FILE_SIZE = 3 * 1024 * 1024;
+const MAX_TOTAL_SIZE = 3 * 1024 * 1024;
+
+const allowedTypes = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "application/pdf",
+];
+
 export default function ContactSection() {
   const [form, setForm] = useState(initialForm);
-  const [sent, setSent] = useState(false);
   const [files, setFiles] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   useEffect(() => {
     const elements = document.querySelectorAll(".contact-reveal");
@@ -84,6 +98,7 @@ export default function ContactSection() {
 
   function updateField(name, value) {
     setSent(false);
+    setSubmitError("");
 
     setForm((current) => ({
       ...current,
@@ -91,40 +106,109 @@ export default function ContactSection() {
     }));
   }
 
-  function handleSubmit(event) {
+  function handleFiles(event) {
+    const selected = Array.from(event.target.files || []);
+
+    setSent(false);
+    setSubmitError("");
+
+    if (selected.length > MAX_FILES) {
+      setSubmitError("Μπορείτε να επιλέξετε έως 5 αρχεία.");
+      event.target.value = "";
+      setFiles([]);
+      return;
+    }
+
+    for (const file of selected) {
+      if (!allowedTypes.includes(file.type)) {
+        setSubmitError(
+          "Επιτρέπονται μόνο φωτογραφίες JPG, PNG, WEBP, GIF και PDF."
+        );
+        event.target.value = "";
+        setFiles([]);
+        return;
+      }
+
+      if (file.size > MAX_FILE_SIZE) {
+        setSubmitError(
+          `Το αρχείο ${file.name} υπερβαίνει το όριο των 3MB.`
+        );
+        event.target.value = "";
+        setFiles([]);
+        return;
+      }
+    }
+
+    const totalSize = selected.reduce(
+      (total, file) => total + file.size,
+      0
+    );
+
+    if (totalSize > MAX_TOTAL_SIZE) {
+      setSubmitError(
+        "Το συνολικό μέγεθος των αρχείων δεν μπορεί να υπερβαίνει τα 3MB."
+      );
+      event.target.value = "";
+      setFiles([]);
+      return;
+    }
+
+    setFiles(selected);
+  }
+
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    const subject = encodeURIComponent(
-      `Νέο αίτημα — ${form.project} — ${form.name}`
-    );
+    if (submitting) return;
 
-    const fileNames = files.length
-      ? files.map((file) => file.name).join(", ")
-      : "Δεν έχουν επιλεγεί αρχεία";
+    setSubmitting(true);
+    setSent(false);
+    setSubmitError("");
 
-    const body = encodeURIComponent(
-      `Ονοματεπώνυμο: ${form.name}
-Τηλέφωνο: ${form.phone}
-Email: ${form.email}
+    try {
+      const data = new FormData();
 
-Τύπος πελάτη: ${form.clientType}
-Είδος έργου: ${form.project}
-Περιοχή έργου: ${form.area || "—"}
-Ενδεικτικός προϋπολογισμός: ${form.budget || "—"}
+      Object.entries(form).forEach(([key, value]) => {
+        data.append(key, value);
+      });
 
-Περιγραφή έργου:
-${form.message || "—"}
+      files.forEach((file) => {
+        data.append("files", file);
+      });
 
-Επιλεγμένα αρχεία:
-${fileNames}
+      // Honeypot protection
+      data.append("website", "");
 
-Παρακαλούμε επικοινωνήστε μαζί μου για το έργο.`
-    );
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        body: data,
+      });
 
-    window.location.href =
-      `mailto:diseto@diseto.gr?subject=${subject}&body=${body}`;
+      const result = await response.json();
 
-    setSent(true);
+      if (!response.ok || !result.success) {
+        throw new Error(
+          result.error || "Δεν ήταν δυνατή η αποστολή του αιτήματος."
+        );
+      }
+
+      setSent(true);
+      setForm(initialForm);
+      setFiles([]);
+
+      const fileInput = document.getElementById("files");
+
+      if (fileInput) {
+        fileInput.value = "";
+      }
+    } catch (error) {
+      setSubmitError(
+        error.message ||
+          "Παρουσιάστηκε σφάλμα. Παρακαλούμε δοκιμάστε ξανά."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const labelClass =
@@ -177,21 +261,16 @@ ${fileNames}
                 ξύλινη κατασκευή ή μια ολοκληρωμένη ανακαίνιση,
                 είμαστε εδώ για να συζητήσουμε την ιδέα σας.
               </p>
-
-              <a
-                href="#contact-form"
-                className="contact-cta mt-8 inline-flex items-center gap-3 border-b border-[#a89576] pb-2 text-[10px] tracking-[0.15em] transition-colors hover:text-[#a89576]"
-              >
-                ΞΕΚΙΝΗΣΤΕ ΤΟ ΕΡΓΟ ΣΑΣ
-                <ArrowUpRight size={14} />
-              </a>
             </div>
 
             {/* ΑΜΕΣΗ ΕΠΙΚΟΙΝΩΝΙΑ */}
 
             <div className="contact-info mt-16 grid grid-cols-1 gap-9 border-t border-[#ded8cd] pt-8 sm:grid-cols-2 lg:mt-24">
 
-              <div className="contact-reveal" style={{ "--delay": "100ms" }}>
+              <div
+                className="contact-reveal"
+                style={{ "--delay": "100ms" }}
+              >
                 <span className={labelClass}>EMAIL</span>
 
                 <a
@@ -207,11 +286,14 @@ ${fileNames}
                 </a>
               </div>
 
-              <div className="contact-reveal" style={{ "--delay": "220ms" }}>
+              <div
+                className="contact-reveal"
+                style={{ "--delay": "220ms" }}
+              >
                 <span className={labelClass}>ΤΗΛΕΦΩΝΟ</span>
 
                 <a
-                  href="tel:+306987452135"
+                  href="tel:+302741038181"
                   className="group inline-flex items-center gap-2 text-[13px] transition-colors hover:text-[#a89576]"
                 >
                   27410.38181
@@ -220,19 +302,6 @@ ${fileNames}
                     size={13}
                     className="transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
                   />
-                </a>
-              </div>
-
-              <div
-                className="contact-reveal sm:col-span-2"
-                style={{ "--delay": "340ms" }}
-              >
-                <a
-                  href="tel:+306987452135"
-                  className="inline-flex items-center gap-2 text-[10px] tracking-[0.15em] transition-colors hover:text-[#a89576]"
-                >
-                  ΚΛΕΙΣΤΕ ΜΙΑ ΕΠΙΣΚΕΨΗ
-                  <ArrowUpRight size={14} />
                 </a>
               </div>
 
@@ -266,9 +335,26 @@ ${fileNames}
 
             <form onSubmit={handleSubmit} className="space-y-9">
 
+              {/* HONEYPOT */}
+
+              <div
+                aria-hidden="true"
+                className="absolute -left-[9999px] h-px w-px overflow-hidden"
+              >
+                <label htmlFor="website">Website</label>
+                <input
+                  id="website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
+
               {/* ΟΝΟΜΑ ΚΑΙ ΤΗΛΕΦΩΝΟ */}
 
               <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+
                 <div className="contact-field">
                   <label className={labelClass} htmlFor="name">
                     ΟΝΟΜΑΤΕΠΩΝΥΜΟ *
@@ -276,10 +362,14 @@ ${fileNames}
 
                   <input
                     id="name"
+                    name="name"
                     required
+                    maxLength={120}
                     autoComplete="name"
                     value={form.name}
-                    onChange={(e) => updateField("name", e.target.value)}
+                    onChange={(e) =>
+                      updateField("name", e.target.value)
+                    }
                     placeholder="Το όνομά σας"
                     className={inputClass}
                   />
@@ -292,15 +382,20 @@ ${fileNames}
 
                   <input
                     id="phone"
+                    name="phone"
                     required
                     type="tel"
+                    maxLength={40}
                     autoComplete="tel"
                     value={form.phone}
-                    onChange={(e) => updateField("phone", e.target.value)}
+                    onChange={(e) =>
+                      updateField("phone", e.target.value)
+                    }
                     placeholder="+30"
                     className={inputClass}
                   />
                 </div>
+
               </div>
 
               {/* EMAIL */}
@@ -312,11 +407,15 @@ ${fileNames}
 
                 <input
                   id="email"
+                  name="email"
                   required
                   type="email"
+                  maxLength={254}
                   autoComplete="email"
                   value={form.email}
-                  onChange={(e) => updateField("email", e.target.value)}
+                  onChange={(e) =>
+                    updateField("email", e.target.value)
+                  }
                   placeholder="example@email.com"
                   className={inputClass}
                 />
@@ -331,8 +430,11 @@ ${fileNames}
 
                 <select
                   id="clientType"
+                  name="clientType"
                   value={form.clientType}
-                  onChange={(e) => updateField("clientType", e.target.value)}
+                  onChange={(e) =>
+                    updateField("clientType", e.target.value)
+                  }
                   className={`${inputClass} cursor-pointer`}
                 >
                   {clientTypes.map((type) => (
@@ -352,8 +454,11 @@ ${fileNames}
 
                 <select
                   id="project"
+                  name="project"
                   value={form.project}
-                  onChange={(e) => updateField("project", e.target.value)}
+                  onChange={(e) =>
+                    updateField("project", e.target.value)
+                  }
                   className={`${inputClass} cursor-pointer`}
                 >
                   {projects.map((project) => (
@@ -367,6 +472,7 @@ ${fileNames}
               {/* ΠΕΡΙΟΧΗ ΚΑΙ ΠΡΟΫΠΟΛΟΓΙΣΜΟΣ */}
 
               <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+
                 <div className="contact-field">
                   <label className={labelClass} htmlFor="area">
                     ΠΕΡΙΟΧΗ ΕΡΓΟΥ
@@ -374,9 +480,13 @@ ${fileNames}
 
                   <input
                     id="area"
+                    name="area"
+                    maxLength={150}
                     autoComplete="address-level2"
                     value={form.area}
-                    onChange={(e) => updateField("area", e.target.value)}
+                    onChange={(e) =>
+                      updateField("area", e.target.value)
+                    }
                     placeholder="Π.χ. Αθήνα"
                     className={inputClass}
                   />
@@ -389,8 +499,11 @@ ${fileNames}
 
                   <select
                     id="budget"
+                    name="budget"
                     value={form.budget}
-                    onChange={(e) => updateField("budget", e.target.value)}
+                    onChange={(e) =>
+                      updateField("budget", e.target.value)
+                    }
                     className={`${inputClass} cursor-pointer`}
                   >
                     <option value="">Επιλέξτε</option>
@@ -402,6 +515,7 @@ ${fileNames}
                     ))}
                   </select>
                 </div>
+
               </div>
 
               {/* ΠΕΡΙΓΡΑΦΗ */}
@@ -413,8 +527,12 @@ ${fileNames}
 
                 <textarea
                   id="message"
+                  name="message"
+                  maxLength={5000}
                   value={form.message}
-                  onChange={(e) => updateField("message", e.target.value)}
+                  onChange={(e) =>
+                    updateField("message", e.target.value)
+                  }
                   rows={4}
                   placeholder="Πείτε μας λίγα λόγια για το έργο σας..."
                   className={`${inputClass} resize-y`}
@@ -430,26 +548,41 @@ ${fileNames}
 
                 <input
                   id="files"
+                  name="files"
                   type="file"
                   multiple
-                  accept="image/*,.pdf"
-                  onChange={(e) =>
-                    setFiles(Array.from(e.target.files || []))
-                  }
+                  accept="image/jpeg,image/png,image/webp,image/gif,application/pdf"
+                  onChange={handleFiles}
                   className="block w-full text-[11px] text-[#777168] file:mr-4 file:border file:border-[#d9d1c5] file:bg-transparent file:px-4 file:py-3 file:text-[10px] file:tracking-wider file:text-[#28231e] hover:file:border-[#a89576]"
                 />
 
                 {files.length > 0 && (
-                  <p className="mt-3 text-[11px] text-[#777168]">
-                    Επιλέχθηκαν {files.length} αρχεία:{" "}
-                    {files.map((file) => file.name).join(", ")}
-                  </p>
+                  <div className="mt-3 space-y-2">
+                    <p className="text-[11px] text-[#777168]">
+                      Επιλέχθηκαν {files.length} αρχεία:
+                    </p>
+
+                    {files.map((file, index) => (
+                      <div
+                        key={`${file.name}-${index}`}
+                        className="flex items-center justify-between gap-3 text-[10px] text-[#938a7d]"
+                      >
+                        <span className="min-w-0 truncate">
+                          {file.name}
+                        </span>
+
+                        <span className="shrink-0">
+                          {(file.size / (1024 * 1024)).toFixed(2)} MB
+                        </span>
+                      </div>
+                    ))}
+                  </div>
                 )}
 
                 <p className="mt-2 text-[10px] leading-5 text-[#938a7d]">
-                  Μπορείτε να επιλέξετε φωτογραφίες ή σχέδια για το έργο σας.
-                  Για την αποστολή τους θα χρειαστεί να τα επισυνάψετε
-                  στο email που θα ανοίξει.
+                  Έως 5 αρχεία, με μέγιστο μέγεθος 3MB ανά αρχείο
+                  και 3MB συνολικά. Τα αρχεία αποστέλλονται
+                  αυτόματα μαζί με το αίτημά σας.
                 </p>
               </div>
 
@@ -457,9 +590,14 @@ ${fileNames}
 
               <button
                 type="submit"
-                className="contact-submit group flex w-full items-center justify-between bg-[#28231e] px-6 py-5 text-[10px] tracking-[0.17em] text-[#f7f4ed] transition-colors duration-300 hover:bg-[#a89576]"
+                disabled={submitting}
+                className="contact-submit group flex w-full items-center justify-between bg-[#28231e] px-6 py-5 text-[10px] tracking-[0.17em] text-[#f7f4ed] transition-colors duration-300 hover:bg-[#a89576] disabled:cursor-not-allowed disabled:opacity-60"
               >
-                <span>ΣΤΕΙΛΤΕ ΤΟ ΑΙΤΗΜΑ ΣΑΣ</span>
+                <span>
+                  {submitting
+                    ? "ΑΠΟΣΤΟΛΗ ΑΙΤΗΜΑΤΟΣ..."
+                    : "ΣΤΕΙΛΤΕ ΤΟ ΑΙΤΗΜΑ ΣΑΣ"}
+                </span>
 
                 <MoveUpRight
                   size={18}
@@ -468,15 +606,34 @@ ${fileNames}
                 />
               </button>
 
-              <p
-                aria-live="polite"
-                className={`text-[11px] leading-6 text-[#8b7655] ${
-                  sent ? "block" : "hidden"
-                }`}
-              >
-                Το πρόγραμμα email σας άνοιξε με τα στοιχεία του αιτήματος.
-                Ελέγξτε το μήνυμα και πατήστε «Αποστολή» για να ολοκληρωθεί.
-              </p>
+              {/* ΕΠΙΤΥΧΙΑ */}
+
+              {sent && (
+                <div
+                  role="status"
+                  aria-live="polite"
+                  className="border-l-2 border-[#a89576] pl-4 text-[11px] leading-7 text-[#8b7655]"
+                >
+                  <strong className="block font-medium">
+                    Το αίτημά σας στάλθηκε επιτυχώς!
+                  </strong>
+
+                  Ευχαριστούμε για την επικοινωνία.
+                  Η ομάδα DISETO θα επικοινωνήσει μαζί σας σύντομα.
+                </div>
+              )}
+
+              {/* ΣΦΑΛΜΑ */}
+
+              {submitError && (
+                <div
+                  role="alert"
+                  aria-live="assertive"
+                  className="border-l-2 border-red-700 pl-4 text-[11px] leading-6 text-red-700"
+                >
+                  {submitError}
+                </div>
+              )}
 
             </form>
           </div>
@@ -563,14 +720,6 @@ ${fileNames}
         .contact-submit svg {
           position: relative;
           z-index: 1;
-        }
-
-        .contact-cta svg {
-          transition: transform 0.35s ease;
-        }
-
-        .contact-cta:hover svg {
-          transform: translate(3px, -3px);
         }
 
         @media (prefers-reduced-motion: reduce) {

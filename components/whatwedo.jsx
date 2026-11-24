@@ -171,7 +171,7 @@ export default function WhatWeDo() {
 
             <a href="#contact" className="philosophy-link">
               ΑΣ ΣΧΕΔΙΑΣΟΥΜΕ ΤΟ ΕΠΟΜΕΝΟ ΕΡΓΟ ΣΑΣ
-              <span className="philosophy-arrow">↗</span>
+              <span className="philosophy-arrow"></span>
             </a>
           </div>
 
