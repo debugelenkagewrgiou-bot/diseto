@@ -270,7 +270,16 @@ export default function WhatWeDo() {
         .what-we-do {
           position: relative;
           isolation: isolate;
-          background: #351019;
+          background-color: #351019;
+          background-image:
+  linear-gradient(
+    rgba(53, 16, 25, 0.65),
+    rgba(53, 16, 25, 0.72)
+  ),
+  url("/images/background.jpg");
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
           color: #f4efe6;
           padding: clamp(82px, 9vw, 138px) 7% 76px;
           overflow: hidden;
@@ -507,7 +516,7 @@ export default function WhatWeDo() {
           border-color: #28231e;
         }
 
-        /* ΝΕΟ ΚΥΚΛΙΚΟ ΚΟΥΜΠΙ */
+        /* CIRCULAR BUTTON */
         .philosophy-arrow {
           display: grid;
           place-items: center;
@@ -599,7 +608,7 @@ export default function WhatWeDo() {
           transition-delay: 150ms;
         }
 
-        /* FULL-WIDTH ARCHITECTURAL IMAGE */
+        /* FULL-WIDTH STRIP - USES SECTION BACKGROUND */
         .what-wide-band {
           position: relative;
           width: 100vw;
@@ -609,15 +618,7 @@ export default function WhatWeDo() {
           align-items: flex-end;
           overflow: hidden;
           isolation: isolate;
-          background-image:
-            linear-gradient(
-              90deg,
-              rgba(35, 8, 16, 0.76),
-              rgba(35, 8, 16, 0.12)
-            ),
-            url("/images/background.jpg");
-          background-size: cover;
-          background-position: center 55%;
+          background: transparent;
         }
 
         .what-wide-band::after {
@@ -752,7 +753,7 @@ export default function WhatWeDo() {
           .what-wide-band {
             height: 250px;
             margin: 48px 0 48px calc(50% - 50vw);
-            background-position: center;
+            background: transparent;
           }
 
           .what-wide-band-inner {
