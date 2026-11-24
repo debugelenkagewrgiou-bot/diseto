@@ -263,9 +263,7 @@ export default function Projects() {
               {t.portfolio}
             </span>
 
-            <span className="relative z-10 text-lg transition-transform duration-500 group-hover:translate-x-2 group-hover:-translate-y-1">
-              ↗
-            </span>
+            
           </button>
         </div>
       </div>
