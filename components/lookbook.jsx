@@ -1,99 +1,237 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useLanguage } from "@/components/languagecontext";
 
-const projects = [
-  { id: "01", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Σύγχρονη κουζίνα", en: "Contemporary Kitchen" }, image: "kitchen-01.jpg", layout: "wide" },
-  { id: "02", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Η αρμονία των υλικών", en: "Harmony of Materials" }, image: "kitchen-02.jpg", layout: "tall" },
-  { id: "03", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Λεπτομέρεια και λειτουργικότητα", en: "Detail and Functionality" }, image: "kitchen-03.jpg", layout: "tall" },
-  { id: "04", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Διαχρονικός σχεδιασμός", en: "Timeless Design" }, image: "kitchen-04.jpg", layout: "wide" },
-  { id: "05", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Ζεστή minimal αισθητική", en: "Warm Minimal Aesthetic" }, image: "kitchen-05.jpg", layout: "tall" },
-  { id: "06", category: "wardrobes", type: { el: "Ντουλάπες", en: "Wardrobes" }, name: { el: "Έξυπνη αποθήκευση", en: "Smart Storage" }, image: "wardrobe-01.jpg", layout: "tall" },
-  { id: "07", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Σχεδιασμός με χαρακτήρα", en: "Design with Character" }, image: "kitchen-06.jpg", layout: "wide" },
-  { id: "08", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Η λεπτομέρεια κάνει τη διαφορά", en: "Details Make the Difference" }, image: "kitchen-07.jpg", layout: "tall" },
-  { id: "09", category: "interiors", type: { el: "Εσωτερικοί χώροι", en: "Interior Spaces" }, name: { el: "Χώροι με ταυτότητα", en: "Spaces with Identity" }, image: "commercial-01.jpg", layout: "tall" },
-  { id: "10", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Σύγχρονη αισθητική", en: "Contemporary Aesthetic" }, image: "kitchen-08.jpg", layout: "wide" },
-  { id: "11", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Ισορροπία και απλότητα", en: "Balance and Simplicity" }, image: "kitchen-09.jpg", layout: "tall" },
-  { id: "12", category: "wardrobes", type: { el: "Ντουλάπες", en: "Wardrobes" }, name: { el: "Σχεδιασμός στα μέτρα σας", en: "Made to Measure Design" }, image: "wardrobe-02.jpg", layout: "tall" },
-  { id: "13", category: "kitchens", type: { el: "Κουζίνες", en: "Kitchens" }, name: { el: "Δημιουργίες DiSeto", en: "DiSeto Creations" }, image: "kitchen-10.jpg", layout: "wide" },
+/* =========================================
+   LOOKBOOK DATA
+========================================= */
+
+const lookbookProjects = [
+  {
+    id: "01",
+    category: "kitchens",
+    type: { el: "Κουζίνες", en: "Kitchens" },
+    name: { el: "Σύγχρονη κουζίνα", en: "Contemporary Kitchen" },
+    image: "/images/lookbook/kitchen-01.jpg",
+    layout: "wide",
+  },
+  {
+    id: "02",
+    category: "kitchens",
+    type: { el: "Κουζίνες", en: "Kitchens" },
+    name: { el: "Η αρμονία των υλικών", en: "Harmony of Materials" },
+    image: "/images/lookbook/kitchen-02.png",
+    layout: "tall",
+  },
+  {
+    id: "03",
+    category: "kitchens",
+    type: { el: "Κουζίνες", en: "Kitchens" },
+    name: {
+      el: "Λεπτομέρεια και λειτουργικότητα",
+      en: "Detail and Functionality",
+    },
+    image: "/images/lookbook/kitchen-03.png",
+    layout: "tall",
+  },
+  {
+    id: "04",
+    category: "kitchens",
+    type: { el: "Κουζίνες", en: "Kitchens" },
+    name: { el: "Διαχρονικός σχεδιασμός", en: "Timeless Design" },
+    image: "/images/lookbook/kitchen-04.png",
+    layout: "wide",
+  },
+  {
+    id: "05",
+    category: "kitchens",
+    type: { el: "Κουζίνες", en: "Kitchens" },
+    name: { el: "Ζεστή minimal αισθητική", en: "Warm Minimal Aesthetic" },
+    image: "/images/lookbook/kitchen-05.png",
+    layout: "tall",
+  },
+  {
+    id: "06",
+    category: "wardrobes",
+    type: { el: "Ντουλάπες", en: "Wardrobes" },
+    name: { el: "Έξυπνη αποθήκευση", en: "Smart Storage" },
+    image: "/images/lookbook/wardrobe-01.png",
+    layout: "tall",
+  },
+  {
+    id: "07",
+    category: "kitchens",
+    type: { el: "Κουζίνες", en: "Kitchens" },
+    name: { el: "Σχεδιασμός με χαρακτήρα", en: "Design with Character" },
+    image: "/images/lookbook/kitchen-06.png",
+    layout: "wide",
+  },
+  {
+    id: "08",
+    category: "kitchens",
+    type: { el: "Κουζίνες", en: "Kitchens" },
+    name: {
+      el: "Η λεπτομέρεια κάνει τη διαφορά",
+      en: "Details Make the Difference",
+    },
+    image: "/images/lookbook/kitchen-07.png",
+    layout: "tall",
+  },
+  {
+    id: "09",
+    category: "interiors",
+    type: { el: "Εσωτερικοί χώροι", en: "Interior Spaces" },
+    name: { el: "Χώροι με ταυτότητα", en: "Spaces with Identity" },
+    image: "/images/lookbook/commersial-01.png",
+    layout: "tall",
+  },
+  {
+    id: "10",
+    category: "kitchens",
+    type: { el: "Κουζίνες", en: "Kitchens" },
+    name: { el: "Σύγχρονη αισθητική", en: "Contemporary Aesthetic" },
+    image: "/images/lookbook/kitchen-08.png",
+    layout: "wide",
+  },
+  {
+    id: "11",
+    category: "kitchens",
+    type: { el: "Κουζίνες", en: "Kitchens" },
+    name: { el: "Ισορροπία και απλότητα", en: "Balance and Simplicity" },
+    image: "/images/lookbook/kitchen-09.png",
+    layout: "tall",
+  },
+  {
+    id: "12",
+    category: "wardrobes",
+    type: { el: "Ντουλάπες", en: "Wardrobes" },
+    name: {
+      el: "Σχεδιασμός στα μέτρα σας",
+      en: "Made to Measure Design",
+    },
+    image: "/images/lookbook/wardrobe-02.png",
+    layout: "tall",
+  },
+  {
+    id: "13",
+    category: "kitchens",
+    type: { el: "Κουζίνες", en: "Kitchens" },
+    name: { el: "Δημιουργίες DiSeto", en: "DiSeto Creations" },
+    image: "/images/lookbook/kitchen-10.png",
+    layout: "wide",
+  },
 ];
 
-const categories = [
+const lookbookCategories = [
   { id: "all", el: "Όλα τα έργα", en: "All Projects" },
   { id: "kitchens", el: "Κουζίνες", en: "Kitchens" },
   { id: "wardrobes", el: "Ντουλάπες", en: "Wardrobes" },
   { id: "interiors", el: "Εσωτερικοί χώροι", en: "Interior Spaces" },
 ];
 
-const content = {
+const lookbookCopy = {
   el: {
+    home: "ΑΡΧΙΚΗ",
     heroTop: "Χώροι σχεδιασμένοι για να αντέχουν στον χρόνο",
     heroTopRight: "Σχεδιασμός · Ποιότητα · Λεπτομέρεια",
     title1: "Σχεδιασμένα",
     title2: "για τη ζωή.",
-    intro: "Ανακαλύψτε τις δημιουργίες μας σε κουζίνες, ντουλάπες και εσωτερικούς χώρους, σχεδιασμένες γύρω από τις δικές σας ανάγκες.",
+    intro:
+      "Ανακαλύψτε τις δημιουργίες μας σε κουζίνες, ντουλάπες και εσωτερικούς χώρους, σχεδιασμένες γύρω από τις δικές σας ανάγκες.",
     discover: "Ανακαλύψτε τα έργα μας",
-    heroImageAlt: "Σχεδιασμός κουζίνας DiSeto",
+    heroImageAlt:
+      "Κουζίνα από φυσικά υλικά σχεδιασμένη από τη DiSeto",
     heroImageCaption: "01 — Σχεδιασμένα γύρω από εσάς",
     heroIndex: "DISETO · ΣΧΕΔΙΑΣΜΟΣ · ΠΟΙΟΤΗΤΑ · ΛΕΠΤΟΜΕΡΕΙΑ",
     workEyebrow: "Μια επιλογή από τα έργα μας",
     workTitle: "Χώροι που σας",
     workTitleAccent: "εκφράζουν.",
     filterLabel: "Φιλτράρισμα έργων",
-    viewProject: "ΠΡΟΒΟΛΗ ΕΡΓΟΥ",
+    view: "ΠΡΟΒΟΛΗ",
     manifestoEyebrow: "Η φιλοσοφία της DiSeto",
-    manifestoTitle: "Ο καλός σχεδιασμός δεν ζητά την προσοχή.\nΚερδίζει τη θέση του στην καθημερινότητά σας.",
-    manifestoText: "Από την πρώτη ιδέα μέχρι την τελευταία λεπτομέρεια, συνδυάζουμε τον σχεδιασμό, τα υλικά και την τεχνογνωσία για να δημιουργούμε χώρους που ανταποκρίνονται πραγματικά σε εσάς.",
-    contact: "ΞΕΚΙΝΗΣΤΕ ΤΟ ΕΡΓΟ ΣΑΣ",
+    manifestoTitle:
+      "Ο καλός σχεδιασμός δεν ζητά την προσοχή.\nΚερδίζει τη θέση του στην καθημερινότητά σας.",
+    manifestoText:
+      "Από την πρώτη ιδέα μέχρι την τελευταία λεπτομέρεια, συνδυάζουμε τον σχεδιασμό, τα υλικά και την τεχνογνωσία για να δημιουργούμε χώρους που ανταποκρίνονται πραγματικά σε εσάς.",
+    contact: "ΕΞΕΡΕΥΝΗΣΤΕ ΤΑ ΕΡΓΑ ΜΑΣ",
     close: "Κλείσιμο",
     previous: "Προηγούμενη φωτογραφία",
     next: "Επόμενη φωτογραφία",
   },
+
   en: {
+    home: "BACK HOME",
     heroTop: "Spaces designed to stand the test of time",
     heroTopRight: "Design · Quality · Detail",
     title1: "Designed",
     title2: "for life.",
-    intro: "Discover our kitchens, wardrobes and interior spaces, thoughtfully designed around your individual needs.",
+    intro:
+      "Discover our kitchens, wardrobes and interior spaces, thoughtfully designed around your individual needs.",
     discover: "Discover our projects",
-    heroImageAlt: "DiSeto kitchen design",
+    heroImageAlt: "Natural-material kitchen designed by DiSeto",
     heroImageCaption: "01 — Designed around you",
     heroIndex: "DISETO · DESIGN · QUALITY · DETAIL",
     workEyebrow: "A selection of our projects",
     workTitle: "Spaces that",
     workTitleAccent: "reflect you.",
     filterLabel: "Filter projects",
-    viewProject: "VIEW PROJECT",
+    view: "VIEW",
     manifestoEyebrow: "The DiSeto Philosophy",
-    manifestoTitle: "Good design does not demand attention.\nIt earns its place in your everyday life.",
-    manifestoText: "From the first idea to the final detail, we combine design, materials and expertise to create spaces that truly respond to your needs.",
-    contact: "START YOUR PROJECT",
+    manifestoTitle:
+      "Good design does not demand attention.\nIt earns its place in your everyday life.",
+    manifestoText:
+      "From the first idea to the final detail, we combine design, materials and expertise to create spaces that truly respond to your needs.",
+    contact: "EXPLORE OUR PROJECTS",
     close: "Close",
     previous: "Previous image",
     next: "Next image",
   },
 };
 
-function ProjectCard({ project, index, onOpen, language, t }) {
+/* =========================================
+   PROJECT CARD
+========================================= */
+
+function ProjectCard({
+  project,
+  index,
+  language,
+  viewLabel,
+  onOpen,
+}) {
   return (
     <article
       className={`lookbook-card lookbook-reveal ${project.layout}`}
-      style={{ "--delay": `${(index % 4) * 120}ms` }}
+      style={{
+        "--delay": `${(index % 4) * 110}ms`,
+      }}
     >
       <button
         className="lookbook-image"
-        onClick={() => onOpen(project.id)}
-        aria-label={`${t.viewProject}: ${project.name[language]}`}
+        type="button"
+        onClick={(event) => onOpen(project.id, event.currentTarget)}
+        aria-label={`${viewLabel}: ${project.name[language]}`}
       >
-        <img
-          src={`/images/lookbook/${project.image}`}
+        <Image
+          src={project.image}
           alt={project.name[language]}
+          fill
+          sizes="(max-width: 700px) 90vw, 43vw"
           loading="lazy"
         />
-        <span className="lookbook-image-arrow">
-          <span>VIEW</span>
+
+        <span className="lookbook-image-arrow" aria-hidden="true">
+          <span>{viewLabel}</span>
           <span className="lookbook-image-arrow-icon">＋</span>
         </span>
       </button>
@@ -103,39 +241,200 @@ function ProjectCard({ project, index, onOpen, language, t }) {
           <span className="lookbook-type">
             {project.type[language]} · {project.id}
           </span>
+
           <h3>{project.name[language]}</h3>
         </div>
 
-        <span className="lookbook-view">{t.viewProject}</span>
+        <span className="lookbook-view">{viewLabel}</span>
       </div>
     </article>
   );
 }
 
+/* =========================================
+   LIGHTBOX
+========================================= */
+
+function LookbookLightbox({
+  project,
+  language,
+  closeLabel,
+  previousLabel,
+  nextLabel,
+  onClose,
+  onStep,
+}) {
+  const dialogRef = useRef(null);
+  const closeButtonRef = useRef(null);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") {
+        onClose();
+        return;
+      }
+
+      if (event.key === "ArrowLeft") {
+        onStep(-1);
+      }
+
+      if (event.key === "ArrowRight") {
+        onStep(1);
+      }
+
+      if (event.key !== "Tab") return;
+
+      const buttons =
+        dialogRef.current?.querySelectorAll("button");
+
+      if (!buttons?.length) return;
+
+      const first = buttons[0];
+      const last = buttons[buttons.length - 1];
+
+      if (
+        event.shiftKey &&
+        document.activeElement === first
+      ) {
+        event.preventDefault();
+        last.focus();
+      } else if (
+        !event.shiftKey &&
+        document.activeElement === last
+      ) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [onClose, onStep]);
+
+  return (
+    <div
+      className="lookbook-lightbox"
+      ref={dialogRef}
+      onClick={(event) => {
+        if (event.target === event.currentTarget) {
+          onClose();
+        }
+      }}
+      role="dialog"
+      aria-modal="true"
+      aria-label={project.name[language]}
+    >
+      <button
+        className="lightbox-close"
+        type="button"
+        onClick={onClose}
+        aria-label={closeLabel}
+        ref={closeButtonRef}
+      >
+        ×
+      </button>
+
+      <button
+        className="lightbox-prev"
+        type="button"
+        aria-label={previousLabel}
+        onClick={() => onStep(-1)}
+      >
+        ‹
+      </button>
+
+      <Image
+        key={project.id}
+        src={project.image}
+        alt={project.name[language]}
+        width={1800}
+        height={1200}
+        sizes="90vw"
+        priority
+      />
+
+      <button
+        className="lightbox-next"
+        type="button"
+        aria-label={nextLabel}
+        onClick={() => onStep(1)}
+      >
+        ›
+      </button>
+
+      <span className="lightbox-caption" aria-live="polite">
+        {project.type[language]} · {project.id} —{" "}
+        {project.name[language]}
+      </span>
+    </div>
+  );
+}
+
+/* =========================================
+   MAIN LOOKBOOK COMPONENT
+========================================= */
+
 export default function Lookbook() {
   const { language } = useLanguage();
-  const t = content[language] || content.el;
+
+  const currentLanguage =
+    language === "en" ? "en" : "el";
 
   const [active, setActive] = useState("all");
   const [selectedId, setSelectedId] = useState(null);
 
-  const selected = projects.find((project) => project.id === selectedId);
+  const triggerRef = useRef(null);
 
-  const visibleProjects = projects.filter(
-    (project) => active === "all" || project.category === active
+  const t = lookbookCopy[currentLanguage];
+
+  const visibleProjects = useMemo(
+    () =>
+      lookbookProjects.filter(
+        (project) =>
+          active === "all" ||
+          project.category === active
+      ),
+    [active]
   );
 
+  const selectedIndex = visibleProjects.findIndex(
+    (project) => project.id === selectedId
+  );
+
+  const selected =
+    selectedIndex >= 0
+      ? visibleProjects[selectedIndex]
+      : null;
+
+  /* SCROLL REVEAL */
+
   useEffect(() => {
-    const elements = document.querySelectorAll(".lookbook-reveal");
+    const elements = document.querySelectorAll(
+      ".lookbook-reveal"
+    );
 
-    const reduceMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    const revealAll = () => {
+      elements.forEach((element) =>
+        element.classList.add("is-visible")
+      );
+    };
 
-    if (reduceMotion) {
-      elements.forEach((element) => {
-        element.classList.add("is-visible");
-      });
+    if (
+      window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches ||
+      !("IntersectionObserver" in window)
+    ) {
+      revealAll();
       return;
     }
 
@@ -150,51 +449,111 @@ export default function Lookbook() {
       },
       {
         threshold: 0.08,
-        rootMargin: "0px 0px -30px 0px",
+        rootMargin: "0px 0px -28px 0px",
       }
     );
 
-    elements.forEach((element) => observer.observe(element));
+    elements.forEach((element) =>
+      observer.observe(element)
+    );
 
     return () => observer.disconnect();
-  }, [active, language]);
+  }, [active, currentLanguage]);
 
-  useEffect(() => {
-    if (!selectedId) return;
+  /* LIGHTBOX ACTIONS */
 
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") {
-        setSelectedId(null);
-      }
+  const closeLightbox = useCallback(() => {
+    setSelectedId(null);
+  }, []);
 
-      if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
-        const currentIndex = projects.findIndex(
-          (project) => project.id === selectedId
+  const stepLightbox = useCallback(
+    (direction) => {
+      setSelectedId((currentId) => {
+        const currentIndex = visibleProjects.findIndex(
+          (project) => project.id === currentId
         );
 
-        const direction = event.key === "ArrowRight" ? 1 : -1;
+        if (
+          currentIndex < 0 ||
+          visibleProjects.length === 0
+        ) {
+          return null;
+        }
 
         const nextIndex =
-          (currentIndex + direction + projects.length) % projects.length;
+          (currentIndex +
+            direction +
+            visibleProjects.length) %
+          visibleProjects.length;
 
-        setSelectedId(projects[nextIndex].id);
-      }
-    };
+        return visibleProjects[nextIndex].id;
+      });
+    },
+    [visibleProjects]
+  );
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+  /* RESTORE FOCUS AFTER CLOSING */
 
-    window.addEventListener("keydown", handleKeyDown);
+  useEffect(() => {
+    if (selectedId !== null) return;
 
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", handleKeyDown);
-    };
+    triggerRef.current?.focus();
+    triggerRef.current = null;
   }, [selectedId]);
 
+  const openLightbox = (id, trigger) => {
+    triggerRef.current = trigger;
+    setSelectedId(id);
+  };
+
+  /* FILTER KEYBOARD NAVIGATION */
+
+  const handleFilterKeyDown = (event) => {
+    if (
+      event.key !== "ArrowRight" &&
+      event.key !== "ArrowLeft"
+    ) {
+      return;
+    }
+
+    const currentIndex =
+      lookbookCategories.findIndex(
+        (category) => category.id === active
+      );
+
+    const direction =
+      event.key === "ArrowRight" ? 1 : -1;
+
+    const nextIndex =
+      (currentIndex +
+        direction +
+        lookbookCategories.length) %
+      lookbookCategories.length;
+
+    const nextCategory =
+      lookbookCategories[nextIndex];
+
+    setActive(nextCategory.id);
+
+    document
+      .getElementById(
+        `lookbook-filter-${nextCategory.id}`
+      )
+      ?.focus();
+  };
+
+  /* =========================================
+     JSX
+  ========================================= */
+
   return (
-    <main className="lookbook-page">
+    <main
+      className="lookbook-page"
+      lang={currentLanguage}
+    >
+      
       {/* HERO */}
+
       <section className="lookbook-hero">
         <div className="lookbook-hero-top lookbook-reveal">
           <span>{t.heroTop}</span>
@@ -203,6 +562,7 @@ export default function Lookbook() {
 
         <h1 className="lookbook-title lookbook-reveal">
           <span>{t.title1}</span>
+
           <span className="lookbook-title-indent">
             <em>{t.title2}</em>
           </span>
@@ -216,15 +576,17 @@ export default function Lookbook() {
             className="lookbook-round-link"
             aria-label={t.discover}
           >
-            ↓
+            <span aria-hidden="true">↓</span>
           </a>
         </div>
 
         <div className="lookbook-hero-image lookbook-reveal">
-          <img
-            src="/images/lookbook/kitchen-01.jpg"
+          <Image
+            src="/images/lookbook/commersial-01.jpg"
             alt={t.heroImageAlt}
-            fetchPriority="high"
+            fill
+            priority
+            sizes="(max-width: 700px) 90vw, 87vw"
           />
 
           <span>{t.heroImageCaption}</span>
@@ -235,793 +597,133 @@ export default function Lookbook() {
         </span>
       </section>
 
-      {/* GALLERY ΕΡΓΩΝ */}
-      <section className="lookbook-work" id="lookbook-work">
+      {/* PROJECTS */}
+
+      <section
+        className="lookbook-work"
+        id="lookbook-work"
+        aria-labelledby="lookbook-heading"
+      >
         <div className="lookbook-heading lookbook-reveal">
           <div>
             <span className="lookbook-eyebrow">
               {t.workEyebrow}
             </span>
 
-            <h2>
-              {t.workTitle} <em>{t.workTitleAccent}</em>
+            <h2 id="lookbook-heading">
+              {t.workTitle}{" "}
+              <em>{t.workTitleAccent}</em>
             </h2>
           </div>
 
-          <span className="lookbook-count">
-            {String(visibleProjects.length).padStart(2, "0")} / 13
+          <span
+            className="lookbook-count"
+            aria-live="polite"
+          >
+            {String(visibleProjects.length).padStart(
+              2,
+              "0"
+            )}{" "}
+            / {lookbookProjects.length}
           </span>
         </div>
 
-        {/* ΦΙΛΤΡΑ */}
+        {/* FILTERS */}
+
         <div
           className="lookbook-filters lookbook-reveal"
           role="group"
           aria-label={t.filterLabel}
         >
-          {categories.map((category) => (
+          {lookbookCategories.map((category) => (
             <button
+              id={`lookbook-filter-${category.id}`}
               key={category.id}
+              type="button"
               className={
                 active === category.id
                   ? "lookbook-filter active"
                   : "lookbook-filter"
               }
-              onClick={() => setActive(category.id)}
+              onClick={() => {
+                setActive(category.id);
+                setSelectedId(null);
+              }}
+              onKeyDown={handleFilterKeyDown}
               aria-pressed={active === category.id}
             >
-              {category[language]}
+              {category[currentLanguage]}
             </button>
           ))}
         </div>
 
-        {/* ΦΩΤΟΓΡΑΦΙΕΣ */}
-        <div className="lookbook-grid">
+        {/* PROJECT GRID */}
+
+        <div
+          className="lookbook-grid"
+          aria-live="polite"
+        >
           {visibleProjects.map((project, index) => (
             <ProjectCard
               key={project.id}
               project={project}
               index={index}
-              onOpen={setSelectedId}
-              language={language}
-              t={t}
+              language={currentLanguage}
+              viewLabel={t.view}
+              onOpen={openLightbox}
             />
           ))}
         </div>
       </section>
 
-      {/* ΦΙΛΟΣΟΦΙΑ DISETO */}
-      <section className="lookbook-manifesto lookbook-reveal">
+      {/* MANIFESTO */}
+
+      <section
+        className="lookbook-manifesto lookbook-reveal"
+        aria-labelledby="lookbook-manifesto-title"
+      >
         <span className="lookbook-eyebrow">
           {t.manifestoEyebrow}
         </span>
 
         <div className="lookbook-manifesto-copy">
-          <p>
-            {t.manifestoTitle.split("\n").map((line, index) => (
-              <span key={index}>
-                {line}
-                {index === 0 && <br />}
-              </span>
-            ))}
-          </p>
+          <h2 id="lookbook-manifesto-title">
+            {t.manifestoTitle
+              .split("\n")
+              .map((line, index) => (
+                <span key={line}>
+                  {line}
+                  {index === 0 && <br />}
+                </span>
+              ))}
+          </h2>
 
-          <span>{t.manifestoText}</span>
+          <p>{t.manifestoText}</p>
         </div>
 
-        <a className="lookbook-text-link" href="/#contact">
+        <Link
+          className="lookbook-text-link"
+          href="/#projects"
+        >
           {t.contact}
-        </a>
+          <span aria-hidden="true"> ↗</span>
+        </Link>
       </section>
 
       {/* LIGHTBOX */}
+
       {selected && (
-        <div
-          className="lookbook-lightbox"
-          onClick={() => setSelectedId(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-label={selected.name[language]}
-        >
-          <button
-            className="lightbox-close"
-            onClick={() => setSelectedId(null)}
-            aria-label={t.close}
-          >
-            ×
-          </button>
-
-          <button
-            className="lightbox-prev"
-            aria-label={t.previous}
-            onClick={(event) => {
-              event.stopPropagation();
-
-              const index = projects.findIndex(
-                (project) => project.id === selected.id
-              );
-
-              setSelectedId(
-                projects[
-                  (index - 1 + projects.length) % projects.length
-                ].id
-              );
-            }}
-          >
-            ‹
-          </button>
-
-          <img
-            src={`/images/lookbook/${selected.image}`}
-            alt={selected.name[language]}
-            onClick={(event) => event.stopPropagation()}
-          />
-
-          <button
-            className="lightbox-next"
-            aria-label={t.next}
-            onClick={(event) => {
-              event.stopPropagation();
-
-              const index = projects.findIndex(
-                (project) => project.id === selected.id
-              );
-
-              setSelectedId(
-                projects[(index + 1) % projects.length].id
-              );
-            }}
-          >
-            ›
-          </button>
-
-          <span className="lightbox-caption">
-            {selected.type[language]} · {selected.id}
-          </span>
-        </div>
+        <LookbookLightbox
+          project={selected}
+          language={currentLanguage}
+          closeLabel={t.close}
+          previousLabel={t.previous}
+          nextLabel={t.next}
+          onClose={closeLightbox}
+          onStep={stepLightbox}
+        />
       )}
 
-      {/* STYLES */}
-      <style jsx global>{`
-        .lookbook-page {
-          --lb-bg: #f7f4ed;
-          --lb-dark: #28231e;
-          --lb-muted: #777168;
-          --lb-gold: #a89576;
-
-          background: var(--lb-bg);
-          color: var(--lb-dark);
-          overflow: hidden;
-        }
-
-        .lookbook-page * {
-          box-sizing: border-box;
-        }
-
-        /* HERO */
-        .lookbook-hero {
-          padding: 75px 6.5% 65px;
-        }
-
-        .lookbook-hero-top,
-        .lookbook-hero-bottom,
-        .lookbook-heading,
-        .lookbook-caption {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .lookbook-hero-top,
-        .lookbook-eyebrow,
-        .lookbook-type,
-        .lookbook-view,
-        .lookbook-hero-index,
-        .lookbook-hero-image > span,
-        .lookbook-count {
-          font-family: Arial, sans-serif;
-          font-size: 12px;
-          font-weight: 600;
-          letter-spacing: 0.13em;
-          text-transform: uppercase;
-        }
-
-        .lookbook-hero-top {
-          color: var(--lb-muted);
-          padding-bottom: 55px;
-          gap: 15px;
-        }
-
-        .lookbook-title {
-          font-family: Georgia, serif;
-          font-size: clamp(65px, 12.5vw, 175px);
-          line-height: 0.88;
-          letter-spacing: -0.075em;
-          font-weight: 500;
-          margin: 0;
-        }
-
-        .lookbook-title > span {
-          display: block;
-        }
-
-        .lookbook-title-indent {
-          text-align: right;
-          padding-right: 9%;
-        }
-
-        .lookbook-title em,
-        .lookbook-heading h2 em {
-          font-weight: 400;
-          color: var(--lb-gold);
-        }
-
-        .lookbook-hero-bottom {
-          margin: 45px 0 55px;
-          gap: 20px;
-        }
-
-        .lookbook-hero-bottom p {
-          max-width: 390px;
-          color: var(--lb-muted);
-          font: 500 16px/1.8 Arial, sans-serif;
-        }
-
-        .lookbook-round-link {
-          display: grid;
-          place-items: center;
-          width: 52px;
-          height: 52px;
-          border: 1px solid #c9c1b4;
-          border-radius: 50%;
-          color: var(--lb-dark);
-          text-decoration: none;
-          font-size: 24px;
-          flex-shrink: 0;
-          transition:
-            background 0.3s,
-            color 0.3s,
-            transform 0.3s;
-        }
-
-        .lookbook-round-link:hover {
-          background: var(--lb-dark);
-          color: white;
-          transform: translateY(4px);
-        }
-
-        .lookbook-hero-image {
-          position: relative;
-          height: min(65vw, 650px);
-          min-height: 300px;
-          overflow: hidden;
-        }
-
-        .lookbook-hero-image img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-          transform: scale(1.1);
-          transition: transform 1.8s cubic-bezier(0.2, 0.7, 0.2, 1);
-        }
-
-        .lookbook-hero-image.is-visible img {
-          transform: scale(1);
-        }
-
-        .lookbook-hero-image > span {
-          position: absolute;
-          bottom: 20px;
-          left: 22px;
-          color: white;
-          text-shadow: 0 1px 8px #0008;
-        }
-
-        .lookbook-hero-index {
-          display: block;
-          text-align: right;
-          color: var(--lb-muted);
-          padding-top: 18px;
-        }
-
-        /* GALLERY */
-        .lookbook-work {
-          padding: 110px 6.5% 130px;
-        }
-
-        .lookbook-heading {
-          align-items: end;
-          margin-bottom: 38px;
-        }
-
-        .lookbook-eyebrow {
-          color: var(--lb-muted);
-        }
-
-        .lookbook-heading h2 {
-          font: 500 clamp(38px, 5.5vw, 72px)/1.1 Georgia, serif;
-          letter-spacing: -0.055em;
-          margin: 18px 0 0;
-        }
-
-        .lookbook-count {
-          color: var(--lb-muted);
-          padding-bottom: 8px;
-        }
-
-        /* FILTERS */
-        .lookbook-filters {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 9px;
-          margin-bottom: 55px;
-        }
-
-        .lookbook-filter {
-          background: transparent;
-          border: 1px solid #d8d1c5;
-          border-radius: 30px;
-          padding: 11px 18px;
-          color: var(--lb-muted);
-          font: 500 13px Arial, sans-serif;
-          cursor: pointer;
-          transition:
-            color 0.35s ease,
-            background 0.35s ease,
-            border-color 0.35s ease,
-            transform 0.35s ease;
-        }
-
-        .lookbook-filter:hover {
-          transform: translateY(-3px);
-        }
-
-        .lookbook-filter:hover,
-        .lookbook-filter.active {
-          background: var(--lb-dark);
-          color: white;
-          border-color: var(--lb-dark);
-        }
-
-        /* GRID */
-        .lookbook-grid {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          column-gap: 5%;
-          row-gap: 75px;
-          align-items: start;
-        }
-
-        .lookbook-card {
-          min-width: 0;
-        }
-
-        .lookbook-card:nth-child(even) {
-          margin-top: 115px;
-        }
-
-        .lookbook-image {
-          position: relative;
-          display: block;
-          width: 100%;
-          padding: 0;
-          border: 0;
-          background: #e9e4da;
-          overflow: hidden;
-          cursor: pointer;
-        }
-
-        .lookbook-card.wide .lookbook-image {
-          aspect-ratio: 1.28 / 1;
-        }
-
-        .lookbook-card.tall .lookbook-image {
-          aspect-ratio: 0.84 / 1;
-        }
-
-        .lookbook-image img {
-          width: 100%;
-          height: 100%;
-          display: block;
-          object-fit: cover;
-          transform: scale(1.04);
-          transition:
-            transform 1.3s cubic-bezier(0.2, 0.7, 0.2, 1),
-            filter 0.6s ease;
-        }
-
-        .lookbook-card.is-visible .lookbook-image img {
-          transform: scale(1);
-        }
-
-        .lookbook-image:hover img {
-          transform: scale(1.07) !important;
-          filter: brightness(0.94);
-        }
-
-        /* ΝΕΟ ΚΟΥΜΠΙ ΦΩΤΟΓΡΑΦΙΑΣ */
-        .lookbook-image-arrow {
-          position: absolute;
-          right: 18px;
-          bottom: 18px;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 8px 9px 8px 15px;
-          border: 1px solid rgba(255, 255, 255, 0.65);
-          border-radius: 40px;
-          background: rgba(247, 244, 237, 0.94);
-          color: var(--lb-dark);
-          font: 600 9px Arial, sans-serif;
-          letter-spacing: 0.16em;
-          opacity: 0;
-          transform: translateY(8px);
-          transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .lookbook-image-arrow-icon {
-          display: grid;
-          place-items: center;
-          width: 25px;
-          height: 25px;
-          border-radius: 50%;
-          background: var(--lb-dark);
-          color: white;
-          font-size: 17px;
-          letter-spacing: 0;
-          transition: transform 0.3s ease;
-        }
-
-        .lookbook-image:hover .lookbook-image-arrow {
-          opacity: 1;
-          transform: translateY(0);
-        }
-
-        .lookbook-image:hover .lookbook-image-arrow-icon {
-          transform: rotate(45deg);
-        }
-
-        .lookbook-caption {
-          align-items: end;
-          padding-top: 18px;
-          gap: 10px;
-        }
-
-        .lookbook-type {
-          color: var(--lb-muted);
-          font-size: 11px;
-        }
-
-        .lookbook-caption h3 {
-          font: 500 25px Georgia, serif;
-          margin: 8px 0 0;
-        }
-
-        .lookbook-view {
-          color: var(--lb-muted);
-          font-size: 10px;
-          font-weight: 600;
-          white-space: nowrap;
-        }
-
-        /* MANIFESTO */
-        .lookbook-manifesto {
-          background: #351019;
-          color: #f7f4ed;
-          border-top: 1px solid rgba(255, 255, 255, 0.1);
-          padding: 95px 6.5% 110px;
-        }
-
-        .lookbook-manifesto .lookbook-eyebrow {
-          color: #c5a47d;
-        }
-
-        .lookbook-manifesto-copy {
-          margin-top: 40px;
-        }
-
-        .lookbook-manifesto-copy p {
-          color: #f7f4ed;
-          font: 500 clamp(32px, 5vw, 65px)/1.15 Georgia, serif;
-          letter-spacing: -0.045em;
-          margin: 0 0 35px;
-        }
-
-        .lookbook-manifesto-copy span {
-          display: block;
-          max-width: 600px;
-          color: #d1c1bd;
-          font: 400 16px/2 Arial, sans-serif;
-        }
-
-        .lookbook-manifesto .lookbook-text-link {
-          color: #c5a47d;
-          border-bottom: 1px solid #c5a47d;
-        }
-
-        .lookbook-manifesto .lookbook-text-link:hover {
-          color: #ffffff;
-          border-color: #ffffff;
-        }
-
-        .lookbook-text-link {
-          display: inline-flex;
-          align-items: center;
-          margin-top: 40px;
-          padding-bottom: 9px;
-          border-bottom: 1px solid var(--lb-dark);
-          color: var(--lb-dark);
-          font: 600 12px Arial, sans-serif;
-          letter-spacing: 0.12em;
-          text-decoration: none;
-          transition: color 0.3s, border-color 0.3s;
-        }
-
-        /* LIGHTBOX */
-        .lookbook-lightbox {
-          position: fixed;
-          inset: 0;
-          z-index: 9999;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 65px;
-          background: rgba(25, 22, 19, 0.96);
-          animation: lightboxFade 0.4s ease both;
-        }
-
-        .lookbook-lightbox > img {
-          max-width: 100%;
-          max-height: 82vh;
-          object-fit: contain;
-          animation: lightboxImage 0.65s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-        }
-
-        .lightbox-close,
-        .lightbox-prev,
-        .lightbox-next {
-          position: absolute;
-          border: 0;
-          background: transparent;
-          color: white;
-          cursor: pointer;
-          font-size: 35px;
-        }
-
-        .lightbox-close {
-          top: 22px;
-          right: 30px;
-          font-size: 42px;
-        }
-
-        /* ΝΕΑ ΚΥΚΛΙΚΑ ΚΟΥΜΠΙΑ LIGHTBOX */
-        .lightbox-prev,
-        .lightbox-next {
-          display: grid;
-          place-items: center;
-          width: 52px;
-          height: 52px;
-          border: 1px solid rgba(255, 255, 255, 0.35);
-          border-radius: 50%;
-          background: rgba(247, 244, 237, 0.08);
-          color: white;
-          font-family: Georgia, serif;
-          font-size: 38px;
-          line-height: 1;
-          transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        .lightbox-prev {
-          left: 25px;
-        }
-
-        .lightbox-next {
-          right: 25px;
-        }
-
-        .lightbox-prev:hover,
-        .lightbox-next:hover {
-          background: #f7f4ed;
-          color: #28231e;
-        }
-
-        .lightbox-caption {
-          position: absolute;
-          bottom: 22px;
-          left: 50%;
-          transform: translateX(-50%);
-          color: white;
-          font: 500 12px Arial, sans-serif;
-          letter-spacing: 0.15em;
-          text-transform: uppercase;
-          white-space: nowrap;
-        }
-
-        /* SCROLL REVEAL */
-        .lookbook-reveal {
-          opacity: 0;
-          transform: translate3d(0, 55px, 0);
-          transition:
-            opacity 1s cubic-bezier(0.2, 0.7, 0.2, 1),
-            transform 1.1s cubic-bezier(0.2, 0.7, 0.2, 1);
-          will-change: opacity, transform;
-        }
-
-        .lookbook-reveal.is-visible {
-          opacity: 1;
-          transform: translate3d(0, 0, 0);
-        }
-
-        .lookbook-title.lookbook-reveal {
-          transform: translate3d(0, 65px, 0);
-          transition-delay: 100ms;
-        }
-
-        .lookbook-title.lookbook-reveal.is-visible {
-          transform: translate3d(0, 0, 0);
-        }
-
-        .lookbook-card.lookbook-reveal {
-          transition-delay: var(--delay, 0ms);
-        }
-
-        /* ANIMATIONS */
-        @keyframes lightboxFade {
-          from {
-            opacity: 0;
-            backdrop-filter: blur(0);
-          }
-          to {
-            opacity: 1;
-            backdrop-filter: blur(8px);
-          }
-        }
-
-        @keyframes lightboxImage {
-          from {
-            opacity: 0;
-            transform: scale(0.94) translateY(15px);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
-
-        /* MOBILE */
-        @media (max-width: 700px) {
-          .lookbook-hero {
-            padding: 45px 5% 45px;
-          }
-
-          .lookbook-hero-top {
-            padding-bottom: 55px;
-            font-size: 10px;
-          }
-
-          .lookbook-title {
-            font-size: clamp(57px, 14.5vw, 105px);
-          }
-
-          .lookbook-title-indent {
-            padding-right: 0;
-          }
-
-          .lookbook-hero-bottom {
-            margin: 35px 0;
-          }
-
-          .lookbook-hero-bottom p {
-            max-width: 270px;
-            font-size: 14px;
-          }
-
-          .lookbook-round-link {
-            width: 43px;
-            height: 43px;
-          }
-
-          .lookbook-hero-image {
-            height: 105vw;
-            min-height: 300px;
-          }
-
-          .lookbook-work {
-            padding: 75px 5% 85px;
-          }
-
-          .lookbook-heading h2 {
-            font-size: 38px;
-          }
-
-          .lookbook-count {
-            font-size: 10px;
-          }
-
-          .lookbook-filters {
-            gap: 7px;
-            margin-bottom: 35px;
-          }
-
-          .lookbook-filter {
-            padding: 9px 13px;
-            font-size: 12px;
-          }
-
-          .lookbook-grid {
-            grid-template-columns: 1fr;
-            row-gap: 42px;
-          }
-
-          .lookbook-card:nth-child(even) {
-            margin-top: 0;
-          }
-
-          .lookbook-card.tall .lookbook-image,
-          .lookbook-card.wide .lookbook-image {
-            aspect-ratio: 1 / 0.9;
-          }
-
-          .lookbook-caption h3 {
-            font-size: 21px;
-          }
-
-          .lookbook-view {
-            font-size: 9px;
-          }
-
-          .lookbook-manifesto {
-            padding: 70px 5% 80px;
-          }
-
-          .lookbook-manifesto-copy {
-            margin-top: 30px;
-          }
-
-          .lookbook-manifesto-copy p {
-            font-size: 35px;
-            font-weight: 500;
-          }
-
-          .lookbook-manifesto-copy span {
-            font-size: 14px;
-          }
-
-          .lookbook-lightbox {
-            padding: 45px 15px;
-          }
-
-          .lightbox-prev {
-            left: 8px;
-          }
-
-          .lightbox-next {
-            right: 8px;
-          }
-        }
-
-        /* REDUCED MOTION */
-        @media (prefers-reduced-motion: reduce) {
-          .lookbook-page *,
-          .lookbook-page *::before,
-          .lookbook-page *::after {
-            scroll-behavior: auto !important;
-            transition-duration: 0.01ms !important;
-            animation-duration: 0.01ms !important;
-          }
-
-          .lookbook-reveal {
-            opacity: 1;
-            transform: none;
-          }
-
-          .lookbook-hero-image img,
-          .lookbook-image img {
-            transform: none;
-          }
-        }
-      `}</style>
     </main>
   );
 }

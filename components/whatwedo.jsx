@@ -1,10 +1,9 @@
-
 "use client";
 
 import { useEffect } from "react";
 import { useLanguage } from "@/components/languagecontext";
 
-const content = {
+const translations = {
   el: {
     eyebrow: "DISETO — ΟΙ ΥΠΗΡΕΣΙΕΣ ΜΑΣ",
     since: "ΑΠΟ ΤΟ 1982",
@@ -59,77 +58,85 @@ const content = {
     ],
     contactLink: "ΑΣ ΣΧΕΔΙΑΣΟΥΜΕ ΤΟ ΕΠΟΜΕΝΟ ΕΡΓΟ ΣΑΣ",
     bottom: "ΣΧΕΔΙΑΣΜΟΣ · ΠΟΙΟΤΗΤΑ · ΔΙΑΧΡΟΝΙΚΟΤΗΤΑ",
+    imageAlt: "Αρχιτεκτονικός χώρος και προσεγμένη κατασκευή",
+    imageEyebrow: "ΣΧΕΔΙΑΣΜΕΝΟ ΜΕ ΣΚΟΠΟ",
+    imageTitle: "ΚΑΤΑΣΚΕΥΑΣΜΕΝΟ ΓΙΑ ΝΑ ΑΝΤΕΧΕΙ.",
   },
 
   en: {
-    eyebrow: "DISETO — OUR SERVICES",
-    since: "EST. 1982",
+    eyebrow: "DISETO — WHAT WE DO",
+    since: "SINCE 1982",
     title: "WE CREATE",
     titleHighlight: "YOUR SPACE.",
     intro:
-      "From the initial idea to the final realization. We create bespoke wooden constructions, furniture and complete interiors with timeless aesthetics and attention to detail.",
+      "From the initial idea to the final construction. We create bespoke wooden structures, furniture and complete spaces with timeless aesthetics and attention to detail.",
     servicesHeading: "WHAT WE CAN CREATE",
     services: [
       {
         number: "01",
         title: "Bespoke Kitchens",
         description:
-          "We design and craft made-to-measure kitchens, combining aesthetics, ergonomics and functionality. Every creation is tailored to your space and everyday needs.",
+          "We design and build custom kitchens tailored to your space, combining aesthetics, ergonomics and functionality. Every creation is designed around your space and everyday needs.",
       },
       {
         number: "02",
-        title: "Furniture & Custom Creations",
+        title: "Furniture & Bespoke Creations",
         description:
-          "We create bespoke furniture and wooden constructions. From distinctive furniture compositions to specialized installations, we bring your ideas to life.",
+          "We craft custom furniture and bespoke wooden creations. From distinctive furniture compositions to specialised constructions, we bring your ideas to life.",
       },
       {
         number: "03",
         title: "Wardrobes & Storage Solutions",
         description:
-          "We create personalized storage solutions using carefully selected materials, clean lines and intelligent use of every available space.",
+          "We create tailored storage solutions using carefully selected materials, clean lines and intelligent use of every available space.",
       },
       {
         number: "04",
         title: "Interior Design",
         description:
-          "We design and shape residential, hospitality and commercial spaces. We combine materials, lighting and furniture to create cohesive interiors.",
+          "We design and transform homes, hotels and commercial spaces. We combine materials, lighting and furniture to create cohesive, carefully considered interiors.",
       },
       {
         number: "05",
         title: "Renovations & Commercial Spaces",
         description:
-          "We undertake renovations and fit-outs for commercial spaces and hotels, delivering comprehensive design and construction solutions.",
+          "We undertake renovations and fit-outs for commercial spaces and hotels, delivering complete design and construction solutions.",
       },
       {
         number: "06",
         title: "Design & Production",
         description:
-          "From the initial concept and planning to the final construction, we draw on our experience and expertise, with a focus on quality and every detail.",
+          "From the initial concept and planning to the final construction, we draw on our experience and expertise, focusing on quality and every detail.",
       },
     ],
     philosophy: "OUR PHILOSOPHY",
     philosophyTitle: ["BEAUTY", "IN EVERY", "DETAIL."],
     philosophyParagraphs: [
-      "We believe every space has its own identity. The quality of materials, thoughtful craftsmanship and balance in design make all the difference.",
-      "We create with knowledge, care and respect for your needs, giving value to every detail.",
+      "We believe every space has its own identity. The quality of materials, careful craftsmanship and balance in design are what make the difference.",
+      "We create with knowledge, care and respect for your individual needs, bringing value to every detail.",
     ],
     contactLink: "LET'S DESIGN YOUR NEXT PROJECT",
     bottom: "DESIGN · QUALITY · TIMELESSNESS",
+    imageAlt: "Architectural space and carefully crafted details",
+    imageEyebrow: "DESIGNED WITH PURPOSE",
+    imageTitle: "BUILT TO STAND THE TEST OF TIME.",
   },
 };
 
 export default function WhatWeDo() {
   const { language } = useLanguage();
-  const t = content[language] || content.el;
+  const content = translations[language] || translations.el;
 
   useEffect(() => {
-    const elements = document.querySelectorAll(".what-reveal");
+    const elements = document.querySelectorAll(
+      "#what-we-do .what-reveal"
+    );
 
     const reduceMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    if (reduceMotion) {
+    if (reduceMotion || !("IntersectionObserver" in window)) {
       elements.forEach((element) => {
         element.classList.add("is-visible");
       });
@@ -165,38 +172,46 @@ export default function WhatWeDo() {
         {/* HEADING */}
         <div className="what-heading what-reveal">
           <div className="what-topline">
-            <span className="what-eyebrow">{t.eyebrow}</span>
-            <span className="what-since">{t.since}</span>
+            <span className="what-eyebrow">
+              {content.eyebrow}
+            </span>
+            <span className="what-since">
+              {content.since}
+            </span>
           </div>
 
           <div className="what-heading-grid">
             <h2 className="what-main-title">
-              {t.title}
+              {content.title}
               <br />
-              <span>{t.titleHighlight}</span>
+              <span>{content.titleHighlight}</span>
             </h2>
 
             <div className="what-intro-wrap">
-              <p className="what-intro">{t.intro}</p>
+              <p className="what-intro">
+                {content.intro}
+              </p>
             </div>
           </div>
         </div>
 
         {/* SERVICES */}
         <div className="services-heading what-reveal">
-          <span>{t.servicesHeading}</span>
+          <span>{content.servicesHeading}</span>
         </div>
 
         <div className="services-list">
-          {t.services.map((service, index) => (
+          {content.services.map((service, index) => (
             <article
               className="service-item what-reveal"
               key={service.number}
               style={{
-                "--service-delay": `${(index % 2) * 150}ms`,
+                "--service-delay": `${index * 70}ms`,
               }}
             >
-              <div className="service-number">{service.number}</div>
+              <div className="service-number">
+                {service.number}
+              </div>
 
               <div className="service-content">
                 <h3>{service.title}</h3>
@@ -211,23 +226,11 @@ export default function WhatWeDo() {
       <div
         className="what-wide-band"
         role="img"
-        aria-label={
-          language === "en"
-            ? "Architectural interior and bespoke craftsmanship"
-            : "Αρχιτεκτονικός χώρος και προσεγμένη κατασκευή"
-        }
+        aria-label={content.imageAlt}
       >
         <div className="what-wide-band-inner">
-          <span>
-            {language === "en"
-              ? "DESIGNED WITH PURPOSE"
-              : "ΣΧΕΔΙΑΣΜΕΝΟ ΜΕ ΣΚΟΠΟ"}
-          </span>
-          <p>
-            {language === "en"
-              ? "CRAFTED TO LAST."
-              : "ΚΑΤΑΣΚΕΥΑΣΜΕΝΟ ΓΙΑ ΝΑ ΑΝΤΕΧΕΙ."}
-          </p>
+          <span>{content.imageEyebrow}</span>
+          <p>{content.imageTitle}</p>
         </div>
       </div>
 
@@ -235,25 +238,33 @@ export default function WhatWeDo() {
         {/* PHILOSOPHY */}
         <div className="what-footer">
           <div className="philosophy-title what-reveal">
-            <span className="what-eyebrow">{t.philosophy}</span>
+            <span className="what-eyebrow">
+              {content.philosophy}
+            </span>
 
             <h2>
-              {t.philosophyTitle[0]}
+              {content.philosophyTitle[0]}
               <br />
-              <span>{t.philosophyTitle[1]}</span>
+              <span>{content.philosophyTitle[1]}</span>
               <br />
-              {t.philosophyTitle[2]}
+              {content.philosophyTitle[2]}
             </h2>
           </div>
 
           <div className="philosophy-content what-reveal">
-            {t.philosophyParagraphs.map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
+            {content.philosophyParagraphs.map(
+              (paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              )
+            )}
 
             <a href="#contact" className="philosophy-link">
-              {t.contactLink}
-              <span className="philosophy-arrow" aria-hidden="true">
+              {content.contactLink}
+
+              <span
+                className="philosophy-arrow"
+                aria-hidden="true"
+              >
                 <span>＋</span>
               </span>
             </a>
@@ -262,24 +273,33 @@ export default function WhatWeDo() {
 
         {/* BOTTOM LINE */}
         <div className="what-bottom-line what-reveal">
-          <span>{t.bottom}</span>
+          <span>{content.bottom}</span>
         </div>
       </div>
 
       <style jsx>{`
         .what-we-do {
-          position: relative;
-          isolation: isolate;
-          background-color: #351019;
-          background-image:
-  linear-gradient(
-    rgba(53, 16, 25, 0.65),
-    rgba(53, 16, 25, 0.72)
-  ),
-  url("/images/background.jpg");
-          background-size: cover;
-          background-position: center;
-          background-repeat: no-repeat;
+          
+        
+  
+    position: relative;
+    isolation: isolate;
+    background-color: #351019;
+    background-image:
+      linear-gradient(
+        rgba(53, 16, 25, 0.65),
+        rgba(53, 16, 25, 0.72)
+      ),
+      url("/images/background.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    color: #f4efe6;
+    padding: clamp(82px, 9vw, 138px) 7% 76px;
+    overflow: hidden;
+  }
+
+
           color: #f4efe6;
           padding: clamp(82px, 9vw, 138px) 7% 76px;
           overflow: hidden;
@@ -397,16 +417,6 @@ export default function WhatWeDo() {
           background: #421c25;
           border: 1px solid rgba(226, 211, 187, 0.15);
           border-radius: 3px;
-          transition:
-            border-color 0.35s ease,
-            background 0.35s ease,
-            transform 0.35s ease;
-        }
-
-        .service-item:hover {
-          background: #4b222c;
-          border-color: rgba(197, 164, 125, 0.65);
-          transform: translateY(-4px);
         }
 
         .service-number {
@@ -417,32 +427,51 @@ export default function WhatWeDo() {
           letter-spacing: 0.12em;
         }
 
-        .service-content h3 {
-          max-width: 440px;
-          margin: 0 0 18px;
-          color: #f4efe6;
-          font-family: Georgia, serif;
-          font-size: clamp(25px, 2.2vw, 33px);
-          font-weight: 400;
-          line-height: 1.15;
-          letter-spacing: -0.04em;
-          transition: color 0.3s ease;
-        }
+ .service-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 55px 1fr;
+  gap: 24px;
+  align-items: start;
+  min-height: auto;
+  padding: 38px 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(197, 164, 125, 0.3);
+  border-radius: 0;
+  box-shadow: none;
+}
 
-        .service-item:hover .service-content h3 {
-          color: #d9bd96;
-        }
+.service-number {
+  padding-top: 5px;
+  color: #c5a47d;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+}
 
-        .service-content p {
-          max-width: 480px;
-          margin: 0;
-          color: #ddcfca;
-          font-family: Arial, Helvetica, sans-serif;
-          font-size: clamp(16px, 1.05vw, 17px);
-          line-height: 1.85;
-        }
+.service-content h3 {
+  max-width: 440px;
+  margin: 0 0 14px;
+  color: #f4efe6;
+  font-family: Georgia, serif;
+  font-size: clamp(25px, 2.2vw, 33px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+}
+
+.service-content p {
+  max-width: 650px;
+  margin: 0;
+  color: #ddcfca;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(16px, 1.05vw, 17px);
+  line-height: 1.85;
+}
 
         /* PHILOSOPHY */
+
         .what-footer {
           position: relative;
           display: grid;
@@ -504,19 +533,8 @@ export default function WhatWeDo() {
           line-height: 1.6;
           letter-spacing: 0.12em;
           text-decoration: none;
-          transition:
-            color 0.3s ease,
-            gap 0.3s ease,
-            border-color 0.3s ease;
         }
 
-        .philosophy-link:hover {
-          color: #9c8058;
-          gap: 19px;
-          border-color: #28231e;
-        }
-
-        /* CIRCULAR BUTTON */
         .philosophy-arrow {
           display: grid;
           place-items: center;
@@ -527,29 +545,16 @@ export default function WhatWeDo() {
           border-radius: 50%;
           background: #28231e;
           color: #f4efe6;
-          transition:
-            transform 0.3s ease,
-            background 0.3s ease,
-            color 0.3s ease;
         }
 
         .philosophy-arrow span {
           display: block;
           font-size: 17px;
           line-height: 1;
-          transition: transform 0.3s ease;
-        }
-
-        .philosophy-link:hover .philosophy-arrow {
-          background: #9c8058;
-          color: #ffffff;
-        }
-
-        .philosophy-link:hover .philosophy-arrow span {
-          transform: rotate(45deg);
         }
 
         /* BOTTOM LINE */
+
         .what-bottom-line {
           display: flex;
           justify-content: space-between;
@@ -564,6 +569,7 @@ export default function WhatWeDo() {
         }
 
         /* REVEAL ANIMATIONS */
+
         .what-reveal {
           opacity: 0;
           transform: translate3d(0, 45px, 0);
@@ -581,9 +587,7 @@ export default function WhatWeDo() {
         .service-item.what-reveal {
           transition:
             opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
-            transform 1s cubic-bezier(0.2, 0.7, 0.2, 1),
-            background 0.35s ease,
-            border-color 0.35s ease;
+            transform 1s cubic-bezier(0.2, 0.7, 0.2, 1);
           transition-delay: var(--service-delay, 0ms);
         }
 
@@ -608,7 +612,8 @@ export default function WhatWeDo() {
           transition-delay: 150ms;
         }
 
-        /* FULL-WIDTH STRIP - USES SECTION BACKGROUND */
+        /* FULL-WIDTH STRIP */
+
         .what-wide-band {
           position: relative;
           width: 100vw;
@@ -655,7 +660,15 @@ export default function WhatWeDo() {
         }
 
         /* TABLET */
+
         @media (max-width: 900px) {
+          .what-we-do {
+            padding-right: 6%;
+            padding-left: 6%;
+            background-size: 130% auto;
+            background-position: center top;
+          }
+
           .what-heading-grid {
             grid-template-columns: 1fr;
             gap: 38px;
@@ -684,14 +697,31 @@ export default function WhatWeDo() {
         }
 
         /* MOBILE */
+
         @media (max-width: 600px) {
           .what-we-do {
-            padding: 76px 5% 48px;
+            padding: 62px 5% 40px;
+            background-size: 180% auto;
+            background-position: center top;
+          }
+
+          .what-reveal {
+            transform: translate3d(0, 24px, 0);
+            transition-duration: 0.7s;
+          }
+
+          .what-heading.what-reveal {
+            transform: translate3d(0, 30px, 0);
+          }
+
+          .what-heading.what-reveal.is-visible {
+            transform: translate3d(0, 0, 0);
           }
 
           .what-topline {
-            align-items: flex-start;
-            gap: 15px;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 18px;
           }
 
           .what-eyebrow,
@@ -731,13 +761,27 @@ export default function WhatWeDo() {
 
           .service-item {
             min-height: auto;
-            padding: 25px 20px;
-            grid-template-columns: 30px 1fr;
-            gap: 12px;
+            padding: 23px 17px 23px 16px;
+            grid-template-columns: 32px minmax(0, 1fr);
+            gap: 11px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #48202a, #3d1922);
+            box-shadow: 0 10px 24px rgba(14, 4, 7, 0.12);
           }
 
           .service-number {
-            font-size: 11px;
+            display: grid;
+            place-items: center;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border: 1px solid rgba(197, 164, 125, 0.42);
+            border-radius: 50%;
+            font-size: 10px;
+          }
+
+          .service-item.what-reveal {
+            transition-delay: var(--service-delay, 0ms);
           }
 
           .service-content h3 {
@@ -797,6 +841,8 @@ export default function WhatWeDo() {
           }
         }
 
+        /* REDUCED MOTION */
+
         @media (prefers-reduced-motion: reduce) {
           .what-reveal {
             opacity: 1;
@@ -804,16 +850,8 @@ export default function WhatWeDo() {
             transition: none;
           }
 
-          .service-item,
-          .service-content h3,
-          .philosophy-link,
-          .philosophy-arrow,
-          .philosophy-arrow span {
+          .service-item {
             transition: none;
-          }
-
-          .service-item:hover {
-            transform: none;
           }
         }
       `}</style>

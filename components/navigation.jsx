@@ -29,13 +29,14 @@ export function Navigation() {
       href: "/#home",
     },
     {
-      label: "PROJECTS",
-      href: "/#projects",
-    },
-    {
       label: language === "el" ? "ΠΟΙΟΙ ΕΙΜΑΣΤΕ" : "ABOUT US",
       href: "/#what-we-do",
     },
+    {
+      label: "PROJECTS",
+      href: "/#projects",
+    },
+    
     {
       label: "LOOKBOOK",
       href: "/lookbook",

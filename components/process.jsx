@@ -1,15 +1,18 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/components/languagecontext";
 
-const content = {
+const translations = {
   el: {
     topline: "DISETO — Η ΔΙΑΔΙΚΑΣΙΑ ΜΑΣ",
+    since: "ΑΠΟ ΤΟ 1982",
     headingStart: "Από το",
     headingHighlight: "σχέδιο",
     headingEnd: "στην παράδοση.",
+    intro:
+      "Κάθε έργο ξεκινά από μια ιδέα. Με προσεκτικό σχεδιασμό, επιδέξια κατασκευή και προσωπική φροντίδα, τη μετατρέπουμε σε έναν χώρο φτιαγμένο για εσάς.",
     steps: [
       {
         number: "01",
@@ -51,6 +54,7 @@ const content = {
 
   en: {
     topline: "DISETO — OUR PROCESS",
+    since: "SINCE 1982",
     headingStart: "From",
     headingHighlight: "concept",
     headingEnd: "to completion.",
@@ -98,33 +102,73 @@ const content = {
 
 export default function OurProcess() {
   const { language } = useLanguage();
-  const t = content[language] || content.el;
+  const t = translations[language] || translations.el;
 
   const [activeStep, setActiveStep] = useState(0);
+  const processRef = useRef(null);
 
-  // Automatic image and step change every 3 seconds
+  // Εμφάνιση στοιχείων κατά το scroll
+  useEffect(() => {
+    const root = processRef.current;
+    if (!root) return;
+
+    const elements = root.querySelectorAll(".process-reveal");
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      elements.forEach((element) => {
+        element.classList.add("is-visible");
+      });
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -40px 0px",
+      }
+    );
+
+    elements.forEach((element) => observer.observe(element));
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Αυτόματη εναλλαγή εικόνας κάθε 2 δευτερόλεπτα
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveStep((current) => (current + 1) % t.steps.length);
-    }, 3000);
+      setActiveStep((current) => (current + 1) % 4);
+    }, 2000);
 
     return () => clearInterval(interval);
-  }, [t.steps.length]);
+  }, []);
 
   const activeItem = t.steps[activeStep];
 
   return (
-    <section className="our-process">
+    <section className="our-process" ref={processRef}>
       <div className="process-container">
 
-        <div className="process-topline">
+        <div className="process-topline process-reveal">
           <span>{t.topline}</span>
-          <span>
-            {language === "el" ? "ΑΠΟ ΤΟ 1982" : "SINCE 1982"}
-          </span>
+
+          <div className="process-topline-meta">
+            <span>{t.since}</span>
+          </div>
         </div>
 
-        <div className="process-heading">
+        <div className="process-heading process-reveal">
           <h2>
             {t.headingStart} <em>{t.headingHighlight}</em>
             <br />
@@ -140,7 +184,7 @@ export default function OurProcess() {
             {t.steps.map((step, index) => (
               <button
                 type="button"
-                className={`process-step ${
+                className={`process-step process-reveal ${
                   activeStep === index ? "active" : ""
                 }`}
                 key={step.number}
@@ -160,12 +204,11 @@ export default function OurProcess() {
                     {step.description}
                   </span>
                 </span>
-
               </button>
             ))}
           </div>
 
-          <div className="process-visual">
+          <div className="process-visual process-reveal">
             {t.steps.map((step, index) => (
               <div
                 key={step.number}
@@ -189,7 +232,7 @@ export default function OurProcess() {
 
         </div>
 
-        <div className="process-bottom">
+        <div className="process-bottom process-reveal">
           <span>{t.bottomStart}</span>
           <span>{t.bottomEnd}</span>
         </div>
@@ -197,6 +240,11 @@ export default function OurProcess() {
       </div>
 
       <style jsx>{`
+        .our-process,
+        .our-process * {
+          box-sizing: border-box;
+        }
+
         .our-process {
           background: #351019;
           color: #f7f4ed;
@@ -209,22 +257,46 @@ export default function OurProcess() {
           margin: 0 auto;
         }
 
-        .process-topline,
-        .process-heading,
-        .process-bottom {
-          animation: process-reveal 0.8s ease both;
+        .process-reveal {
+          opacity: 1;
+          transform: translate3d(0, 12px, 0);
+          transition: transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1);
+          will-change: transform;
         }
 
-        @keyframes process-reveal {
-          from {
-            opacity: 0;
-            transform: translateY(18px);
-          }
+        .process-reveal.is-visible {
+          opacity: 1;
+          transform: translate3d(0, 0, 0);
+          will-change: auto;
+        }
 
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+        .process-topline-meta {
+          display: flex;
+          align-items: center;
+          gap: 18px;
+        }
+
+        .process-language-toggle {
+          min-width: 42px;
+          min-height: 42px;
+          padding: 0 10px;
+          border: 1px solid rgba(197, 164, 125, 0.55);
+          border-radius: 999px;
+          background: transparent;
+          color: #f7f4ed;
+          font: inherit;
+          font-size: 10px;
+          letter-spacing: 0.1em;
+          cursor: pointer;
+          transition: background 0.25s ease, color 0.25s ease;
+        }
+
+        .process-language-toggle:hover,
+        .process-language-toggle:focus-visible {
+          outline: 2px solid #c5a47d;
+          outline-offset: 3px;
+          background: #c5a47d;
+          color: #351019;
         }
 
         .process-topline,
@@ -245,7 +317,6 @@ export default function OurProcess() {
           gap: 8%;
           align-items: end;
           padding: 85px 0 75px;
-          animation-delay: 100ms;
         }
 
         .process-heading h2 {
@@ -346,12 +417,13 @@ export default function OurProcess() {
           font-size: 14px;
           font-weight: 400;
           line-height: 1.9;
-          opacity: 0.75;
-          transition: opacity 0.3s ease;
+          opacity: 1;
+          visibility: visible;
         }
 
         .process-step.active .process-step-description {
           opacity: 1;
+          visibility: visible;
         }
 
         .process-symbol {
@@ -380,13 +452,18 @@ export default function OurProcess() {
           position: absolute;
           inset: 0;
           opacity: 0;
+          visibility: hidden;
           transform: scale(1.04);
-          transition: opacity 0.65s ease, transform 1s ease;
+          transition:
+            opacity 0.65s ease,
+            transform 1s ease,
+            visibility 0.65s ease;
           pointer-events: none;
         }
 
         .process-image.visible {
           opacity: 1;
+          visibility: visible;
           transform: scale(1);
         }
 
@@ -432,13 +509,29 @@ export default function OurProcess() {
         }
 
         @media (max-width: 1000px) {
+          .our-process {
+            padding-right: 5%;
+            padding-left: 5%;
+          }
+
           .process-showcase {
-            grid-template-columns: 1fr 0.85fr;
+            grid-template-columns: minmax(0, 1fr) minmax(280px, 0.85fr);
             gap: 30px;
           }
 
           .process-visual {
-            min-height: 500px;
+            min-height: 480px;
+          }
+
+          .process-step {
+            grid-template-columns: 38px minmax(0, 1fr) 18px;
+            gap: 14px;
+            padding-right: 8px;
+            padding-left: 8px;
+          }
+
+          .process-step-title {
+            font-size: clamp(24px, 2.8vw, 32px);
           }
         }
 
@@ -465,69 +558,154 @@ export default function OurProcess() {
 
         @media (max-width: 600px) {
           .our-process {
-            padding: 85px 6% 75px;
+            padding: 68px 5% 58px;
+          }
+
+          .process-reveal {
+            transform: translate3d(0, 22px, 0);
+            transition-duration: 650ms;
           }
 
           .process-topline,
           .process-bottom {
-            font-size: 10px;
+            font-size: 9px;
+            line-height: 1.65;
+            letter-spacing: 0.12em;
+          }
+
+          .process-topline {
+            align-items: center;
+            gap: 10px;
+          }
+
+          .process-topline-meta {
+            gap: 7px;
+            flex-shrink: 0;
+          }
+
+          .process-topline-meta > span {
+            white-space: nowrap;
+          }
+
+          .process-language-toggle {
+            min-width: 38px;
+            min-height: 38px;
           }
 
           .process-heading {
-            padding: 65px 0 45px;
+            gap: 20px;
+            padding: 54px 0 34px;
           }
 
           .process-heading h2 {
-            font-size: clamp(48px, 11vw, 68px);
+            font-size: clamp(43px, 11vw, 62px);
+            line-height: 0.98;
+            letter-spacing: -0.07em;
           }
 
           .process-heading p {
+            max-width: 34rem;
             font-size: 14px;
+            line-height: 1.8;
+          }
+
+          .process-showcase {
+            gap: 18px;
           }
 
           .process-visual {
-            min-height: 340px;
+            min-height: 0;
+            height: clamp(255px, 70vw, 360px);
+            border-radius: 5px;
+          }
+
+          .process-image-overlay {
+            padding: 18px;
+          }
+
+          .process-image-overlay span {
+            font-size: 9px;
+            letter-spacing: 0.14em;
+          }
+
+          .process-image-overlay strong {
+            font-size: 34px;
+          }
+
+          .process-list {
+            border-top: 1px solid rgba(197, 164, 125, 0.48);
           }
 
           .process-step {
-            grid-template-columns: 32px 1fr 15px;
-            gap: 12px;
-            padding: 25px 5px;
+            grid-template-columns: 34px minmax(0, 1fr) 18px;
+            gap: 10px;
+            align-items: start;
+            padding: 19px 9px;
+            border-bottom-color: rgba(197, 164, 125, 0.32);
+            transition:
+              background 0.25s ease,
+              padding 0.25s ease;
           }
 
           .process-step:hover,
           .process-step.active {
-            padding-left: 8px;
-            padding-right: 8px;
+            padding-right: 11px;
+            padding-left: 11px;
+            background: rgba(255, 255, 255, 0.045);
+          }
+
+          .process-number {
+            display: grid;
+            place-items: center;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            border: 1px solid rgba(197, 164, 125, 0.48);
+            border-radius: 50%;
+            font-size: 10px;
           }
 
           .process-step-title {
-            font-size: 26px;
+            margin: 2px 0 0;
+            font-size: clamp(21px, 6vw, 26px);
             font-weight: 500;
+            line-height: 1.2;
           }
 
           .process-step-description {
+            display: block;
+            margin-top: 10px;
             font-size: 13px;
-            line-height: 1.8;
+            line-height: 1.75;
+            opacity: 1;
+            visibility: visible;
+          }
+
+          .process-symbol {
+            padding-top: 6px;
+            font-size: 16px;
           }
 
           .process-bottom {
-            flex-direction: column;
-            gap: 10px;
+            gap: 7px;
+            padding-top: 19px;
           }
         }
 
         @media (prefers-reduced-motion: reduce) {
-          .process-topline,
-          .process-heading,
-          .process-bottom {
-            animation: none;
+          .process-reveal {
+            opacity: 1;
+            transform: none;
+            transition: none;
+            will-change: auto;
           }
 
           .process-step,
           .process-image,
           .process-step-title,
-          .process-symbol {
+          .process-symbol,
+          .process-step.active .process-step-description {
+            animation: none;
             transition: none;
           }
         }

@@ -16,7 +16,6 @@ const initialForm = {
   message: "",
 };
 
-// Οι τιμές παραμένουν στα ελληνικά για συμβατότητα με το υπάρχον API.
 const clientTypes = [
   { value: "Ιδιώτης", el: "Ιδιώτης", en: "Private client" },
   { value: "Ξενοδοχείο", el: "Ξενοδοχείο", en: "Hotel" },
@@ -297,7 +296,6 @@ export default function ContactSection() {
         data.append("files", file);
       });
 
-      // Honeypot protection
       data.append("website", "");
 
       const response = await fetch("/api/contact", {

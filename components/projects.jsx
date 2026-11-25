@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/languagecontext";
 
@@ -25,7 +26,7 @@ const projects = [
   },
 ];
 
-function VideoCard({ project, exploreText, onClick }) {
+function VideoCard({ project, exploreText, onClick, index, visible }) {
   return (
     <article
       onClick={onClick}
@@ -38,7 +39,14 @@ function VideoCard({ project, exploreText, onClick }) {
       role="link"
       tabIndex={0}
       aria-label={`${exploreText} ${project.title}`}
-      className="group relative h-[420px] min-w-[78vw] flex-1 cursor-pointer overflow-hidden rounded-[2rem] transition-[flex,opacity,box-shadow] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] sm:h-[500px] sm:min-w-[320px] lg:h-[600px] lg:flex-[0.8] lg:opacity-90 lg:hover:flex-[2] lg:hover:opacity-100 lg:hover:shadow-2xl lg:hover:shadow-black/10"
+      style={{
+        transitionDelay: visible ? `${index * 180}ms` : "0ms",
+      }}
+      className={`group relative h-[420px] min-w-[78vw] flex-1 cursor-pointer overflow-hidden rounded-[2rem] transition-[flex,opacity,box-shadow,transform] duration-700 ease-[cubic-bezier(0.4,0,0.2,1)] sm:h-[500px] sm:min-w-[320px] lg:h-[600px] lg:flex-[0.8] lg:opacity-90 lg:hover:flex-[2] lg:hover:opacity-100 lg:hover:shadow-2xl lg:hover:shadow-black/10 ${
+        visible
+          ? "translate-y-0 scale-100 opacity-100"
+          : "translate-y-16 scale-[0.96] opacity-0"
+      }`}
     >
       <div className="absolute inset-0">
         <img
@@ -73,6 +81,32 @@ export default function Projects() {
   const router = useRouter();
   const { language } = useLanguage();
 
+  const sectionRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -60px 0px",
+      }
+    );
+
+    const section = sectionRef.current;
+
+    if (section) {
+      observer.observe(section);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const content = {
     el: {
       description:
@@ -98,11 +132,19 @@ export default function Projects() {
 
   return (
     <section
+      ref={sectionRef}
       id="projects"
       className="relative overflow-hidden bg-transparent px-5 pb-24 pt-16 text-[#28231e] sm:px-8 sm:pb-32 sm:pt-20"
     >
       <div className="mx-auto flex max-w-[1600px] flex-col items-center">
-        <div className="mb-14 flex flex-col items-center text-center sm:mb-20">
+        {/* TITLE ANIMATION */}
+        <div
+          className={`mb-14 flex flex-col items-center text-center transition-all duration-1000 ease-out sm:mb-20 ${
+            visible
+              ? "translate-y-0 opacity-100"
+              : "translate-y-12 opacity-0"
+          }`}
+        >
           <h2 className="text-center font-serif text-6xl font-semibold leading-[0.95] tracking-[-0.055em] sm:text-7xl md:text-8xl lg:text-9xl">
             PROJECTS<span className="text-[#a89576]">.</span>
           </h2>
@@ -112,11 +154,14 @@ export default function Projects() {
           </span>
         </div>
 
+        {/* PROJECT CARDS */}
         <div className="mx-auto flex w-full max-w-[1350px] items-stretch justify-center gap-5 overflow-x-auto bg-transparent px-2 pb-4 sm:px-4 lg:overflow-visible">
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <VideoCard
               key={project.id}
               project={project}
+              index={index}
+              visible={visible}
               exploreText={t.explore}
               onClick={() =>
                 router.push(`/projects/${project.slug}`)
@@ -125,12 +170,32 @@ export default function Projects() {
           ))}
         </div>
 
-        <div className="mt-8 flex w-full flex-col items-center justify-between gap-3 text-center font-sans text-[11px] font-semibold tracking-[0.16em] text-[#999184] sm:flex-row">
+        {/* BOTTOM TEXT */}
+        <div
+          style={{
+            transitionDelay: visible ? "650ms" : "0ms",
+          }}
+          className={`mt-8 flex w-full flex-col items-center justify-between gap-3 text-center font-sans text-[11px] font-semibold tracking-[0.16em] text-[#999184] transition-all duration-700 sm:flex-row ${
+            visible
+              ? "translate-y-0 opacity-100"
+              : "translate-y-8 opacity-0"
+          }`}
+        >
           <span>{t.hover}</span>
           <span>{t.click}</span>
         </div>
 
-        <div className="mt-16 flex flex-col items-center sm:mt-20">
+        {/* PORTFOLIO BUTTON */}
+        <div
+          style={{
+            transitionDelay: visible ? "800ms" : "0ms",
+          }}
+          className={`mt-16 flex flex-col items-center transition-all duration-1000 ease-out sm:mt-20 ${
+            visible
+              ? "translate-y-0 opacity-100"
+              : "translate-y-12 opacity-0"
+          }`}
+        >
           <span className="mb-5 text-[11px] font-semibold tracking-[0.25em] text-[#999184]">
             {t.discover}
           </span>
