@@ -1,18 +1,8 @@
 
 "use client";
 
-import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/languagecontext";
-
-const InfiniteGalley = dynamic(
-  () => import("@/components/infinitegallery"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="gallery-canvas" aria-hidden="true" />
-    ),
-  }
-);
 
 const images = [
   "/images/1.webp",
@@ -27,6 +17,25 @@ const images = [
 
 export default function Hero() {
   const { language } = useLanguage();
+  const [InfiniteGallery, setInfiniteGallery] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+
+    import("@/components/infinitegallery")
+      .then((module) => {
+        if (mounted) {
+          setInfiniteGallery(() => module.default);
+        }
+      })
+      .catch((error) => {
+        console.error("Gallery loading error:", error);
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const content = {
     el: {
@@ -47,9 +56,24 @@ export default function Hero() {
 
   const t = content[language] || content.el;
 
+  // Περιμένουμε να φορτωθεί το gallery component.
+  if (!InfiniteGallery) {
+    return (
+      <section
+        className="hero hero-loading"
+        id="home"
+        aria-busy="true"
+      >
+        <div className="hero-gallery">
+          <div className="gallery-canvas" aria-hidden="true" />
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="hero" id="home">
-      <div className="hero-content hero-title-reveal">
+    <section className="hero hero-ready" id="home">
+      <div className="hero-content">
         <span className="hero-eyebrow">
           {t.eyebrow}
         </span>
@@ -62,7 +86,7 @@ export default function Hero() {
       </div>
 
       <div className="hero-gallery">
-        <InfiniteGalley
+        <InfiniteGallery
           images={images}
           className="gallery-canvas"
           speed={0.7}
@@ -74,68 +98,6 @@ export default function Hero() {
         <span>{t.bottom}</span>
         <span>{t.scroll}</span>
       </div>
-
-      <style jsx>{`
-        .hero-title-reveal {
-          animation: heroTitleReveal 1.5s
-            cubic-bezier(0.22, 1, 0.36, 1) both;
-        }
-
-        .hero-title-reveal .hero-eyebrow {
-          animation: heroEyebrowReveal 1.2s ease both;
-          animation-delay: 0.15s;
-        }
-
-        .hero-title-reveal h1 {
-          animation: heroHeadingReveal 1.6s
-            cubic-bezier(0.22, 1, 0.36, 1) both;
-          animation-delay: 0.2s;
-        }
-
-        @keyframes heroTitleReveal {
-          from {
-            opacity: 0;
-          }
-          to {
-            opacity: 1;
-          }
-        }
-
-        @keyframes heroEyebrowReveal {
-          from {
-            opacity: 0;
-            transform: translateY(12px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes heroHeadingReveal {
-          from {
-            opacity: 0;
-            transform: translateY(35px);
-            filter: blur(7px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-            filter: blur(0);
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .hero-title-reveal,
-          .hero-title-reveal .hero-eyebrow,
-          .hero-title-reveal h1 {
-            animation: none;
-            opacity: 1;
-            transform: none;
-            filter: none;
-          }
-        }
-      `}</style>
     </section>
   );
 }

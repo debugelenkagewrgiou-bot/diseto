@@ -1,5 +1,4 @@
 
-import { Navigation } from "@/components/navigation";
 import Hero from "@/components/hero";
 import Projects from "@/components/projects";
 import ContactSection from "@/components/contact/page";
@@ -11,7 +10,6 @@ import OurProcess from "@/components/process";
 export default function Home() {
   return (
     <main className="w-full min-w-0 overflow-x-clip">
-      <Navigation />
       <Hero />
       <Marquee/>
       <WhatWeDo/>
