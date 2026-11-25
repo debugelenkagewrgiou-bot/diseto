@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect } from "react";
@@ -7,8 +8,8 @@ const translations = {
   el: {
     eyebrow: "DISETO — ΟΙ ΥΠΗΡΕΣΙΕΣ ΜΑΣ",
     since: "ΑΠΟ ΤΟ 1982",
-    title: "ΔΗΜΙΟΥΡΓΟΥΜΕ",
-    titleHighlight: "ΤΟΝ ΧΩΡΟ ΣΑΣ.",
+    title: "Δημιουργούμε",
+    titleHighlight: "τον χώρο σας.",
     intro:
       "Από την ιδέα μέχρι την τελική κατασκευή. Δημιουργούμε ξύλινες κατασκευές, έπιπλα και ολοκληρωμένους χώρους με διαχρονική αισθητική και έμφαση στη λεπτομέρεια.",
     servicesHeading: "ΤΙ ΜΠΟΡΟΥΜΕ ΝΑ ΔΗΜΙΟΥΡΓΗΣΟΥΜΕ",
@@ -60,14 +61,14 @@ const translations = {
     bottom: "ΣΧΕΔΙΑΣΜΟΣ · ΠΟΙΟΤΗΤΑ · ΔΙΑΧΡΟΝΙΚΟΤΗΤΑ",
     imageAlt: "Αρχιτεκτονικός χώρος και προσεγμένη κατασκευή",
     imageEyebrow: "ΣΧΕΔΙΑΣΜΕΝΟ ΜΕ ΣΚΟΠΟ",
-    imageTitle: "ΚΑΤΑΣΚΕΥΑΣΜΕΝΟ ΓΙΑ ΝΑ ΑΝΤΕΧΕΙ.",
+    imageTitle: "Κατασκευασμένο για να αντέχει."
   },
 
   en: {
     eyebrow: "DISETO — WHAT WE DO",
     since: "SINCE 1982",
-    title: "WE CREATE",
-    titleHighlight: "YOUR SPACE.",
+    title: " We create",
+    titleHighlight: "your Space.",
     intro:
       "From the initial idea to the final construction. We create bespoke wooden structures, furniture and complete spaces with timeless aesthetics and attention to detail.",
     servicesHeading: "WHAT WE CAN CREATE",
@@ -110,7 +111,7 @@ const translations = {
       },
     ],
     philosophy: "OUR PHILOSOPHY",
-    philosophyTitle: ["BEAUTY", "IN EVERY", "DETAIL."],
+    philosophyTitle: ["Beauy","in every","detail"],
     philosophyParagraphs: [
       "We believe every space has its own identity. The quality of materials, careful craftsmanship and balance in design are what make the difference.",
       "We create with knowledge, care and respect for your individual needs, bringing value to every detail.",
@@ -181,7 +182,7 @@ export default function WhatWeDo() {
           </div>
 
           <div className="what-heading-grid">
-            <h2 className="what-main-title">
+            <h2 className="what-main-title what-title-reveal">
               {content.title}
               <br />
               <span>{content.titleHighlight}</span>
@@ -224,13 +225,15 @@ export default function WhatWeDo() {
 
       {/* FULL-WIDTH ARCHITECTURAL IMAGE STRIP */}
       <div
-        className="what-wide-band"
+        className="what-wide-band what-reveal"
         role="img"
         aria-label={content.imageAlt}
       >
         <div className="what-wide-band-inner">
           <span>{content.imageEyebrow}</span>
-          <p>{content.imageTitle}</p>
+          <p className="what-title-reveal">
+            {content.imageTitle}
+          </p>
         </div>
       </div>
 
@@ -242,7 +245,7 @@ export default function WhatWeDo() {
               {content.philosophy}
             </span>
 
-            <h2>
+            <h2 className="what-title-reveal">
               {content.philosophyTitle[0]}
               <br />
               <span>{content.philosophyTitle[1]}</span>
@@ -279,27 +282,18 @@ export default function WhatWeDo() {
 
       <style jsx>{`
         .what-we-do {
-          
-        
-  
-    position: relative;
-    isolation: isolate;
-    background-color: #351019;
-    background-image:
-      linear-gradient(
-        rgba(53, 16, 25, 0.65),
-        rgba(53, 16, 25, 0.72)
-      ),
-      url("/images/background.jpg");
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
-    color: #f4efe6;
-    padding: clamp(82px, 9vw, 138px) 7% 76px;
-    overflow: hidden;
-  }
-
-
+          position: relative;
+          isolation: isolate;
+          background-color: #351019;
+          background-image:
+            linear-gradient(
+              rgba(53, 16, 25, 0.65),
+              rgba(53, 16, 25, 0.72)
+            ),
+            url("/images/background.jpg");
+          background-size: cover;
+          background-position: center center;
+          background-repeat: no-repeat;
           color: #f4efe6;
           padding: clamp(82px, 9vw, 138px) 7% 76px;
           overflow: hidden;
@@ -355,14 +349,16 @@ export default function WhatWeDo() {
             clamp(82px, 9vw, 130px);
         }
 
+        /* MAIN HEADINGS */
+
         .what-heading h2,
         .what-footer h2 {
           margin: 0;
-          color: #f4efe6;
+          color: #f7f4ed;
           font-family: Georgia, serif;
-          font-size: clamp(64px, 8vw, 124px);
-          font-weight: 400;
-          line-height: 0.88;
+          font-size: clamp(3.5rem, 8vw, 7rem);
+          font-weight: 500;
+          line-height: 0.9;
           letter-spacing: -0.075em;
         }
 
@@ -370,6 +366,14 @@ export default function WhatWeDo() {
         .what-footer h2 span {
           color: #c5a47d;
           font-style: italic;
+          font-weight: 500;
+        }
+
+        /* Keep the same typography on every highlighted title. */
+        .what-title-reveal {
+          font-family: Georgia, serif;
+          font-weight: 500;
+          letter-spacing: -0.075em;
         }
 
         .what-intro-wrap {
@@ -386,6 +390,8 @@ export default function WhatWeDo() {
           font-size: clamp(17px, 1.25vw, 19px);
           line-height: 1.9;
         }
+
+        /* SERVICES */
 
         .services-heading {
           display: flex;
@@ -409,14 +415,16 @@ export default function WhatWeDo() {
         .service-item {
           position: relative;
           display: grid;
-          grid-template-columns: 42px 1fr;
-          gap: 20px;
+          grid-template-columns: 55px 1fr;
+          gap: 24px;
           align-items: start;
-          min-height: 230px;
-          padding: 34px 32px 32px;
-          background: #421c25;
-          border: 1px solid rgba(226, 211, 187, 0.15);
-          border-radius: 3px;
+          min-height: auto;
+          padding: 38px 12px;
+          background: transparent;
+          border: none;
+          border-bottom: 1px solid rgba(197, 164, 125, 0.3);
+          border-radius: 0;
+          box-shadow: none;
         }
 
         .service-number {
@@ -427,48 +435,25 @@ export default function WhatWeDo() {
           letter-spacing: 0.12em;
         }
 
- .service-item {
-  position: relative;
-  display: grid;
-  grid-template-columns: 55px 1fr;
-  gap: 24px;
-  align-items: start;
-  min-height: auto;
-  padding: 38px 12px;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(197, 164, 125, 0.3);
-  border-radius: 0;
-  box-shadow: none;
-}
+        .service-content h3 {
+          max-width: 440px;
+          margin: 0 0 14px;
+          color: #f4efe6;
+          font-family: Georgia, serif;
+          font-size: clamp(25px, 2.2vw, 33px);
+          font-weight: 400;
+          line-height: 1.15;
+          letter-spacing: -0.04em;
+        }
 
-.service-number {
-  padding-top: 5px;
-  color: #c5a47d;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 13px;
-  letter-spacing: 0.12em;
-}
-
-.service-content h3 {
-  max-width: 440px;
-  margin: 0 0 14px;
-  color: #f4efe6;
-  font-family: Georgia, serif;
-  font-size: clamp(25px, 2.2vw, 33px);
-  font-weight: 400;
-  line-height: 1.15;
-  letter-spacing: -0.04em;
-}
-
-.service-content p {
-  max-width: 650px;
-  margin: 0;
-  color: #ddcfca;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: clamp(16px, 1.05vw, 17px);
-  line-height: 1.85;
-}
+        .service-content p {
+          max-width: 650px;
+          margin: 0;
+          color: #ddcfca;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: clamp(16px, 1.05vw, 17px);
+          line-height: 1.85;
+        }
 
         /* PHILOSOPHY */
 
@@ -482,17 +467,19 @@ export default function WhatWeDo() {
           padding: clamp(48px, 6vw, 82px) clamp(28px, 5vw, 72px);
           background: #eae3d7;
           color: #28231e;
-          border-radius: 3px;
+          border-radius: 3px;  
         }
 
         .what-footer h2 {
-          color: #28231e;
-          font-size: clamp(55px, 6.3vw, 92px);
-        }
+  color: #28231e;
+  font-size: clamp(55px, 7.5vw, 110px);
+}
 
-        .what-footer h2 span {
-          color: #9c8058;
-        }
+.what-footer h2 span {
+  color: #c5a47d
+  font-style: italic;
+  font-weight: 500;
+}
 
         .what-footer .what-eyebrow {
           color: #9c8058;
@@ -500,10 +487,6 @@ export default function WhatWeDo() {
 
         .philosophy-title h2 {
           margin-top: 28px;
-        }
-
-        .philosophy-title h2 span {
-          font-style: normal;
         }
 
         .philosophy-content {
@@ -612,6 +595,14 @@ export default function WhatWeDo() {
           transition-delay: 150ms;
         }
 
+        /* TITLES: typography follows the OurProcess heading */
+        .what-title-reveal {
+          opacity: 1;
+          transform: none;
+          filter: none;
+          transition: none;
+        }
+
         /* FULL-WIDTH STRIP */
 
         .what-wide-band {
@@ -651,12 +642,14 @@ export default function WhatWeDo() {
         }
 
         .what-wide-band-inner p {
-          max-width: 800px;
+          max-width: 1000px;
           margin: 0;
-          font-size: clamp(28px, 5.4vw, 72px);
+          color: #f7f4ed;
+          font-family: Georgia, serif;
+          font-size: clamp(3.5rem, 8vw, 7rem);
           font-weight: 500;
-          line-height: 0.98;
-          letter-spacing: -0.055em;
+          line-height: 0.9;
+          letter-spacing: -0.075em;
         }
 
         /* TABLET */
@@ -735,8 +728,11 @@ export default function WhatWeDo() {
             padding: 58px 0 72px;
           }
 
-          .what-heading h2 {
-            font-size: clamp(49px, 12vw, 70px);
+          .what-heading h2,
+          .what-footer h2 {
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            line-height: 0.9;
+            letter-spacing: -0.075em;
           }
 
           .what-intro-wrap {
@@ -810,7 +806,9 @@ export default function WhatWeDo() {
           }
 
           .what-wide-band-inner p {
-            font-size: 34px;
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            line-height: 0.9;
+            letter-spacing: -0.075em;
           }
 
           .what-footer {
@@ -821,7 +819,9 @@ export default function WhatWeDo() {
           }
 
           .philosophy-title h2 {
-            font-size: clamp(44px, 10.5vw, 64px);
+            font-size: clamp(3.5rem, 8vw, 7rem);
+            line-height: 0.9;
+            letter-spacing: -0.075em;
           }
 
           .philosophy-content p {
@@ -844,10 +844,12 @@ export default function WhatWeDo() {
         /* REDUCED MOTION */
 
         @media (prefers-reduced-motion: reduce) {
-          .what-reveal {
-            opacity: 1;
-            transform: none;
-            transition: none;
+          .what-reveal,
+          .what-title-reveal {
+            opacity: 1 !important;
+            transform: none !important;
+            filter: none !important;
+            transition: none !important;
           }
 
           .service-item {

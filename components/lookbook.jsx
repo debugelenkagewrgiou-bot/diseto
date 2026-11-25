@@ -92,7 +92,7 @@ const lookbookProjects = [
     category: "interiors",
     type: { el: "Εσωτερικοί χώροι", en: "Interior Spaces" },
     name: { el: "Χώροι με ταυτότητα", en: "Spaces with Identity" },
-    image: "/images/lookbook/commersial-01.png",
+    image: "/images/lookbook/commersial-02.png",
     layout: "tall",
   },
   {
