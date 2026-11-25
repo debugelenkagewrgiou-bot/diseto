@@ -524,7 +524,7 @@ export default function DISETOChatbot() {
               disabled={!input.trim() || loading}
               aria-label={isGreek ? "Αποστολή" : "Send"}
             >
-              ↗
+              
             </button>
           </form>
 

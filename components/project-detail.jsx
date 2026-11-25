@@ -120,7 +120,7 @@ export function ProjectDetail({ project }) {
         }
       `}</style>
 
-      {/* HEADER */}
+      {/* HEADER
       <header className="relative z-10 flex items-center justify-between border-b border-[#ded8cd] px-6 py-6 md:px-12 lg:px-20">
         <Link href="/" className="flex items-center gap-3 text-[#28231e]">
           <ArrowLeft size={17} strokeWidth={1.4} />
@@ -142,7 +142,7 @@ export function ProjectDetail({ project }) {
         >
           {t.allProjects}
         </Link>
-      </header>
+      </header> */}
 
       {/* HERO */}
       <section className="px-6 pb-16 pt-20 md:px-12 md:pb-24 md:pt-28 lg:px-20">

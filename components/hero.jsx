@@ -1,7 +1,18 @@
+
 "use client";
 
-import InfiniteGalley from "@/components/infinitegallery";
+import dynamic from "next/dynamic";
 import { useLanguage } from "@/components/languagecontext";
+
+const InfiniteGalley = dynamic(
+  () => import("@/components/infinitegallery"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="gallery-canvas" aria-hidden="true" />
+    ),
+  }
+);
 
 const images = [
   "/images/1.webp",
@@ -65,8 +76,6 @@ export default function Hero() {
       </div>
 
       <style jsx>{`
-        /* SMOOTH TITLE ANIMATION */
-
         .hero-title-reveal {
           animation: heroTitleReveal 1.5s
             cubic-bezier(0.22, 1, 0.36, 1) both;
