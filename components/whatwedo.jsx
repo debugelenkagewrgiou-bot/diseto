@@ -819,10 +819,10 @@ export default function WhatWeDo() {
           }
 
           .philosophy-title h2 {
-            font-size: clamp(3.5rem, 8vw, 7rem);
-            line-height: 0.9;
-            letter-spacing: -0.075em;
-          }
+  font-size: clamp(2.5rem, 10vw, 3.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.065em;
+}
 
           .philosophy-content p {
             font-size: 16px;
