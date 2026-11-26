@@ -1,4 +1,5 @@
 
+import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -6,6 +7,7 @@ import { LanguageProvider } from "@/components/languagecontext";
 import ChatbotLoader from "@/components/chatbotloader";
 import InitialLoader from "@/components/loading";
 import { Navigation } from "@/components/navigation";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,20 +26,28 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
+            <ClerkProvider>
+
     <html
       lang="el"
+      data-scroll-behavior="smooth"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <LanguageProvider>
-          <InitialLoader />
-          <Navigation />
+          <LanguageProvider>
+            <InitialLoader />
 
-          {children}
+            <Suspense fallback={null}>
+              <Navigation />
+            </Suspense>
 
-          <ChatbotLoader />
-        </LanguageProvider>
+            {children}
+
+            <ChatbotLoader />
+          </LanguageProvider>
       </body>
     </html>
+            </ClerkProvider>
+
   );
 }

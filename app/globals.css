@@ -1611,3 +1611,101 @@ body {
     animation: none;
   }
 }
+
+
+/* DISETO AUTH BUTTONS */
+
+.auth-actions-desktop {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  margin-left: 20px;
+  padding-left: 20px;
+  border-left: 1px solid #d5c6ae;
+}
+
+.auth-btn {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 23px !important;
+  font-size: 10px !important;
+  font-weight: 500 !important;
+  letter-spacing: 2px !important;
+  border-radius: 2px !important;
+  cursor: pointer;
+  transition: all .3s ease !important;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.auth-btn-login {
+  color: #28231e !important;
+  background: transparent !important;
+  border: 1px solid #a89576 !important;
+}
+
+.auth-btn-login:hover {
+  color: #fff !important;
+  background: #28231e !important;
+  border-color: #28231e !important;
+}
+
+.auth-btn-signup {
+  color: #f8f6f1 !important;
+  background: #28231e !important;
+  border: 1px solid #28231e !important;
+}
+
+.auth-btn-signup:hover {
+  background: #a89576 !important;
+  border-color: #a89576 !important;
+  transform: translateY(-2px);
+}
+
+.mobile-auth-btn {
+  width: 100%;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  padding: 15px !important;
+  font-size: 11px !important;
+  letter-spacing: 2px !important;
+  border-radius: 2px !important;
+  transition: all .3s ease;
+}
+
+.mobile-auth-login {
+  color: #28231e !important;
+  background: transparent !important;
+  border: 1px solid #a89576 !important;
+}
+
+.mobile-auth-signup {
+  color: #f8f6f1 !important;
+  background: #28231e !important;
+  border: 1px solid #28231e !important;
+}
+
+.mobile-auth-signup:hover {
+  background: #a89576 !important;
+}
+
+.mobile-auth-dashboard {
+  color: #a89576 !important;
+  border: 1px solid #a89576 !important;
+}
+
+@media (max-width: 1024px) {
+  .auth-actions-desktop {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  .auth-actions-mobile {
+    display: none !important;
+  }
+}
+

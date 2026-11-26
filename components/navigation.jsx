@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -8,14 +7,117 @@ import {
   motion,
   useReducedMotion,
 } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LogIn, LayoutDashboard } from "lucide-react";
+import {
+  Show,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/nextjs";
 import { useLanguage } from "@/components/languagecontext";
 
 const ease = [0.22, 1, 0.36, 1];
 
+// ✅ Inline styles για να μην επηρεάζονται από global CSS
+const styles = {
+  authWrapDesktop: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    marginLeft: "16px",
+    paddingLeft: "16px",
+    borderLeft: "1px solid rgba(40, 35, 30, 0.15)",
+  },
+  btnLogin: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "6px",
+    padding: "9px 16px",
+    fontSize: "11px",
+    fontWeight: "600",
+    letterSpacing: "0.14em",
+    textTransform: "uppercase",
+    background: "#ffffff",
+    color: "#28231e",
+    border: "1.5px solid #28231e",
+    borderRadius: "4px",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    whiteSpace: "nowrap",
+    fontFamily: "inherit",
+    lineHeight: 1,
+  },
+  btnSignup: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "6px",
+    padding: "9px 16px",
+    fontSize: "11px",
+    fontWeight: "600",
+    letterSpacing: "0.14em",
+    textTransform: "uppercase",
+    background: "#28231e",
+    color: "#f7f4ed",
+    border: "1.5px solid #28231e",
+    borderRadius: "4px",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    whiteSpace: "nowrap",
+    fontFamily: "inherit",
+    lineHeight: 1,
+  },
+  btnDashboard: {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "6px",
+    padding: "9px 16px",
+    fontSize: "11px",
+    fontWeight: "600",
+    letterSpacing: "0.14em",
+    textTransform: "uppercase",
+    background: "#a89576",
+    color: "#ffffff",
+    border: "1.5px solid #a89576",
+    borderRadius: "4px",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    whiteSpace: "nowrap",
+    textDecoration: "none",
+    fontFamily: "inherit",
+    lineHeight: 1,
+  },
+  authWrapMobile: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "10px",
+    width: "100%",
+    marginBottom: "20px",
+  },
+  mobileBtn: {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px",
+    width: "100%",
+    padding: "14px 16px",
+    fontSize: "12px",
+    fontWeight: "600",
+    letterSpacing: "0.14em",
+    textTransform: "uppercase",
+    borderRadius: "4px",
+    cursor: "pointer",
+    transition: "all 0.2s ease",
+    textDecoration: "none",
+    fontFamily: "inherit",
+    lineHeight: 1,
+    boxSizing: "border-box",
+  },
+};
+
 export function Navigation() {
   const [open, setOpen] = useState(false);
   const [pendingHash, setPendingHash] = useState(null);
+  const [mounted, setMounted] = useState(false);
 
   const reduceMotion = useReducedMotion();
   const router = useRouter();
@@ -23,31 +125,35 @@ export function Navigation() {
 
   const { language, setLanguage } = useLanguage();
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const currentLanguage = mounted ? language : "el";
+
   const links = [
     {
-      label: language === "el" ? "ΑΡΧΙΚΗ" : "HOME",
+      label: currentLanguage === "el" ? "ΑΡΧΙΚΗ" : "HOME",
       href: "/#home",
     },
     {
-      label: language === "el" ? "ΠΟΙΟΙ ΕΙΜΑΣΤΕ" : "ABOUT US",
+      label: currentLanguage === "el" ? "ΠΟΙΟΙ ΕΙΜΑΣΤΕ" : "ABOUT US",
       href: "/#what-we-do",
     },
     {
       label: "PROJECTS",
       href: "/#projects",
     },
-    
     {
       label: "LOOKBOOK",
       href: "/lookbook",
     },
     {
-      label: language === "el" ? "ΕΠΙΚΟΙΝΩΝΙΑ" : "CONTACT",
+      label: currentLanguage === "el" ? "ΕΠΙΚΟΙΝΩΝΙΑ" : "CONTACT",
       href: "/#contact",
     },
   ];
 
-  // Scroll after returning to the homepage from another page
   useEffect(() => {
     if (pathname !== "/" || !pendingHash) return;
 
@@ -59,7 +165,6 @@ export function Navigation() {
         });
       } else {
         const target = document.getElementById(pendingHash);
-
         if (target) {
           target.scrollIntoView({
             behavior: reduceMotion ? "auto" : "smooth",
@@ -67,7 +172,6 @@ export function Navigation() {
           });
         }
       }
-
       setPendingHash(null);
     });
 
@@ -102,7 +206,6 @@ export function Navigation() {
     }
 
     const target = document.getElementById(hash);
-
     if (target) {
       target.scrollIntoView({
         behavior: reduceMotion ? "auto" : "smooth",
@@ -118,22 +221,167 @@ export function Navigation() {
       <button
         type="button"
         onClick={() => setLanguage("el")}
-        className={language === "el" ? "language-active" : ""}
-        aria-pressed={language === "el"}
+        className={currentLanguage === "el" ? "language-active" : ""}
+        aria-pressed={currentLanguage === "el"}
       >
         EL
       </button>
-
       <span>|</span>
-
       <button
         type="button"
         onClick={() => setLanguage("en")}
-        className={language === "en" ? "language-active" : ""}
-        aria-pressed={language === "en"}
+        className={currentLanguage === "en" ? "language-active" : ""}
+        aria-pressed={currentLanguage === "en"}
       >
         EN
       </button>
+    </div>
+  );
+
+  // ✅ DESKTOP AUTH
+  const AuthActionsDesktop = () => (
+    <div style={styles.authWrapDesktop}>
+      <Show when="signed-out">
+        <SignInButton mode="modal">
+          <button
+            type="button"
+            style={styles.btnLogin}
+            aria-label={currentLanguage === "el" ? "Σύνδεση" : "Sign in"}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#28231e";
+              e.currentTarget.style.color = "#f7f4ed";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#ffffff";
+              e.currentTarget.style.color = "#28231e";
+            }}
+          >
+            <LogIn size={14} strokeWidth={2} />
+            {currentLanguage === "el" ? "ΣΥΝΔΕΣΗ" : "SIGN IN"}
+          </button>
+        </SignInButton>
+
+        <SignUpButton mode="modal">
+          <button
+            type="button"
+            style={styles.btnSignup}
+            aria-label={currentLanguage === "el" ? "Εγγραφή" : "Sign up"}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#a89576";
+              e.currentTarget.style.borderColor = "#a89576";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#28231e";
+              e.currentTarget.style.borderColor = "#28231e";
+            }}
+          >
+            {currentLanguage === "el" ? "ΕΓΓΡΑΦΗ" : "SIGN UP"}
+          </button>
+        </SignUpButton>
+      </Show>
+
+      <Show when="signed-in">
+        <a
+          href="/dashboard"
+          style={styles.btnDashboard}
+          aria-label={
+            currentLanguage === "el" ? "Πίνακας διαχείρισης" : "Dashboard"
+          }
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = "#8a7659";
+            e.currentTarget.style.borderColor = "#8a7659";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = "#a89576";
+            e.currentTarget.style.borderColor = "#a89576";
+          }}
+        >
+          <LayoutDashboard size={14} strokeWidth={2} />
+          DASHBOARD
+        </a>
+
+        <div style={{ marginLeft: "4px", display: "flex" }}>
+          <UserButton
+            afterSignOutUrl="/"
+            appearance={{
+              elements: {
+                avatarBox: { width: 36, height: 36 },
+              },
+            }}
+          />
+        </div>
+      </Show>
+    </div>
+  );
+
+  // ✅ MOBILE AUTH
+  const AuthActionsMobile = () => (
+    <div style={styles.authWrapMobile}>
+      <Show when="signed-out">
+        <SignInButton mode="modal">
+          <button
+            type="button"
+            onClick={closeMenu}
+            style={{
+              ...styles.mobileBtn,
+              background: "transparent",
+              color: "#28231e",
+              border: "1.5px solid #28231e",
+            }}
+          >
+            <LogIn size={16} strokeWidth={2} />
+            {currentLanguage === "el" ? "ΣΥΝΔΕΣΗ" : "SIGN IN"}
+          </button>
+        </SignInButton>
+
+        <SignUpButton mode="modal">
+          <button
+            type="button"
+            onClick={closeMenu}
+            style={{
+              ...styles.mobileBtn,
+              background: "#28231e",
+              color: "#f7f4ed",
+              border: "1.5px solid #28231e",
+            }}
+          >
+            {currentLanguage === "el" ? "ΕΓΓΡΑΦΗ" : "SIGN UP"}
+          </button>
+        </SignUpButton>
+      </Show>
+
+      <Show when="signed-in">
+        <a
+          href="/dashboard"
+          onClick={closeMenu}
+          style={{
+            ...styles.mobileBtn,
+            background: "#a89576",
+            color: "#ffffff",
+            border: "1.5px solid #a89576",
+          }}
+        >
+          <LayoutDashboard size={16} strokeWidth={2} />
+          DASHBOARD
+        </a>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
+            padding: "10px 4px",
+            color: "#28231e",
+            fontSize: "13px",
+            fontWeight: "500",
+          }}
+        >
+          <UserButton afterSignOutUrl="/" />
+          <span>
+            {currentLanguage === "el" ? "Ο λογαριασμός μου" : "My account"}
+          </span>
+        </div>
+      </Show>
     </div>
   );
 
@@ -168,7 +416,7 @@ export function Navigation() {
           <nav className="desktop-nav" aria-label="Main navigation">
             {links.map((link) => (
               <a
-                key={link.label}
+                key={link.href}
                 href={link.href}
                 onClick={(e) => navigateTo(e, link.href)}
                 className={
@@ -188,6 +436,7 @@ export function Navigation() {
           </nav>
 
           <LanguageSwitcher />
+          <AuthActionsDesktop />
         </div>
 
         {/* MOBILE TOGGLE */}
@@ -216,9 +465,7 @@ export function Navigation() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{
-              duration: reduceMotion ? 0 : 0.3,
-            }}
+            transition={{ duration: reduceMotion ? 0 : 0.3 }}
           >
             <div className="mobile-menu-header">
               <a
@@ -257,17 +504,13 @@ export function Navigation() {
                 DISETO — INTERIOR DESIGN
               </span>
 
-              <nav
-                className="mobile-menu-links"
-                aria-label="Mobile navigation"
-              >
+              <nav className="mobile-menu-links" aria-label="Mobile navigation">
                 {links.map((link, index) => (
                   <motion.a
-                    key={link.label}
+                    key={link.href}
                     href={link.href}
                     className={`mobile-menu-link ${
-                      pathname === "/lookbook" &&
-                      link.href === "/lookbook"
+                      pathname === "/lookbook" && link.href === "/lookbook"
                         ? "nav-active"
                         : ""
                     }`}
@@ -287,13 +530,13 @@ export function Navigation() {
             </div>
 
             <div className="mobile-menu-bottom">
-              <span>DESIGNED WITH PURPOSE.</span>
+              <AuthActionsMobile />
               <LanguageSwitcher />
               <span>© DISETO</span>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-      </>
+    </>
   );
 }
