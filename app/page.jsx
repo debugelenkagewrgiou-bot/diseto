@@ -6,6 +6,7 @@ import Footer from "@/components/footer";
 import Marquee from "@/components/marquee";
 import WhatWeDo from "@/components/whatwedo";
 import OurProcess from "@/components/process";
+import PhotoGallery from "@/components/photogallery";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Marquee/>
       <WhatWeDo/>
       <OurProcess/>
+      <PhotoGallery/>
       <Projects />
       <ContactSection />
       <Footer/>

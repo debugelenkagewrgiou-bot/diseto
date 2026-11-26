@@ -18,7 +18,6 @@ import { useLanguage } from "@/components/languagecontext";
 
 const ease = [0.22, 1, 0.36, 1];
 
-// ✅ Inline styles για να μην επηρεάζονται από global CSS
 const styles = {
   authWrapDesktop: {
     display: "flex",
@@ -148,11 +147,21 @@ export function Navigation() {
       label: "LOOKBOOK",
       href: "/lookbook",
     },
+   {
+  label: currentLanguage === "el" ? "ΠΡΟΣΦΑΤΕΣ ΦΩΤΟΓΡΑΦΙΕΣ" : "LATEST PHOTOS",
+  href: "/latest-photos",  // ✅ ΟΧΙ /gallery
+},
     {
       label: currentLanguage === "el" ? "ΕΠΙΚΟΙΝΩΝΙΑ" : "CONTACT",
       href: "/#contact",
     },
   ];
+
+  const isActive = (href) => {
+    if (href === "/lookbook") return pathname === "/lookbook";
+    if (href === "/latest-photos") return pathname === "/latest-photos";
+    return false;
+  };
 
   useEffect(() => {
     if (pathname !== "/" || !pendingHash) return;
@@ -183,9 +192,11 @@ export function Navigation() {
     setOpen(false);
 
     if (href === "/lookbook") {
-      if (pathname !== "/lookbook") {
-        router.push("/lookbook");
-      }
+      if (pathname !== "/lookbook") router.push("/lookbook");
+      return;
+    }
+    if (href === "/latest-photos") {
+      if (pathname !== "/latest-photos") router.push("/latest-photos");
       return;
     }
 
@@ -238,7 +249,6 @@ export function Navigation() {
     </div>
   );
 
-  // ✅ DESKTOP AUTH
   const AuthActionsDesktop = () => (
     <div style={styles.authWrapDesktop}>
       <Show when="signed-out">
@@ -246,7 +256,6 @@ export function Navigation() {
           <button
             type="button"
             style={styles.btnLogin}
-            aria-label={currentLanguage === "el" ? "Σύνδεση" : "Sign in"}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = "#28231e";
               e.currentTarget.style.color = "#f7f4ed";
@@ -265,7 +274,6 @@ export function Navigation() {
           <button
             type="button"
             style={styles.btnSignup}
-            aria-label={currentLanguage === "el" ? "Εγγραφή" : "Sign up"}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = "#a89576";
               e.currentTarget.style.borderColor = "#a89576";
@@ -284,9 +292,6 @@ export function Navigation() {
         <a
           href="/dashboard"
           style={styles.btnDashboard}
-          aria-label={
-            currentLanguage === "el" ? "Πίνακας διαχείρισης" : "Dashboard"
-          }
           onMouseEnter={(e) => {
             e.currentTarget.style.background = "#8a7659";
             e.currentTarget.style.borderColor = "#8a7659";
@@ -304,9 +309,7 @@ export function Navigation() {
           <UserButton
             afterSignOutUrl="/"
             appearance={{
-              elements: {
-                avatarBox: { width: 36, height: 36 },
-              },
+              elements: { avatarBox: { width: 36, height: 36 } },
             }}
           />
         </div>
@@ -314,7 +317,6 @@ export function Navigation() {
     </div>
   );
 
-  // ✅ MOBILE AUTH
   const AuthActionsMobile = () => (
     <div style={styles.authWrapMobile}>
       <Show when="signed-out">
@@ -388,7 +390,6 @@ export function Navigation() {
   return (
     <>
       <header className="site-header">
-        {/* LOGO */}
         <a
           href="/#home"
           className="site-logo"
@@ -411,7 +412,6 @@ export function Navigation() {
           />
         </a>
 
-        {/* DESKTOP NAVIGATION */}
         <div className="desktop-nav-wrap">
           <nav className="desktop-nav" aria-label="Main navigation">
             {links.map((link) => (
@@ -419,16 +419,8 @@ export function Navigation() {
                 key={link.href}
                 href={link.href}
                 onClick={(e) => navigateTo(e, link.href)}
-                className={
-                  pathname === "/lookbook" && link.href === "/lookbook"
-                    ? "nav-active"
-                    : ""
-                }
-                aria-current={
-                  pathname === "/lookbook" && link.href === "/lookbook"
-                    ? "page"
-                    : undefined
-                }
+                className={isActive(link.href) ? "nav-active" : ""}
+                aria-current={isActive(link.href) ? "page" : undefined}
               >
                 {link.label}
               </a>
@@ -439,7 +431,6 @@ export function Navigation() {
           <AuthActionsDesktop />
         </div>
 
-        {/* MOBILE TOGGLE */}
         <button
           className="menu-toggle"
           type="button"
@@ -456,7 +447,6 @@ export function Navigation() {
         </button>
       </header>
 
-      {/* MOBILE MENU */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -510,9 +500,7 @@ export function Navigation() {
                     key={link.href}
                     href={link.href}
                     className={`mobile-menu-link ${
-                      pathname === "/lookbook" && link.href === "/lookbook"
-                        ? "nav-active"
-                        : ""
+                      isActive(link.href) ? "nav-active" : ""
                     }`}
                     onClick={(e) => navigateTo(e, link.href)}
                     initial={{ opacity: 0, x: -15 }}

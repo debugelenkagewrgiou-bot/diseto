@@ -59,11 +59,9 @@ function escapeHtml(value = "") {
   });
 }
 
-// ✅ Βελτιωμένο isOwner με debug πληροφορίες
 async function checkOwner() {
   const { userId } = await auth();
   const ownerId = process.env.OWNER_CLERK_USER_ID;
-
   const debug = {
     hasUserId: Boolean(userId),
     hasOwnerId: Boolean(ownerId),
@@ -71,20 +69,12 @@ async function checkOwner() {
     ownerId: ownerId || null,
     match: userId === ownerId,
   };
-
-  if (process.env.NODE_ENV === "development") {
-    console.log("=== OWNER CHECK ===");
-    console.log(JSON.stringify(debug, null, 2));
-    console.log("===================");
-  }
-
   return {
     isOwner: Boolean(userId && ownerId && userId === ownerId),
     debug,
   };
 }
 
-// ✅ Στέλνει email στον πελάτη
 async function sendAppointmentEmail(appointment, status) {
   if (!process.env.RESEND_API_KEY || !process.env.FROM_EMAIL) {
     throw new Error(
@@ -93,7 +83,6 @@ async function sendAppointmentEmail(appointment, status) {
   }
 
   const resend = new Resend(process.env.RESEND_API_KEY);
-
   const approved = status === "approved";
   const name = escapeHtml(appointment.name);
   const time = escapeHtml(appointment.time);
@@ -110,9 +99,7 @@ async function sendAppointmentEmail(appointment, status) {
       year: "numeric",
       timeZone: "Europe/Athens",
     }).format(new Date(`${appointment.date}T12:00:00.000Z`));
-  } catch {
-    /* fallback */
-  }
+  } catch {}
 
   const subject = approved
     ? `✅ Το ραντεβού σας επιβεβαιώθηκε | DISETO`
@@ -195,15 +182,13 @@ async function sendAppointmentEmail(appointment, status) {
   if (result.error) {
     throw new Error(result.error.message || "Email sending failed");
   }
-
   return result.data;
 }
 
-// ============ POST ============
+// POST — δημιουργία ραντεβού
 export async function POST(request) {
   try {
     const body = await request.json();
-
     const name = String(body.name || "").trim();
     const email = String(body.email || "").trim().toLowerCase();
     const phone = String(body.phone || "").trim();
@@ -234,16 +219,8 @@ export async function POST(request) {
     }
 
     const db = await getDatabase();
-    const appointments = db.collection("appointments");
-
     const appointment = {
-      name,
-      email,
-      phone,
-      date,
-      time,
-      project,
-      message,
+      name, email, phone, date, time, project, message,
       status: "pending",
       slotKey: `${date}_${time}`,
       emailSent: false,
@@ -251,9 +228,7 @@ export async function POST(request) {
       updatedAt: new Date(),
     };
 
-    const result = await appointments.insertOne(appointment);
-
-    console.log("✅ Appointment created:", result.insertedId.toString());
+    const result = await db.collection("appointments").insertOne(appointment);
 
     return Response.json({
       success: true,
@@ -263,15 +238,10 @@ export async function POST(request) {
   } catch (error) {
     if (error?.code === 11000) {
       return Response.json(
-        {
-          success: false,
-          message:
-            "Η συγκεκριμένη ώρα μόλις δεσμεύτηκε. Επιλέξτε άλλη ώρα.",
-        },
+        { success: false, message: "Η συγκεκριμένη ώρα μόλις δεσμεύτηκε. Επιλέξτε άλλη ώρα." },
         { status: 409 }
       );
     }
-
     console.error("Appointment POST error:", error);
     return Response.json(
       { success: false, message: "Παρουσιάστηκε σφάλμα κατά την κράτηση." },
@@ -280,21 +250,20 @@ export async function POST(request) {
   }
 }
 
-// ============ GET ============
+// GET — λίστα (owner only)
 export async function GET() {
   try {
     const { isOwner, debug } = await checkOwner();
 
     if (!isOwner) {
-      // ✅ Πιο κατατοπιστικό μήνυμα
       return Response.json(
         {
           success: false,
           message: !debug.hasUserId
-            ? "Δεν είστε συνδεδεμένος. Παρακαλώ συνδεθείτε."
+            ? "Δεν είστε συνδεδεμένος."
             : !debug.hasOwnerId
             ? "Λείπει το OWNER_CLERK_USER_ID από το .env.local"
-            : "Ο λογαριασμός σας δεν είναι ο owner. Ελέγξτε το OWNER_CLERK_USER_ID.",
+            : "Ο λογαριασμός σας δεν είναι ο owner.",
           debug,
         },
         { status: 403 }
@@ -309,10 +278,6 @@ export async function GET() {
       collection.countDocuments({}),
     ]);
 
-    console.log(
-      `📅 GET appointments: found ${appointments.length} / total ${total}`
-    );
-
     return Response.json({
       success: true,
       total,
@@ -324,17 +289,13 @@ export async function GET() {
   } catch (error) {
     console.error("Appointment GET error:", error);
     return Response.json(
-      {
-        success: false,
-        message: "Αδυναμία φόρτωσης ραντεβού.",
-        debug: error.message,
-      },
+      { success: false, message: "Αδυναμία φόρτωσης ραντεβού." },
       { status: 500 }
     );
   }
 }
 
-// ============ PATCH ============
+// PATCH — έγκριση/απόρριψη (owner only)
 export async function PATCH(request) {
   try {
     const { isOwner, debug } = await checkOwner();
@@ -345,8 +306,6 @@ export async function PATCH(request) {
           success: false,
           message: !debug.hasUserId
             ? "Δεν είστε συνδεδεμένος."
-            : !debug.hasOwnerId
-            ? "Λείπει το OWNER_CLERK_USER_ID από το .env.local"
             : "Ο λογαριασμός σας δεν είναι ο owner.",
           debug,
         },
@@ -388,57 +347,40 @@ export async function PATCH(request) {
     if (appointment.status === status) {
       return Response.json({
         success: true,
-        message: `Το ραντεβού είναι ήδη ${
-          status === "approved" ? "εγκεκριμένο" : "απορριφθέν"
-        }.`,
+        message: `Το ραντεβού είναι ήδη ${status === "approved" ? "εγκεκριμένο" : "απορριφθέν"}.`,
         emailSent: appointment.emailSent || false,
         emailError: appointment.emailError || null,
       });
     }
 
-    if (
-      status === "approved" &&
-      !isValidSlot(appointment.date, appointment.time)
-    ) {
+    if (status === "approved" && !isValidSlot(appointment.date, appointment.time)) {
       return Response.json(
-        {
-          success: false,
-          message:
-            "Δεν μπορεί να εγκριθεί ραντεβού για ώρα που έχει περάσει.",
-        },
+        { success: false, message: "Δεν μπορεί να εγκριθεί ραντεβού για ώρα που έχει περάσει." },
         { status: 400 }
       );
     }
 
     const filter = { _id, status: appointment.status };
-
-    let update;
-
-    if (status === "approved") {
-      update = {
-        $set: {
-          status: "approved",
-          slotKey: `${appointment.date}_${appointment.time}`,
-          updatedAt: new Date(),
-        },
-        $unset: { emailError: "" },
-      };
-    } else {
-      update = {
-        $set: { status: "rejected", updatedAt: new Date() },
-        $unset: { slotKey: "", emailError: "" },
-      };
-    }
+    const update =
+      status === "approved"
+        ? {
+            $set: {
+              status: "approved",
+              slotKey: `${appointment.date}_${appointment.time}`,
+              updatedAt: new Date(),
+            },
+            $unset: { emailError: "" },
+          }
+        : {
+            $set: { status: "rejected", updatedAt: new Date() },
+            $unset: { slotKey: "", emailError: "" },
+          };
 
     const result = await collection.updateOne(filter, update);
 
     if (result.modifiedCount !== 1) {
       return Response.json(
-        {
-          success: false,
-          message:
-            "Το ραντεβού άλλαξε από άλλη ενέργεια. Ανανεώστε τη σελίδα.",
-        },
+        { success: false, message: "Το ραντεβού άλλαξε από άλλη ενέργεια. Ανανεώστε τη σελίδα." },
         { status: 409 }
       );
     }
@@ -449,7 +391,6 @@ export async function PATCH(request) {
     try {
       await sendAppointmentEmail(appointment, status);
       emailSent = true;
-      console.log(`✅ Email sent to ${appointment.email} (${status})`);
     } catch (error) {
       emailError = error.message || "Αποτυχία αποστολής email";
       console.error("Appointment email error:", error);
@@ -457,36 +398,22 @@ export async function PATCH(request) {
 
     await collection.updateOne(
       { _id },
-      {
-        $set: {
-          emailSent,
-          emailError,
-          emailUpdatedAt: new Date(),
-        },
-      }
+      { $set: { emailSent, emailError, emailUpdatedAt: new Date() } }
     );
 
     return Response.json({
       success: true,
-      message:
-        status === "approved"
-          ? "Το ραντεβού εγκρίθηκε."
-          : "Το ραντεβού απορρίφθηκε.",
+      message: status === "approved" ? "Το ραντεβού εγκρίθηκε." : "Το ραντεβού απορρίφθηκε.",
       emailSent,
       emailError,
     });
   } catch (error) {
     if (error?.code === 11000) {
       return Response.json(
-        {
-          success: false,
-          message:
-            "Η συγκεκριμένη ώρα έχει ήδη δεσμευτεί από άλλο ραντεβού.",
-        },
+        { success: false, message: "Η συγκεκριμένη ώρα έχει ήδη δεσμευτεί από άλλο ραντεβού." },
         { status: 409 }
       );
     }
-
     console.error("Appointment PATCH error:", error);
     return Response.json(
       { success: false, message: "Παρουσιάστηκε σφάλμα κατά την ενημέρωση." },

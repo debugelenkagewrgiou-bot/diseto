@@ -23,7 +23,12 @@ import {
   ChevronDown,
   ChevronUp,
   AlertCircle,
+  Image as ImageIcon,
 } from "lucide-react";
+
+/* =========================================
+   HELPERS
+========================================= */
 
 const statusLabels = {
   pending: "Σε αναμονή",
@@ -37,12 +42,30 @@ function formatDate(date) {
   return `${day}/${month}/${year}`;
 }
 
+function formatCreatedAt(date) {
+  if (!date) return "—";
+  try {
+    return new Intl.DateTimeFormat("el-GR", {
+      dateStyle: "medium",
+      timeStyle: "short",
+      timeZone: "Europe/Athens",
+    }).format(new Date(date));
+  } catch {
+    return "—";
+  }
+}
+
+/* =========================================
+   COMPONENTS
+========================================= */
+
 function StatusPill({ status }) {
   const styles = {
     pending: "bg-amber-50 text-amber-700 border-amber-200",
     approved: "bg-emerald-50 text-emerald-700 border-emerald-200",
     rejected: "bg-rose-50 text-rose-700 border-rose-200",
   };
+
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium ${
@@ -95,6 +118,7 @@ function StatCard({ icon: Icon, label, value, accent = "gray" }) {
     emerald: "bg-emerald-50 text-emerald-600",
     blue: "bg-blue-50 text-blue-600",
   };
+
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between">
@@ -108,13 +132,11 @@ function StatCard({ icon: Icon, label, value, accent = "gray" }) {
   );
 }
 
-// ============ ΚΑΡΤΑ ΡΑΝΤΕΒΟΥ ============
 function AppointmentCard({ item, onUpdate, updating }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm transition hover:shadow-md">
-      {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
@@ -129,7 +151,6 @@ function AppointmentCard({ item, onUpdate, updating }) {
         </div>
       </div>
 
-      {/* Details grid */}
       <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="flex items-center gap-2 text-sm text-gray-700">
           <CalendarDays size={16} className="text-gray-400" />
@@ -155,7 +176,6 @@ function AppointmentCard({ item, onUpdate, updating }) {
         </a>
       </div>
 
-      {/* Project */}
       {item.project && (
         <div className="mt-4 rounded-lg bg-gray-50 px-3 py-2 text-sm">
           <span className="text-gray-500">Project: </span>
@@ -163,7 +183,6 @@ function AppointmentCard({ item, onUpdate, updating }) {
         </div>
       )}
 
-      {/* Expandable message */}
       {item.message && (
         <>
           <button
@@ -181,7 +200,6 @@ function AppointmentCard({ item, onUpdate, updating }) {
         </>
       )}
 
-      {/* Actions — ΠΑΝΤΑ ορατά */}
       <div className="mt-6 flex flex-col gap-3 border-t border-gray-100 pt-5 sm:flex-row">
         <button
           type="button"
@@ -196,6 +214,7 @@ function AppointmentCard({ item, onUpdate, updating }) {
           )}
           Έγκριση & Αποστολή Email
         </button>
+
         <button
           type="button"
           disabled={updating}
@@ -214,17 +233,52 @@ function AppointmentCard({ item, onUpdate, updating }) {
   );
 }
 
-// ============ ΚΑΡΤΑ ΜΗΝΥΜΑΤΟΣ ============
-function ContactCard({ item, onDownload }) {
+function ContactCard({
+  item,
+  onDownload,
+  onToggleRead,
+  onDelete,
+  onReply,
+}) {
+  const isUnread = !item.read;
+
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+    <div
+      className={`rounded-2xl border bg-white p-6 shadow-sm transition ${
+        isUnread
+          ? "border-blue-200 ring-1 ring-blue-100"
+          : "border-gray-200"
+      }`}
+    >
       <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
-          <p className="mt-1 text-sm text-gray-500">{item.createdAtDisplay}</p>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2">
+            {isUnread && (
+              <span className="h-2 w-2 shrink-0 rounded-full bg-blue-500" />
+            )}
+            <h3
+              className={`truncate text-lg ${
+                isUnread
+                  ? "font-semibold text-gray-900"
+                  : "font-medium text-gray-700"
+              }`}
+            >
+              {item.name}
+            </h3>
+          </div>
+          <p className="mt-1 text-sm text-gray-500">
+            {item.createdAtDisplay}
+          </p>
         </div>
-        <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
-          Νέο
+
+        <span
+          className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${
+            isUnread
+              ? "bg-blue-50 text-blue-700"
+              : "bg-gray-50 text-gray-500"
+          }`}
+        >
+          {isUnread ? "Νέο" : "Διαβασμένο"}
         </span>
       </div>
 
@@ -301,15 +355,56 @@ function ContactCard({ item, onDownload }) {
           </div>
         </div>
       )}
+
+      <div className="mt-5 flex flex-wrap gap-2 border-t border-gray-100 pt-4">
+        <button
+          onClick={() => onReply(item)}
+          className="flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-2 text-xs font-medium text-blue-700 transition hover:bg-blue-100"
+        >
+          <Mail size={14} />
+          Απάντηση
+        </button>
+
+        <button
+          onClick={() => onToggleRead(item)}
+          className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium transition ${
+            isUnread
+              ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+              : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+          }`}
+        >
+          {isUnread ? (
+            <>
+              <MailCheck size={14} /> Σήμανση ως διαβασμένο
+            </>
+          ) : (
+            <>
+              <Mail size={14} /> Σήμανση ως μη διαβασμένο
+            </>
+          )}
+        </button>
+
+        <button
+          onClick={() => onDelete(item)}
+          className="ml-auto flex items-center gap-1.5 rounded-lg bg-rose-50 px-3 py-2 text-xs font-medium text-rose-700 transition hover:bg-rose-100"
+        >
+          <XCircle size={14} />
+          Διαγραφή
+        </button>
+      </div>
     </div>
   );
 }
 
-// ============ ΚΥΡΙΩΣ ΣΕΛΙΔΑ ============
+/* =========================================
+   MAIN PAGE
+========================================= */
+
 export default function DashboardPage() {
   const [appointments, setAppointments] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [activeTab, setActiveTab] = useState("appointments");
+  const [contactFilter, setContactFilter] = useState("all");
 
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -323,6 +418,7 @@ export default function DashboardPage() {
 
   const abortRef = useRef(null);
 
+  /* LOAD DATA */
   const loadData = useCallback(async (showLoader = true) => {
     if (showLoader) setLoading(true);
     setError("");
@@ -380,6 +476,7 @@ export default function DashboardPage() {
     loadData(false);
   };
 
+  /* APPOINTMENT ACTIONS */
   const updateAppointment = async (id, status) => {
     const confirmed = window.confirm(
       status === "approved"
@@ -427,17 +524,96 @@ export default function DashboardPage() {
     }
   };
 
-  // Υπολογισμός display date client-side (αποφυγή hydration mismatch)
+  /* CONTACT ACTIONS */
+  const toggleContactRead = async (contact) => {
+    const newRead = !contact.read;
+
+    setContacts((prev) =>
+      prev.map((c) =>
+        c._id === contact._id ? { ...c, read: newRead } : c
+      )
+    );
+
+    try {
+      const response = await fetch(`/api/contacts/${contact._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ read: newRead }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Η ενημέρωση απέτυχε.");
+      }
+    } catch (err) {
+      setContacts((prev) =>
+        prev.map((c) =>
+          c._id === contact._id ? { ...c, read: contact.read } : c
+        )
+      );
+      setError(err.message || "Παρουσιάστηκε σφάλμα.");
+    }
+  };
+
+  const deleteContact = async (contact) => {
+    const confirmed = window.confirm(
+      `Διαγραφή μηνύματος από "${contact.name}";\n\nΗ ενέργεια δεν αναιρείται.`
+    );
+    if (!confirmed) return;
+
+    const previous = contacts;
+    setContacts((prev) => prev.filter((c) => c._id !== contact._id));
+
+    try {
+      const response = await fetch(`/api/contacts/${contact._id}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Η διαγραφή απέτυχε.");
+      }
+
+      setNotice("✅ Το μήνυμα διαγράφηκε.");
+    } catch (err) {
+      setContacts(previous);
+      setError(err.message || "Παρουσιάστηκε σφάλμα.");
+    }
+  };
+
+  const replyToContact = (contact) => {
+    const subject = encodeURIComponent(
+      `Απάντηση στο αίτημά σας - DISETO`
+    );
+    const body = encodeURIComponent(
+      `Αγαπητέ/ή ${contact.name},\n\nΣας ευχαριστούμε για το μήνυμά σας.\n\n`
+    );
+    window.location.href = `mailto:${contact.email}?subject=${subject}&body=${body}`;
+  };
+
+  const downloadFile = (contactId, file, index) => {
+    if (!contactId || !file) return;
+    const url = `/api/contacts/${contactId}/files/${index}`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.name || "attachment";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
+
+  /* COMPUTED */
   const withDisplayDate = (items) =>
     items.map((item) => ({
       ...item,
-      createdAtDisplay: mounted
-        ? formatCreatedAt(item.createdAt)
-        : "—",
+      createdAtDisplay: mounted ? formatCreatedAt(item.createdAt) : "—",
     }));
 
   const pendingAppointments = withDisplayDate(
-    appointments.filter((item) => !item.status || item.status === "pending")
+    appointments.filter(
+      (item) => !item.status || item.status === "pending"
+    )
   );
 
   const completedAppointments = withDisplayDate(
@@ -451,36 +627,42 @@ export default function DashboardPage() {
   );
 
   const displayContacts = withDisplayDate(contacts);
+  const unreadContacts = contacts.filter((c) => !c.read);
 
-  const downloadFile = (contactId, file, index) => {
-    if (!contactId || !file) return;
-    const url = `/api/contacts/${contactId}/files/${index}`;
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = file.name || "attachment";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  };
+  const filteredContacts =
+    contactFilter === "unread"
+      ? displayContacts.filter((c) => !c.read)
+      : displayContacts;
 
+  /* =========================================
+     RENDER
+  ========================================= */
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-white px-4 pb-20 pt-24 md:px-8">
       <div className="mx-auto max-w-6xl">
         {/* HEADER */}
         <header className="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="mb-2 text-xs font-semibold uppercase tracking-[0.25em] text-amber-600">
-              DISETO / Administration
-            </p>
-            <h1 className="text-3xl font-bold text-gray-900 md:text-4xl">
-              Dashboard
-            </h1>
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-amber-100 px-3 py-1">
+              <span className="h-2 w-2 rounded-full bg-amber-500" />
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-amber-800">
+                DISETO / Administration
+              </span>
+            </div>
+            <h1 className="text-4xl font-bold text-gray-900">Dashboard</h1>
             <p className="mt-2 text-sm text-gray-500">
               Διαχείριση ραντεβού και μηνυμάτων πελατών.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-2">
+            <a
+              href="/dashboard/photos"
+              className="flex items-center gap-2 rounded-xl bg-amber-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-amber-700"
+            >
+              <ImageIcon size={15} />
+              Φωτογραφίες
+            </a>
             <button
               onClick={refreshData}
               disabled={refreshing}
@@ -578,36 +760,42 @@ export default function DashboardPage() {
               >
                 <MessageSquare size={16} />
                 Μηνύματα ({contacts.length})
+                {unreadContacts.length > 0 && (
+                  <span className="rounded-full bg-blue-500 px-2 py-0.5 text-xs font-semibold text-white">
+                    {unreadContacts.length}
+                  </span>
+                )}
               </button>
             </div>
 
-            {/* APPOINTMENTS */}
+            {/* APPOINTMENTS TAB */}
             {activeTab === "appointments" && (
               <div className="space-y-8">
-                {/* PENDING SECTION */}
                 <section>
                   <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 text-amber-700">
-                      <Inbox size={18} />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
+                      <Inbox size={20} />
                     </div>
                     <div>
-                      <h2 className="text-lg font-semibold text-gray-900">
+                      <h2 className="text-xl font-semibold text-gray-900">
                         Εκκρεμή αιτήματα
                       </h2>
-                      <p className="text-xs text-gray-500">
-                        {pendingAppointments.length} ραντεβού περιμένουν έγκριση
+                      <p className="text-sm text-gray-500">
+                        {pendingAppointments.length} ραντεβού περιμένουν
+                        έγκριση
                       </p>
                     </div>
                   </div>
 
                   {pendingAppointments.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-12 text-center">
-                      <Inbox
-                        size={40}
-                        className="mx-auto text-gray-300"
-                      />
-                      <p className="mt-3 text-sm text-gray-500">
-                        Δεν υπάρχουν εκκρεμή ραντεβού.
+                    <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
+                      <Inbox size={48} className="mx-auto text-gray-300" />
+                      <h3 className="mt-4 text-lg font-semibold text-gray-700">
+                        Δεν υπάρχουν εκκρεμή ραντεβού
+                      </h3>
+                      <p className="mt-2 text-sm text-gray-500">
+                        Όταν ένας πελάτης κλείσει ραντεβού από τη φόρμα
+                        επικοινωνίας, θα εμφανιστεί εδώ.
                       </p>
                     </div>
                   ) : (
@@ -624,17 +812,16 @@ export default function DashboardPage() {
                   )}
                 </section>
 
-                {/* HISTORY SECTION */}
                 <section>
                   <div className="mb-4 flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-700">
-                      <History size={18} />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100 text-gray-700">
+                      <History size={20} />
                     </div>
                     <div>
-                      <h2 className="text-lg font-semibold text-gray-900">
+                      <h2 className="text-xl font-semibold text-gray-900">
                         Ιστορικό ραντεβού
                       </h2>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-sm text-gray-500">
                         {completedAppointments.length} ολοκληρωμένα
                         ραντεβού
                       </p>
@@ -642,13 +829,14 @@ export default function DashboardPage() {
                   </div>
 
                   {completedAppointments.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-12 text-center">
-                      <History
-                        size={40}
-                        className="mx-auto text-gray-300"
-                      />
-                      <p className="mt-3 text-sm text-gray-500">
-                        Δεν υπάρχει ιστορικό ραντεβού.
+                    <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
+                      <History size={48} className="mx-auto text-gray-300" />
+                      <h3 className="mt-4 text-lg font-semibold text-gray-700">
+                        Δεν υπάρχει ιστορικό
+                      </h3>
+                      <p className="mt-2 text-sm text-gray-500">
+                        Τα εγκεκριμένα και απορριφθέντα ραντεβού θα
+                        εμφανίζονται εδώ.
                       </p>
                     </div>
                   ) : (
@@ -695,36 +883,34 @@ export default function DashboardPage() {
                               </td>
                               <td className="p-4">
                                 <div className="flex flex-wrap gap-1.5">
-                                  <button
-                                    disabled={
-                                      updating === item._id ||
-                                      item.status === "approved"
-                                    }
-                                    onClick={() =>
-                                      updateAppointment(
-                                        item._id,
-                                        "approved"
-                                      )
-                                    }
-                                    className="rounded-lg bg-emerald-50 px-2.5 py-1.5 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100 disabled:opacity-40"
-                                  >
-                                    Έγκριση
-                                  </button>
-                                  <button
-                                    disabled={
-                                      updating === item._id ||
-                                      item.status === "rejected"
-                                    }
-                                    onClick={() =>
-                                      updateAppointment(
-                                        item._id,
-                                        "rejected"
-                                      )
-                                    }
-                                    className="rounded-lg bg-rose-50 px-2.5 py-1.5 text-xs font-medium text-rose-700 transition hover:bg-rose-100 disabled:opacity-40"
-                                  >
-                                    Απόρριψη
-                                  </button>
+                                  {item.status !== "approved" && (
+                                    <button
+                                      disabled={updating === item._id}
+                                      onClick={() =>
+                                        updateAppointment(
+                                          item._id,
+                                          "approved"
+                                        )
+                                      }
+                                      className="rounded-lg bg-emerald-50 px-2.5 py-1.5 text-xs font-medium text-emerald-700 transition hover:bg-emerald-100 disabled:opacity-40"
+                                    >
+                                      Έγκριση
+                                    </button>
+                                  )}
+                                  {item.status !== "rejected" && (
+                                    <button
+                                      disabled={updating === item._id}
+                                      onClick={() =>
+                                        updateAppointment(
+                                          item._id,
+                                          "rejected"
+                                        )
+                                      }
+                                      className="rounded-lg bg-rose-50 px-2.5 py-1.5 text-xs font-medium text-rose-700 transition hover:bg-rose-100 disabled:opacity-40"
+                                    >
+                                      Απόρριψη
+                                    </button>
+                                  )}
                                 </div>
                               </td>
                             </tr>
@@ -737,40 +923,76 @@ export default function DashboardPage() {
               </div>
             )}
 
-            {/* CONTACTS */}
+            {/* CONTACTS TAB */}
             {activeTab === "contacts" && (
               <section>
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-blue-700">
-                    <MessageSquare size={18} />
+                <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700">
+                      <MessageSquare size={20} />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-semibold text-gray-900">
+                        Μηνύματα επικοινωνίας
+                      </h2>
+                      <p className="text-sm text-gray-500">
+                        {contacts.length} μηνύματα · {unreadContacts.length}{" "}
+                        νέα
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-900">
-                      Μηνύματα επικοινωνίας
-                    </h2>
-                    <p className="text-xs text-gray-500">
-                      {contacts.length} μηνύματα
-                    </p>
+
+                  <div className="flex gap-1 rounded-xl bg-gray-100 p-1">
+                    <button
+                      onClick={() => setContactFilter("all")}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+                        contactFilter === "all"
+                          ? "bg-white text-gray-900 shadow-sm"
+                          : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      Όλα ({contacts.length})
+                    </button>
+                    <button
+                      onClick={() => setContactFilter("unread")}
+                      className={`rounded-lg px-3 py-1.5 text-xs font-medium transition ${
+                        contactFilter === "unread"
+                          ? "bg-white text-gray-900 shadow-sm"
+                          : "text-gray-600 hover:text-gray-900"
+                      }`}
+                    >
+                      Νέα ({unreadContacts.length})
+                    </button>
                   </div>
                 </div>
 
-                {contacts.length === 0 ? (
-                  <div className="rounded-2xl border border-dashed border-gray-200 bg-white p-12 text-center">
+                {filteredContacts.length === 0 ? (
+                  <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
                     <MessageSquare
-                      size={40}
+                      size={48}
                       className="mx-auto text-gray-300"
                     />
-                    <p className="mt-3 text-sm text-gray-500">
-                      Δεν υπάρχουν μηνύματα επικοινωνίας.
+                    <h3 className="mt-4 text-lg font-semibold text-gray-700">
+                      {contactFilter === "unread"
+                        ? "Δεν υπάρχουν νέα μηνύματα"
+                        : "Δεν υπάρχουν μηνύματα"}
+                    </h3>
+                    <p className="mt-2 text-sm text-gray-500">
+                      {contactFilter === "unread"
+                        ? "Όλα τα μηνύματα έχουν διαβαστεί."
+                        : "Τα μηνύματα από τη φόρμα επικοινωνίας θα εμφανιστούν εδώ."}
                     </p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-                    {displayContacts.map((item) => (
+                    {filteredContacts.map((item) => (
                       <ContactCard
                         key={item._id}
                         item={item}
                         onDownload={downloadFile}
+                        onToggleRead={toggleContactRead}
+                        onDelete={deleteContact}
+                        onReply={replyToContact}
                       />
                     ))}
                   </div>
@@ -782,17 +1004,4 @@ export default function DashboardPage() {
       </div>
     </main>
   );
-}
-
-function formatCreatedAt(date) {
-  if (!date) return "—";
-  try {
-    return new Intl.DateTimeFormat("el-GR", {
-      dateStyle: "medium",
-      timeStyle: "short",
-      timeZone: "Europe/Athens",
-    }).format(new Date(date));
-  } catch {
-    return "—";
-  }
 }

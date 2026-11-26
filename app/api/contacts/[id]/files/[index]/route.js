@@ -14,7 +14,7 @@ export async function GET(request, { params }) {
       );
     }
 
-    const { id, index } = params;
+    const { id, index } = await params;
 
     if (!ObjectId.isValid(id)) {
       return Response.json(
@@ -34,7 +34,10 @@ export async function GET(request, { params }) {
     const db = await getDatabase();
     const contact = await db
       .collection("contacts")
-      .findOne({ _id: new ObjectId(id) }, { projection: { files: 1 } });
+      .findOne(
+        { _id: new ObjectId(id) },
+        { projection: { files: 1 } }
+      );
 
     if (!contact) {
       return Response.json(

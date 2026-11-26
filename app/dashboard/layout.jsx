@@ -1,8 +1,7 @@
-// app/dashboard/layout.jsx
 import { auth } from "@clerk/nextjs/server";
 import { redirect, notFound } from "next/navigation";
 
-// Key: allow this route to block navigation, rendering dynamically on each request
+// ✅ Επιτρέπει στο route να μπλοκάρει αντί να αποτυγχάνει το prerender
 export const instant = false;
 
 export default async function DashboardLayout({ children }) {

@@ -38,7 +38,7 @@ export async function GET(request) {
       contacts: contacts.map((item) => ({
         ...item,
         _id: item._id.toString(),
-        // Δεν στέλνουμε το base64 data — μόνο metadata
+        read: item.read || false,
         files: (item.files || []).map(({ data, ...rest }) => rest),
       })),
     });
