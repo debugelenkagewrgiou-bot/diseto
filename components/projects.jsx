@@ -69,7 +69,7 @@ function VideoCard({ project, exploreText, onClick, index, visible }) {
               {exploreText}
             </span>
 
-            <span className="text-xl text-[#a89576]">↗</span>
+            <span className="text-xl text-[#a89576]"></span>
           </div>
         </div>
       </div>
